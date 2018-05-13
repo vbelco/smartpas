@@ -1,0 +1,26 @@
+{* Latte template *}
+{block banner}
+{/block}
+
+{block title}
+    <h1>{_ui.prirad_osobu_k_rfid}: {$cislo_rfid} </h1>
+{/block}
+
+
+{block content}
+{if $user->loggedIn} {*uz sme vnutri, len pre prihlasenych *}
+    
+<div>
+    <ul class="nav nav-pills">
+        <li class="active"><a n:href="RFID:default">{_menu.section_rfid.prehlad}</a></li>
+        <li><a n:href="RFID:pridaj">{_menu.section_rfid.add}</a></li>
+    </ul>
+</div>
+
+<div>    
+{control priradOsobu}
+</div>
+    
+{/if} {*if user is logged in*}
+{/block}
+    

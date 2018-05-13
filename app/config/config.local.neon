@@ -1,0 +1,34 @@
+parameters:
+
+php:
+	date.timezone: Europe/Prague
+
+
+application:
+	errorPresenter: Error
+	mapping:
+		*: App\*Module\Presenters\*Presenter
+
+
+session:
+	expiration: 14 days
+
+
+services:
+	router: App\RouterFactory::createRouter
+	- App\Model\RFID
+	- App\Model\Osoba
+	- App\Model\Citacka
+	- App\Model\Dochadzka
+	authenticator: MyAuthenticator
+
+database:
+	dsn: 'mysql:host=46.229.230.117;dbname=ii013502db'
+	user: ii013500
+	password: fbidowuj
+
+extensions:
+	translation: Kdyby\Translation\DI\TranslationExtension
+
+translation:
+	whitelist: [sk, en]

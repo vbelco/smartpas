@@ -1,0 +1,22 @@
+home: Domov
+citacky: Čítačky
+rfid: RFID
+osoby: Osoby
+dochadzka: Dochádzka
+sign_out: Odhlásiť
+sign_in: Prihlásiť
+register: Registrovať
+citacka:
+    prehlad: "Prehľad"
+    pridaj: "Pridaj čítačku"
+section_rfid:
+    prehlad: "Prehľad"
+    add: "Pridaj RFID"
+section_osoby:
+    prehlad: "Prehľad"
+    pridaj: "Pridaj osobu"
+section_dochadzka:
+    current: "Aktualne"
+    prehlad: "Prehľad"
+    settings: "Nastavenia"
+    nepriradene: "Nepriradené"

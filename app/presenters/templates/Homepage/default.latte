@@ -1,0 +1,37 @@
+{* This is the welcome page, you can delete it *}
+{block banner}
+{/block}
+
+{block title}
+    <h1>{_ui.welcome}</h1>
+{/block}
+
+{block content}
+
+<div id="content">
+{if $user->loggedIn}
+    <h2> {_ui.intro}  </h2>
+    <div class="table-responsive">
+    <table class="table table-hover table-bordered">
+    <tr>
+        <th>{_ui.id_zaznam}</th> <th>{_ui.id_reader}</th> <th>{_ui.id_rfid}</th> <th>{_ui.timestamp}</th> <th>{_ui.spracovane}</th>
+    </tr>
+	{foreach $posts as $post}
+            <tr>
+                <td>{$post->id}</td> 
+                <td>{$post->citacka->id}</td> 
+                <td>{$post->rfid_number}</td> 
+                <td>{$post->timestamp}</td>
+                <td>
+                    {if $post->spracovane}
+                        {_ui.spracovane}
+                    {/if}
+                </td>
+            </tr>
+        {/foreach}
+    </table>
+    </div>
+{/if}
+</div>
+
+{/block}

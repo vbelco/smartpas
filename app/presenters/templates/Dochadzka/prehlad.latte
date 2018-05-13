@@ -1,0 +1,103 @@
+{* Latte template *}
+{block banner}
+{/block}
+
+{block title}
+    <h1>{_ui.dochadzka}</h1>
+{/block}
+
+
+{block content}
+
+   
+
+{if $user->loggedIn} {*uz sme vnutri, len pre prihlasenych *}
+    
+<div>
+    <ul class="nav nav-pills">
+        <li><a n:href="Dochadzka:default">{_menu.section_dochadzka.current}</a></li>
+        <li class="active"><a n:href="Dochadzka:prehlad">{_menu.section_dochadzka.prehlad}</a></li>
+        <li><a n:href="Dochadzka:nastavenie">{_menu.section_dochadzka.settings}</a></li>
+    </ul>
+</div>
+    
+<div class="container">
+    {form prehladForm}
+        <div class="row required">
+            <div class="col-xs-1 required"> {label datum_od /}</div>
+            <div class="col-sm-4 input-group date required" id="form-date-od" >
+                        {input datum_od}
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+			<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+            </div>
+            <div class="col-xs-1 required"> {label datum_do /}</div>
+            <div class="col-sm-4 input-group date required" id ="form-date-do">
+                        {input datum_do}
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+			<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+            </div>
+        </div> 
+                        
+           
+        <div class="row">
+            <div class="col-sm-1"> {label osoby /}</div>
+            <div class="col-sm-4"> {input osoby }</div>
+        </div>
+        <div class="row">
+            <div class="col-sm-1"> </div>
+            <div class="col-sm-4">{input send }</div>
+        </div>
+    {/form}
+</div>   
+
+{if isset($meno_osoby) }
+    {foreach $osoby as $osoba}
+    <div class="table-responsive">
+        <h3>{$meno_osoby[$osoba]} ( {$osoba} )</h3>
+        
+        {ifset $posts2[$osoba]  }
+        {_ui.celkovy_cas}: {$celkovy_cas_dochadzky[$osoba]}    
+        <table class=" table table-hover">
+            <tr>
+                <th>{_ui.prichod}</th>
+                <th>{_ui.odchod}</th>
+                <th>{_ui.time_at_work}</th>
+            </tr>
+        
+        {foreach $posts2[$osoba] as $post2}
+            <tr>
+                <td>{$post2['prichod']|date:"d. m. Y G:i:s"}</td>
+                <td>{$post2['odchod']|date:"d. m. Y G:i:s"}</td>
+                <td>{$post2['cas_v_praci']}</td>
+            </tr>
+        {/foreach}
+        </table>
+        {else}
+        <div>{_ui.none_definition_attendance}</div>
+        {/ifset}
+        
+    </div>
+    {/foreach}
+{/if}
+    
+
+
+<script type="text/javascript">
+    $('#form-date-od').datetimepicker({
+        minView: 2,
+        autoclose: 1,
+        todayBtn:  1,
+        useCurrent: true,
+        language:  {$activeLocale}
+    });
+    $('#form-date-do').datetimepicker({
+        minView: 2,
+        autoclose: 1,
+        todayBtn:  1,
+        language:  {$activeLocale}
+    });
+</script> 
+
+
+{/if} {*if user is logged in*}
+{/block}

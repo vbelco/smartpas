@@ -1,0 +1,54 @@
+{* Latte template *}
+{block banner}
+{/block}
+
+{block title}
+    <h1>{_ui.management_citaciek}</h1>
+{/block}
+
+
+{block content}
+{if $user->loggedIn} {*uz sme vnutri, len pre prihlasenych *}
+
+    <script src="{$basePath}/js/my_mqtt.js" charset="UTF-8"></script>
+    <script>
+        $(document).ready(function() {
+            MQTTconnect();
+        });
+        
+    </script>
+    
+<div>
+    <ul class="nav nav-pills">
+        <li class="active"><a n:href="Citacka:default">{_menu.citacka.prehlad}</a></li>
+        <li><a n:href="Citacka:pridaj">{_menu.citacka.pridaj}</a></li>
+    </ul>
+</div>
+
+{*vypis nasich rfidiek*}
+<div class="table-responsive">
+<table class=" table table-hover" id="citacky-tabulka">
+    <tr>
+        <th>{_ui.id_reader}</th>
+        <th>{_ui.name_reader}</th>
+        <th></th>
+        <th>{_ui.action}</th>
+    </tr>
+    {foreach $posts as $post}
+            <tr>
+                <td>{$post->id}</td> 
+                <td>{$post->name}</td> 
+                <td id="cell_kontrola_{$post->id}"><div id="kontrola_{$post->id}"> offline </div></td>
+                <td>
+                    <a n:href="edituj $post->id" class="btn btn-default" role="button">{_ui.form.edit}</a> </td>     
+            </tr>
+    {* este spustenie javascriptu na kontrolu dostupnosti mojej citacky*}
+    <script>
+        Prva_kontrola_dostupnosti_citacky( {$post->id} );
+        setInterval( 'Kontrola_dostupnosti_citacky( {$post->id} )'  , 10000 );
+    </script>
+    {/foreach}   
+</table>
+</div>
+{/if} {*if user is logged in*}
+{/block}

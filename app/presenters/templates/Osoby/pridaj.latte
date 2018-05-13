@@ -1,0 +1,23 @@
+{* Latte template *}
+{block banner}
+{/block}
+
+{block title}
+    <h1>{_ui.pridat_osobu}</h1>
+{/block}
+
+
+{block content}
+{if $user->loggedIn} {*uz sme vnutri, len pre prihlasenych *}
+    
+<div>
+    <ul class="nav nav-pills">
+        <li><a n:href="Osoby:default">{_menu.section_osoby.prehlad}</a></li>
+        <li class="active"><a n:href="Osoby:pridaj">{_menu.section_osoby.pridaj}</a></li>
+    </ul>
+</div>
+    
+{control osobaForm}    
+    
+{/if}
+{/block}

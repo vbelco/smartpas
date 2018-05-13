@@ -1,0 +1,36 @@
+{* Latte template *}
+{block banner}
+{/block}
+
+{block title}
+    <h1 class="text-danger">{_ui.deactivate_rfid}</h1>
+{/block}
+
+
+{block content}
+{if $user->loggedIn} {*uz sme vnutri, len pre prihlasenych *}
+ <div>
+    <ul class="nav nav-pills">
+        <li class="active"><a n:href="RFID:default">{_menu.section_rfid.prehlad}</a></li>
+        <li><a n:href="RFID:pridaj">{_menu.section_rfid.add}</a></li>
+    </ul>
+</div>
+ 
+<div>
+{_ui.really_deactivate_rfid}: {$cislo_rfid} ?
+</div>
+{if $osoba}
+    <p>
+    {_ui.assigned_rfid}: {$osoba->meno}
+    </p>
+    <p>
+    {_ui.for_deactivation_rfid_need_to_cancel_essigment_of_person}Pre deaktivovanie tejto osoby je nutne zrusit priradene RFID.
+    </p>
+{else}
+    <div>
+    <a n:href="RFID:deaktivuj $rfid_id , proceed => 1" ><button type="button" class="btn btn-danger">Deaktivuj</button></a>
+    </div>    
+{/if}
+    
+{/if}
+{/block}

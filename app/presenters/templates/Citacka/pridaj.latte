@@ -1,0 +1,23 @@
+{* Latte template *}
+{block banner}
+{/block}
+
+{block title}
+    <h1>{_ui.pridaj_citacku}</h1>
+{/block}
+
+
+{block content}
+{if $user->loggedIn} {*uz sme vnutri, len pre prihlasenych *}
+    
+<div>
+    <ul class="nav nav-pills">
+        <li><a n:href="Citacka:default">{_menu.citacka.prehlad}</a></li>
+        <li class="active"><a n:href="Citacka:pridaj">{_menu.citacka.pridaj}</a></li>
+    </ul>
+</div>
+    
+{control citackaForm}    
+    
+{/if}
+{/block}

@@ -1,0 +1,35 @@
+{* Latte template *}
+{block banner}
+{/block}
+
+{block title}
+    <h1>{_ui.osoby_management}</h1>
+{/block}
+
+
+{block content}
+{if $user->loggedIn} {*uz sme vnutri, len pre prihlasenych *}
+    
+<div>
+    <ul class="nav nav-pills">
+        <li class="active"><a n:href="Osoby:default">{_menu.section_osoby.prehlad}</a></li>
+        <li><a n:href="Osoby:pridaj">{_menu.section_osoby.pridaj}</a></li>
+    </ul>
+</div>
+
+{*vypis nasich rfidiek*}
+<div class="table-responsive">
+<table class=" table table-hover">
+    {foreach $posts as $post}
+        <tr>
+            <td>{$post->id} </td>
+            <td>{$post->meno}</td>
+            <td>
+                <a n:href="edituj $post->id" class="btn btn-default" role="button">{_ui.form.edit}</a> 
+            </td> 
+        </tr>
+    {/foreach}   
+</table>
+</div>
+{/if}
+{/block}

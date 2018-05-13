@@ -1,0 +1,22 @@
+home: Home
+citacky: Readers
+rfid: RFID
+osoby: Users
+dochadzka: Attendance
+sign_out: Sign out
+sign_in: Sign in
+register: Register
+citacka:
+    prehlad: "Listing"
+    pridaj: "Add reader"
+section_rfid:
+    prehlad: "Listing"
+    add: "Add RFID"
+section_osoby:
+    prehlad: "Listing"
+    pridaj: "Add Person"
+section_dochadzka:
+    current: "Current"
+    prehlad: "Listing"
+    settings: "Settings"
+    nepriradene: "Not assigned"

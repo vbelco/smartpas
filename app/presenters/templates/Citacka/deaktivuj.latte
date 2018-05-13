@@ -1,0 +1,27 @@
+{* Latte template *}
+{block banner}
+{/block}
+
+{block title}
+    <h1 class="text-danger">{_ui.reader_deactivate}</h1>
+{/block}
+
+
+{block content}
+{if $user->loggedIn} {*uz sme vnutri, len pre prihlasenych *}
+ <div>
+    <ul class="nav nav-pills">
+        <li class="active"><a n:href="Citacka:default">{_menu.citacka.prehlad}</a></li>
+        <li><a n:href="Citacka:pridaj">{_menu.citacka.pridaj}</a></li>
+    </ul>
+</div>
+ 
+<div>
+{_ui.reader_deactivation_confirmation} : {$number} ?
+</div>
+
+<div>
+    <a n:href="Citacka:deaktivuj $citacka_id , proceed => 1" ><button type="button" class="btn btn-danger">{_ui.form.deactivate}</button></a>
+</div>    
+{/if}
+{/block}

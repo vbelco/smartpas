@@ -1,0 +1,28 @@
+{* Latte template *}
+{block banner}
+{/block}
+
+{block title}
+    <h1>{_ui.dochadzka}</h1>
+{/block}
+
+
+{block content}
+
+   
+
+{if $user->loggedIn} {*uz sme vnutri, len pre prihlasenych *}
+    
+<div>
+    <ul class="nav nav-pills">
+        <li><a n:href="Dochadzka:default">{_menu.section_dochadzka.current}</a></li>
+        <li ><a n:href="Dochadzka:prehlad">{_menu.section_dochadzka.prehlad}</a></li>
+        <li class="active"><a n:href="Dochadzka:nastavenie">{_menu.section_dochadzka.settings}</a></li>
+    </ul>
+</div>
+    
+{control nastavenieForm}
+
+
+{/if} {*if user is logged in*}
+{/block}

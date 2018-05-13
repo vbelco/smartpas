@@ -1,0 +1,41 @@
+{* Latte template *}
+{block banner}
+{/block}
+
+{block title}
+    <h1>{_ui.dochadzka}</h1>
+{/block}
+
+
+{block content}
+{if $user->loggedIn} {*uz sme vnutri, len pre prihlasenych *}
+    
+<div>
+    <ul class="nav nav-pills">
+        <li class="active"><a n:href="Dochadzka:default">{_menu.section_dochadzka.current}</a></li>
+        <li><a n:href="Dochadzka:prehlad">{_menu.section_dochadzka.prehlad}</a></li>
+        <li><a n:href="Dochadzka:nastavenie">{_menu.section_dochadzka.settings}</a></li>
+    </ul>
+</div>
+
+    <h2>{_ui.people_at_work}</h2>
+    
+<div class="table-responsive">
+<table class=" table table-hover">
+    <tr>
+        <th>{_ui.name}</th>
+        <th>{_ui.prichod}</th>
+    </tr>
+
+    {foreach $posts as $post}
+            <tr>
+                <td>{$post->meno}</td>                
+                <td>{$post->prichod_timestamp}</td>     
+            </tr>
+    {/foreach}   
+
+</table>
+</div>
+    
+{/if} {*if user is logged in*}
+{/block}

@@ -1,0 +1,41 @@
+{* Latte template *}
+{block banner}
+{/block}
+
+{block title}
+    <h1>{_ui.person_deactivation}</h1>
+{/block}
+
+
+{block content}
+{if $user->loggedIn} {*uz sme vnutri, len pre prihlasenych *}
+    
+<div>
+    <ul class="nav nav-pills">
+        <li class="active"><a n:href="Osoby:default">{_menu.section_osoby.prehlad}</a></li>
+        <li><a n:href="Osoby:pridaj">{_menu.section_osoby.pridaj}</a></li>
+    </ul>
+</div>
+    
+<div>
+{_ui.really_deactivate_this_person}: {$meno} ?
+</div>
+{if $rfidky}
+    <div>
+    {_ui.this_person_has_assigned_rfid}:
+    <ul>
+    {foreach $rfidky as $polozka}
+        <li> {$polozka->number} </li>
+    {/foreach}
+    </ul>
+    {_ui.for_person_deactivation_needs_be_rfid_cleaned}.
+    </div>
+
+{else}
+    <div>
+    <a n:href="Osoby:deaktivuj $osoba_id , proceed => 1" ><button type="button" class="btn btn-danger">{_ui.form.deactivate}</button></a>
+    </div>  
+{/if}
+
+{/if} {*end if is user logged in*}
+{/block}

@@ -1,0 +1,56 @@
+{* Latte template *}
+{block banner}
+{/block}
+
+{block title}
+    <h1>{_ui.add_rfid}</h1>
+{/block}
+
+
+{block content}
+{if $user->loggedIn} {*uz sme vnutri, len pre prihlasenych *}
+    
+<div>
+    <ul class="nav nav-pills">
+        <li><a n:href="RFID:default">{_menu.section_rfid.prehlad}</a></li>
+        <li class="active"><a n:href="RFID:pridaj">{_menu.section_rfid.add}</a></li>
+    </ul>
+</div>
+<div>
+    <h3>{_ui.manual_add_rfid}</h3>    
+{control rFIDForm}    
+</div>    
+<div>
+    <h3>{_ui.auto_add_rfid}</h3>
+    <p>{_ui.auto_add_rfid_explain} </p>
+    {control zvolCitackuForm}
+    {if isset($zvol_citacku_form_submitted) }
+    <p>{_ui.scan_from_reader}: {$cislo_citacky}</p>
+    <p>{_ui.scan_time}: {$timestamp|date:'%d.%m.%Y %H:%M:%S'}</p>
+    <p>{_ui.than_press_refresh} </p>
+    <div>
+    <a n:href="Obnov! $cislo_citacky, $timestamp"><button type="button" class="btn btn-danger">{_ui.form.refresh}</button></a>
+    </div> 
+    {/if}
+    {if isset($obnovene) }
+        <p>{_ui.scan_from_reader}: {$obnovene}...</p>
+        <p>{_ui.scan_time}: {$timestamp|date:'%d.%m.%Y %H:%M:%S'}</p>
+        <a n:href="Obnov! $obnovene, $timestamp"><button type="button" class="btn btn-danger">{_ui.form.refresh_again}</button></a>
+        <div class="table-responsive">
+        <table class="table table-hover table-bordered">
+            {if isset($nove) }
+            {foreach $nove as $novy}
+            <tr>
+                <td>{$novy->id}</td> 
+                <td>{$novy->rfid_number}</td> 
+                <td>{$novy->timestamp}</td>
+                <td><a n:href="PridajNovu! $novy->rfid_number, $obnovene, $timestamp, $novy->id"><button type="button" class="btn btn-danger">{_ui.add_to_app}</button></a></td>
+            </tr>
+            {/foreach}
+            {/if}
+        </table>
+        </div>
+    {/if}
+</div>
+{/if}
+{/block}
