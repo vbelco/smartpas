@@ -710,8 +710,8 @@ class Container_5080e879cd extends Nette\DI\Container
 
 	public function createServiceDatabase__default__connection(): Nette\Database\Connection
 	{
-		$service = new Nette\Database\Connection('mysql:host=46.229.230.117;dbname=ii013502db',
-			'ii013500', 'fbidowuj', null);
+		$service = new Nette\Database\Connection('mysql:host=46.229.230.86;dbname=hz024701db',
+			'hz024700', 'dhynydor', null);
 		$this->getService('tracy.blueScreen')->addPanel('Nette\Bridges\DatabaseTracy\ConnectionPanel::renderException');
 		Nette\Database\Helpers::createDebugPanel($service, true, 'default');
 		return $service;

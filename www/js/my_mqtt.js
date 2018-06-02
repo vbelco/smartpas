@@ -4,11 +4,13 @@
  * and open the template in the editor.
  */
  
-var host = 'test.mosquitto.org';	// hostname or IP address
+var host = 'broker.hivemq.com';	// hostname or IP address
 
-var port = 8080;
+var port = 8000;
 var path = "/mqtt";
 var topic = 'out_smartpas';		// topic to subscribe to
+var topic_lwt = 'lwt_smartpas'; //topic na lWT spravy
+var topic_online = 'online_smartpas'; //topic na kontrolu online dostupnosti citaciek
 var useTLS = false;
 var username = null;
 var password = null;
@@ -23,65 +25,82 @@ var clientId = "web_" + parseInt(Math.random() * 100, 10);
 
 cleansession = true;       
         
-    var mqtt;
-    var reconnectTimeout = 2000;
-    var pripojene = 0;
+var mqtt;
+var reconnectTimeout = 2000;
+var pripojene = 0;
 
-    function MQTTconnect() {
-        mqtt = new Paho.MQTT.Client(
-			host,
-			port,
-			clientId );
+function MQTTconnect() {
+    mqtt = new Paho.MQTT.Client(
+	host,
+	port,
+	clientId );
         
-        var options = {
-            timeout: 3,
-            useSSL: useTLS,
-            cleanSession: cleansession,
-            onSuccess: onConnect,
-            onFailure: onFailure
-        };
+    var options = {
+        timeout: 3,
+        useSSL: useTLS,
+        cleanSession: cleansession,
+        onSuccess: onConnect,
+        onFailure: onFailure
+    };
             
-        mqtt.onConnectionLost = onConnectionLost;
-        mqtt.onMessageArrived = onMessageArrived;
-        if (username != null) {
-            options.userName = username;
-            options.password = password;
-        }
-        console.log("Host="+ host + ", port=" + port + " TLS = " + useTLS + " username=" + username + " password=" + password);
-        mqtt.connect(options);
-    }//end function MQTTconnect
-    
-    function onFailure(message) {
-                console.log("Connection failed: " + message.errorMessage + "Retrying");
-                setTimeout(MQTTconnect, reconnectTimeout);
-            }
-    
-    function onConnect() {
-        console.log('Connected to ' + host + ':' + port + path);
-        // Connection succeeded; subscribe to our topic
-        mqtt.subscribe(topic, { qos: 2 }); //prihlasenie sa do tohto topicu
-        console.log(topic);
-        message = new Paho.MQTT.Message("Hello, here is web");
-        message.destinationName = "in_smartpas";
-        mqtt.send(message);
-        pripojene = 1;
+    mqtt.onConnectionLost = onConnectionLost;
+    mqtt.onMessageArrived = onMessageArrived;
+    if (username !== null) {
+        options.userName = username;
+        options.password = password;
     }
+    console.log("Host="+ host + ", port=" + port + " TLS = " + useTLS + " username=" + username + " password=" + password);
+    mqtt.connect(options);
+}//end function MQTTconnect
     
-    function onConnectionLost(response) {
-        pripojene = 0;
-        setTimeout(MQTTconnect, reconnectTimeout);
-        console.log("connection lost: " + responseObject.errorMessage + ". Reconnecting");
-    }
+function onFailure(message) {
+    console.log("Connection failed: " + message.errorMessage + "Retrying");
+    setTimeout(MQTTconnect, reconnectTimeout);
+}
     
-    function onMessageArrived(message) {
-        var topic = message.destinationName;
-        var payload = message.payloadString;
-        var identifikator = '#'+payload;
-        var cell_identifikator = '#cell_'+payload;
-        $(cell_identifikator).addClass("success");
-        $(identifikator).text("pripojene");
-        console.log(identifikator +">"+ topic+": "+payload);
-    }
+function onConnect() {
+    console.log('Connected to ' + host + ':' + port + path);
+    // Connection succeeded; subscribe to our topic
+    mqtt.subscribe(topic, { qos: 2 }); //prihlasenie sa do tohto topicu
+    mqtt.subscribe(topic_lwt, { qos: 2 });
+    mqtt.subscribe(topic_online, { qos: 2 });
+    console.log(topic + "," + topic_lwt + "," + topic_online);
+    message = new Paho.MQTT.Message("Hello, here is web");
+    message.destinationName = "in_smartpas";
+    mqtt.send(message);
+    pripojene = 1;
+}
+    
+function onConnectionLost(response) {
+    pripojene = 0;
+    setTimeout(MQTTconnect, reconnectTimeout);
+    console.log("connection lost: " + responseObject.errorMessage + ". Reconnecting");
+}
+    
+function onMessageArrived(message) {
+    var topic = message.destinationName;
+    var payload = message.payloadString;
+        
+    switch  (topic){
+        case "online_smartpas":
+            var identifikator = '#kontrola_'+payload;
+            var cell_identifikator = '#cell_kontrola_'+payload;
+            $(cell_identifikator).removeClass("warning");
+            $(cell_identifikator).addClass("success");
+            $(identifikator).text("pripojene");
+            console.log(identifikator +">"+ topic+": "+payload);
+            break;
+
+        case "lwt_smartpas":
+            var identifikator = '#kontrola_'+payload;
+            var cell_identifikator = '#cell_kontrola_'+payload;
+            $(cell_identifikator).removeClass("success");
+            $(cell_identifikator).addClass("warning");
+            $(identifikator).text("offline");
+            console.log(identifikator +">"+ topic+": "+payload);
+            break;
+    } //end switch    
+}//end function onMessageArrived
     
   
 //kontrola dostupnosti mojich citaciek

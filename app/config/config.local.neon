@@ -23,9 +23,9 @@ services:
 	authenticator: MyAuthenticator
 
 database:
-	dsn: 'mysql:host=46.229.230.117;dbname=ii013502db'
-	user: ii013500
-	password: fbidowuj
+	dsn: 'mysql:host=46.229.230.86;dbname=hz024701db'
+	user: hz024700
+	password: dhynydor
 
 extensions:
 	translation: Kdyby\Translation\DI\TranslationExtension

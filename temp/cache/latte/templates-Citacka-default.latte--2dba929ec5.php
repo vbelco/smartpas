@@ -95,7 +95,7 @@ class Template2dba929ec5 extends Latte\Runtime\Template
             <tr>
                 <td><?php echo LR\Filters::escapeHtmlText($post->id) /* line 39 */ ?></td> 
                 <td><?php echo LR\Filters::escapeHtmlText($post->name) /* line 40 */ ?></td> 
-                <td id="cell_kontrola_<?php echo LR\Filters::escapeHtmlAttr($post->id) /* line 41 */ ?>"><div id="kontrola_<?php
+                <td id="cell_kontrola_<?php echo LR\Filters::escapeHtmlAttr($post->id) /* line 41 */ ?>" class="warning"><div id="kontrola_<?php
 				echo LR\Filters::escapeHtmlAttr($post->id) /* line 41 */ ?>"> offline </div></td>
                 <td>
                     <a class="btn btn-default" role="button" href="<?php echo LR\Filters::escapeHtmlAttr($this->global->uiControl->link("edituj", [$post->id])) ?>"><?php
@@ -103,7 +103,7 @@ class Template2dba929ec5 extends Latte\Runtime\Template
             </tr>
     <script>
         Prva_kontrola_dostupnosti_citacky( <?php echo LR\Filters::escapeJs($post->id) /* line 47 */ ?> );
-        setInterval( 'Kontrola_dostupnosti_citacky( <?php echo LR\Filters::escapeJs($post->id) /* line 48 */ ?> )'  , 10000 );
+        //setInterval( 'Kontrola_dostupnosti_citacky( <?php echo LR\Filters::escapeJs($post->id) /* line 48 */ ?> )'  , 10000 );
     </script>
 <?php
 				$iterations++;
