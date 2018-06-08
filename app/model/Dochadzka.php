@@ -30,7 +30,7 @@ class Dochadzka extends Nette\Object
     private $clovek_id;//clovek, ktoreho dochadzku riesime
     private $datum_od; //odkedy pocitame, objedkt DateTime
     private $datum_do; //dokedy pocitame, objekt DateTime
-    private $celkovy_cas; //celkovy cas dochadzky za sledovane obdobie
+    private $celkovy_cas; //celkovy cas dochadzky za sledovane obdobie vo formate DateInterval
     private $rfid_number; //id rfid ktora si pipla, bude je niekomu priradena, alebo nieje 
     
     /*
@@ -38,6 +38,7 @@ class Dochadzka extends Nette\Object
      * pole ma tvar $pole_dochadzky[id zaznamu][prichod] -> Nette\Utils\DateTime 
      *                                         [odchod]  -> Nette\Utils\DateTime 
      *                                         [cas_v_praci] -> hodnota v sekundach
+     *                                         [text_cas_v_praci] -> textovy retazec 
      */
     private $pole_dochadzky; 
     
@@ -121,11 +122,9 @@ class Dochadzka extends Nette\Object
                    ;
                 if ( $vysl_dochadzka->count() != 0  ){ //mame tento zaznam, ideme ho len updatnut
                     $vysl2 = $vysl_dochadzka->fetch();
-                    //vypocitame cas v praci
-                    $cas = $vysl->timestamp->getTimestamp() - $vysl2->prichod_timestamp->getTimestamp();           
+                    //vypocitame cas v praci          
                     $pole = array (
                         'odchod_timestamp' => $vysl->timestamp,
-                        'cas_v_praci' => $cas
                         );
                     $vysl_dochadzka->update($pole);
                 }
@@ -151,10 +150,8 @@ class Dochadzka extends Nette\Object
                 if ( $vysl_dochadzka->count() != 0  ){ //mame tento zaznam, ideme ho len updatnut
                     $vysl2 = $vysl_dochadzka->fetch();
                     //vypocitame cas v praci
-                    $cas = $vysl->timestamp->getTimestamp() - $vysl2->prichod_timestamp->getTimestamp();           
                     $pole = array (
                         'odchod_timestamp' => $vysl->timestamp,
-                        'cas_v_praci' => $cas
                         );
                     $vysl_dochadzka->update($pole);
                 }
@@ -233,40 +230,38 @@ class Dochadzka extends Nette\Object
         foreach ($rows as $row){
             $this->pole_dochadzky[$row->id]['prichod'] = $row->prichod_timestamp;
             $this->pole_dochadzky[$row->id]['odchod'] = $row->odchod_timestamp;
-            $this->pole_dochadzky[$row->id]['cas_v_praci'] = $row->cas_v_praci;
-            
         }
         $this->zaokruhliCasVPraci(); //zaokruhli cas v praci
         //\Tracy\Dumper::dump($this->pole_dochadzky);
-        
     }
     
     public function zaokruhliCasVPraci(){
         if ( isset($this->pole_dochadzky) ){ //mozeme vratit nejaky cas az ked to mame nahodene
             $this->setZaokruhlovanieFromDatabase();//zistime si zaokruhlovanie
             //prebehneme si dochadzku a zratame
-            if ($this->zaokruhlovanie != 0 ){ //bude zaokruhlovat len ked je nastavene rozne od nuly
-                foreach ( $this->pole_dochadzky as $key => $den ){
+            foreach ( $this->pole_dochadzky as $key => $den ){
                     //prichod
-                    $temp = $den['prichod']->getTimestamp() / ($this->getZaokruhlovanie() * 60 ); //pocet zaokruhlovacich jednotiek
+                    $temp = $this->getZaokruhlovanie() ? $den['prichod']->getTimestamp() / ($this->getZaokruhlovanie() * 60 ) : $den['prichod']->getTimestamp(); //vylucenie delenia 0 cez ternarny operator   
                     $temp = ceil ($temp); //zaokruhlime nadol aby sme dostali cele jednoty
-                    $temp = $temp * $this->getZaokruhlovanie() * 60; //vypocitame spet zaokruhleny cas
+                    $temp = $this->getZaokruhlovanie() ? $temp * $this->getZaokruhlovanie() * 60 : $temp; //vypocitame spet zaokruhleny cas, ale len v pripade, kedy zaokruhlovanie je rozdielne od 0
                     $den['prichod']->setTimestamp($temp) ; //nastavime spet
                     //odchod
                     //len v pripade ze je odchod uz nastaveny, a nieje NULL
                     if ( $den['odchod'] != NULL ){
-                        $temp = $den['odchod']->getTimestamp() / ($this->getZaokruhlovanie() * 60 ); //pocet zaokruhlovacich jednotiek
+                        $temp = $this->getZaokruhlovanie() ? $den['odchod']->getTimestamp() / ($this->getZaokruhlovanie() * 60 ) : $den['odchod']->getTimestamp(); //vylucenie delenia 0 cez ternarny operator
                         $temp = floor($temp); //zaokruhlime nadol aby sme dostali cele jednoty
-                        $temp = $temp * $this->getZaokruhlovanie() * 60; //vypocitame spet zaokruhleny cas
+                        $temp = $this->getZaokruhlovanie() ? $temp * $this->getZaokruhlovanie() * 60 : $temp; //vypocitame spet zaokruhleny cas, ale len v pripade, kedy zaokruhlovanie je rozdielne od 0
                         $den['odchod']->setTimestamp($temp) ; //nastavime spet
                         //prepocitanie casu v praci
-                        $this->pole_dochadzky[$key]['cas_v_praci'] = $den['odchod']->getTimestamp() - $den['prichod']->getTimestamp(); //priamy pristup do pola musi byt cez operato $this->
+                        //$hodnota_casu = $den['odchod']->getTimestamp() - $den['prichod']->getTimestamp();
+                        $hodnota_casu = $den['prichod']->diff( $den['odchod'] );
+                        $this->pole_dochadzky[$key]['cas_v_praci'] = $hodnota_casu; //priamy pristup do pola musi byt cez operato $this->
                     }
-                    else $this->pole_dochadzky[$key]['cas_v_praci'] = 'este v praci';
-                    
-
+                    else {
+                        $this->pole_dochadzky[$key]['cas_v_praci'] = 0 ; //ked je este v praci, tak dame 0
+                    } //end else
             }//end foreach
-            }//end if isset zaokruhlovane nieje 0
+            
         } else return false;
     }
     
@@ -278,12 +273,25 @@ class Dochadzka extends Nette\Object
     
     //funckia spocita celkovy cas v praci za sledovane obdobie
     public function sumarizuj(){
+        $e = new Nette\Utils\DateTime('00:00');
+        $f = clone $e;
+        if ( count($this->pole_dochadzky)  ){
+            foreach ( $this->pole_dochadzky as $key => $den ){
+                $e->add( $this->pole_dochadzky[$key]['cas_v_praci']);
+            }
+            $this->celkovy_cas = $f->diff($e);//odratame cas
+            
+        }//end if ze mame nejaku dochadzku
+        
+/*        
         $this->celkovy_cas = 0;
         if ( count($this->pole_dochadzky)  ){
             foreach ( $this->pole_dochadzky as $key => $den ){
-                $this->celkovy_cas += $this->pole_dochadzky[$key]['cas_v_praci'];
+                $this->celkovy_cas += $this->pole_dochadzky[$key]['cas_v_praci']->getTimestamp();
             }
         }//end if ze mame nejaku dochadzku
-    }
+ * 
+ */
+    }//end function sumarizuj
 
 }

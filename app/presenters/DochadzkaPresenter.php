@@ -86,7 +86,11 @@ class DochadzkaPresenter extends BasePresenter
             $this->dochadzka->generuj_zaokruhlenu_dochadzku_cloveka($clovek, $od, $do);//naplni objekt udajmi o dochaddzke cloveka
             $pole_dochadzka_zaokruhlena[$clovek]= $this->dochadzka->getPoleDochadzky(); //zaokruhli dochadzku podla nastaveneho zaokruhlovania
             $this->dochadzka->sumarizuj(); //spocitame celkovy cas za obdobie
-            $pole_celkovy_cas_dochadzky[$clovek] = $this->dochadzka->getCelkovyCasDochadzky();
+            $temp_celkovy_cas = $this->dochadzka->getCelkovyCasDochadzky(); //ziskame hodnotu v DateInterval objekte
+            $temp_hodiny = ($temp_celkovy_cas->days*24) + ($temp_celkovy_cas->h); //pocet hodin
+            $temp_minuty = $temp_celkovy_cas->i; //pocet minut
+            $pole_celkovy_cas_dochadzky[$clovek]["hodiny"] = $temp_hodiny;
+            $pole_celkovy_cas_dochadzky[$clovek]["minuty"] = $temp_minuty;
         }
         $this->template->meno_osoby = $pole_meno_osoby;
         $this->template->posts2 = $pole_dochadzka_zaokruhlena;

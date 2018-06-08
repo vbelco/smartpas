@@ -51,6 +51,8 @@ odchod: "Odchod"
 time_at_work: "Čas v práci"
 none_definition_attendance: "Žiadna definovaná dochádzka v systéme"
 celkovy_cas: "Celkový čas"
+hodin: "hod"
+minut: "min"
 definovanie_obrazovky_citacky: "Definovanie obrazovky čítačky"
 form:
     save: "Uložiť"

@@ -25,7 +25,7 @@ return array (
     'App\\Model\\Dochadzka' => 
     array (
       'file' => 'C:\\xampp\\htdocs\\sandbox\\app\\model\\Dochadzka.php',
-      'time' => 1521742588,
+      'time' => 1513661559,
     ),
     'MyAuthenticator' => 
     array (
@@ -36,6 +36,11 @@ return array (
     array (
       'file' => 'C:\\xampp\\htdocs\\sandbox\\app\\model\\Osoba.php',
       'time' => 1492981551,
+    ),
+    'App\\Model\\RFID' => 
+    array (
+      'file' => 'C:\\xampp\\htdocs\\sandbox\\app\\model\\rfid.php',
+      'time' => 1523627227,
     ),
     'App\\Model\\UserManager' => 
     array (
@@ -52,10 +57,10 @@ return array (
       'file' => 'C:\\xampp\\htdocs\\sandbox\\app\\presenters\\BasePresenter.php',
       'time' => 1502200669,
     ),
-    'App\\Presenters\\DochadzkaPresenter' => 
+    'App\\Presenters\\CitackaPresenter' => 
     array (
-      'file' => 'C:\\xampp\\htdocs\\sandbox\\app\\presenters\\DochadzkaPresenter.php',
-      'time' => 1515508084,
+      'file' => 'C:\\xampp\\htdocs\\sandbox\\app\\presenters\\CitackaPresenter.php',
+      'time' => 1523627063,
     ),
     'App\\Presenters\\Error4xxPresenter' => 
     array (
@@ -77,6 +82,11 @@ return array (
       'file' => 'C:\\xampp\\htdocs\\sandbox\\app\\presenters\\OsobyPresenter.php',
       'time' => 1501530178,
     ),
+    'App\\Presenters\\RFIDPresenter' => 
+    array (
+      'file' => 'C:\\xampp\\htdocs\\sandbox\\app\\presenters\\RFIDPresenter.php',
+      'time' => 1523627287,
+    ),
     'App\\Presenters\\SignPresenter' => 
     array (
       'file' => 'C:\\xampp\\htdocs\\sandbox\\app\\presenters\\SignPresenter.php',
@@ -87,25 +97,14 @@ return array (
       'file' => 'C:\\xampp\\htdocs\\sandbox\\app\\router\\RouterFactory.php',
       'time' => 1504882448,
     ),
-    'App\\Model\\RFID' => 
+    'App\\Presenters\\DochadzkaPresenter' => 
     array (
-      'file' => 'C:\\xampp\\htdocs\\sandbox\\app\\model\\rfid.php',
-      'time' => 1523627227,
-    ),
-    'App\\Presenters\\CitackaPresenter' => 
-    array (
-      'file' => 'C:\\xampp\\htdocs\\sandbox\\app\\presenters\\CitackaPresenter.php',
-      'time' => 1523627063,
-    ),
-    'App\\Presenters\\RFIDPresenter' => 
-    array (
-      'file' => 'C:\\xampp\\htdocs\\sandbox\\app\\presenters\\RFIDPresenter.php',
-      'time' => 1523627287,
+      'file' => 'C:\\xampp\\htdocs\\sandbox\\app\\presenters\\DochadzkaPresenter.php',
+      'time' => 1528485462,
     ),
   ),
   1 => 
   array (
     'Nette\\Environment' => 3,
-    'App\\Model\\BasePresenter' => 1,
   ),
 );

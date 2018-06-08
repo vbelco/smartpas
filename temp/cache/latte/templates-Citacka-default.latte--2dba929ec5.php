@@ -103,7 +103,6 @@ class Template2dba929ec5 extends Latte\Runtime\Template
             </tr>
     <script>
         Prva_kontrola_dostupnosti_citacky( <?php echo LR\Filters::escapeJs($post->id) /* line 47 */ ?> );
-        //setInterval( 'Kontrola_dostupnosti_citacky( <?php echo LR\Filters::escapeJs($post->id) /* line 48 */ ?> )'  , 10000 );
     </script>
 <?php
 				$iterations++;

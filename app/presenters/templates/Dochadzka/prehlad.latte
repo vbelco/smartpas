@@ -43,7 +43,7 @@
             <div class="col-sm-1"> {label osoby /}</div>
             <div class="col-sm-4"> {input osoby }</div>
         </div>
-        <div class="row">
+        <div class="my_last_row">
             <div class="col-sm-1"> </div>
             <div class="col-sm-4">{input send }</div>
         </div>
@@ -56,7 +56,8 @@
         <h3>{$meno_osoby[$osoba]} ( {$osoba} )</h3>
         
         {ifset $posts2[$osoba]  }
-        {_ui.celkovy_cas}: {$celkovy_cas_dochadzky[$osoba]}    
+            
+        {_ui.celkovy_cas}: {$celkovy_cas_dochadzky[$osoba]["hodiny"]} : {$celkovy_cas_dochadzky[$osoba]["minuty"]}
         <table class=" table table-hover">
             <tr>
                 <th>{_ui.prichod}</th>
@@ -68,7 +69,7 @@
             <tr>
                 <td>{$post2['prichod']|date:"d. m. Y G:i:s"}</td>
                 <td>{$post2['odchod']|date:"d. m. Y G:i:s"}</td>
-                <td>{$post2['cas_v_praci']}</td>
+                <td>{$post2['cas_v_praci']|date:"%h:%I"} </td>
             </tr>
         {/foreach}
         </table>
@@ -88,12 +89,14 @@
         autoclose: 1,
         todayBtn:  1,
         useCurrent: true,
+        format: "dd.mm.yyyy",
         language:  {$activeLocale}
     });
     $('#form-date-do').datetimepicker({
         minView: 2,
         autoclose: 1,
         todayBtn:  1,
+        format: "dd.mm.yyyy",
         language:  {$activeLocale}
     });
 </script> 

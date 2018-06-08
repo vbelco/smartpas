@@ -51,6 +51,8 @@ odchod: "Departure"
 time_at_work: "Time at work"
 none_definition_attendance: "There is none definition of attendace in system"
 celkovy_cas: "Total time"
+hod: "hrs"
+minut: "min"
 definovanie_obrazovky_citacky: "Reader screen settings"
 form:
     save: "Save"
