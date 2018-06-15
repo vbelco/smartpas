@@ -51,11 +51,11 @@ class RFIDPresenter extends BasePresenter
         //pokial bolo potvrdene, tak ho deaktivujeme, teda nastavime priznak active=0
         if ( $this->getParameter('proceed') ){
             if ( $this->rfid->deaktivuj() ){
-                $this->flashMessage($this->translator->translate('ui.message.change_success'),'bg-success');
+                $this->flashMessage($this->translator->translate('ui.message.change_success'),'alert alert-success');
                 $this->redirect('RFID:default');
             }
             else {
-                $this->flashMessage($this->translator->translate('ui.message.change_fail'), 'bg-danger');
+                $this->flashMessage($this->translator->translate('ui.message.change_fail'), 'alert alert-warning');
                 $this->redirect('RFID:default');
             }
         }//end if proceed = 1
@@ -199,13 +199,13 @@ class RFIDPresenter extends BasePresenter
 
         if ($postId) { //uz mame, upravujeme
             $this->rfid->updateRfidToDatabaseFromFormular($values, $postId);
-            $this->flashMessage(  $this->translator->translate('message.change_success') , 'bg-success');
+            $this->flashMessage(  $this->translator->translate('message.change_success') , 'alert alert-success');
             $this->redirect('RFID:default');
         }
         else { //este nemame, pridavame novu
             if ( $this->rfid->InsertRfidToDatabaseFromFormular($values, $active_user_id ) )
             {
-                $this->flashMessage($this->translator->translate('message.change_success'), 'bg-success');
+                $this->flashMessage($this->translator->translate('message.change_success'), 'alert alert-success');
                 $this->redirect('RFID:default');
             }  
         }      
@@ -213,10 +213,10 @@ class RFIDPresenter extends BasePresenter
     
     public function PriradOsobuFormSubmitted ( $form, $values) {
         if ( $this->rfid->priradOsobu($values->osoby) ) { //volame metodu triedy na priradenie osoby k rfidke
-            $this->flashMessage($this->translator->translate('message.change_success'), 'bg-success');
+            $this->flashMessage($this->translator->translate('message.change_success'), 'alert alert-success');
             $this->redirect('RFID:default');
         } else {
-            $this->flashMessage($this->translator->translate('message.change_fail'), 'bg-danger');
+            $this->flashMessage($this->translator->translate('message.change_fail'), 'alert alert-warning');
             $this->redirect('RFID:default');
         }
         

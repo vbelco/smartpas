@@ -39,6 +39,7 @@ class Templatec4b52cb790 extends Latte\Runtime\Template
 	function prepare()
 	{
 		extract($this->params);
+		if (isset($this->params['index'])) trigger_error('Variable $index overwritten in foreach on line 68');
 		if (isset($this->params['post2'])) trigger_error('Variable $post2 overwritten in foreach on line 68');
 		if (isset($this->params['osoba'])) trigger_error('Variable $osoba overwritten in foreach on line 54');
 		Nette\Bridges\ApplicationLatte\UIRuntime::initialize($this, $this->parentName, $this->blocks);
@@ -128,7 +129,7 @@ class Templatec4b52cb790 extends Latte\Runtime\Template
         <h3><?php echo LR\Filters::escapeHtmlText($meno_osoby[$osoba]) /* line 56 */ ?> ( <?php echo LR\Filters::escapeHtmlText($osoba) /* line 56 */ ?> )</h3>
         
 <?php
-					if (isset($posts2[$osoba])) {
+					if (isset($posts_zaokruhlena_dochadzka[$osoba])) {
 ?>
             
         <?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "ui.celkovy_cas")) ?>: <?php
@@ -144,12 +145,37 @@ class Templatec4b52cb790 extends Latte\Runtime\Template
         
 <?php
 						$iterations = 0;
-						foreach ($posts2[$osoba] as $post2) {
+						foreach ($posts_zaokruhlena_dochadzka[$osoba] as $index => $post2) {
 ?>
             <tr>
-                <td><?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->date, $post2['prichod'], "d. m. Y G:i:s")) /* line 70 */ ?></td>
-                <td><?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->date, $post2['odchod'], "d. m. Y G:i:s")) /* line 71 */ ?></td>
-                <td><?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->date, $post2['cas_v_praci'], "%h:%I")) /* line 72 */ ?> </td>
+                <td>
+                    <?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->date, $post2['prichod'], "d. m. Y G:i:s")) /* line 71 */ ?>
+
+<?php
+							if ($vypisovat_realne_casy) {
+?>
+                        <br>
+                        ( <?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->date, $posts_raw_dochadzka[$osoba][$index]['prichod'], "G:i:s")) /* line 74 */ ?> )
+<?php
+							}
+?>
+                </td>
+                <td>
+                    <?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->date, $post2['odchod'], "d. m. Y G:i:s")) /* line 78 */ ?>
+
+<?php
+							if ($vypisovat_realne_casy) {
+?>
+                        <br>
+                        ( <?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->date, $posts_raw_dochadzka[$osoba][$index]['odchod'], "G:i:s")) /* line 81 */ ?> )
+<?php
+							}
+?>
+                </td>
+                <td>
+                    <?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->date, $post2['cas_v_praci'], "%h:%I")) /* line 85 */ ?>
+
+                </td>
             </tr>
 <?php
 							$iterations++;
@@ -180,7 +206,7 @@ class Templatec4b52cb790 extends Latte\Runtime\Template
         todayBtn:  1,
         useCurrent: true,
         format: "dd.mm.yyyy",
-        language:  <?php echo LR\Filters::escapeJs($activeLocale) /* line 93 */ ?>
+        language:  <?php echo LR\Filters::escapeJs($activeLocale) /* line 107 */ ?>
 
     });
     $('#form-date-do').datetimepicker({
@@ -188,7 +214,7 @@ class Templatec4b52cb790 extends Latte\Runtime\Template
         autoclose: 1,
         todayBtn:  1,
         format: "dd.mm.yyyy",
-        language:  <?php echo LR\Filters::escapeJs($activeLocale) /* line 100 */ ?>
+        language:  <?php echo LR\Filters::escapeJs($activeLocale) /* line 114 */ ?>
 
     });
 </script> 

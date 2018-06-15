@@ -25,7 +25,7 @@ return array (
     'App\\Model\\Dochadzka' => 
     array (
       'file' => 'C:\\xampp\\htdocs\\sandbox\\app\\model\\Dochadzka.php',
-      'time' => 1513661559,
+      'time' => 1528832009,
     ),
     'MyAuthenticator' => 
     array (
@@ -42,16 +42,6 @@ return array (
       'file' => 'C:\\xampp\\htdocs\\sandbox\\app\\model\\rfid.php',
       'time' => 1523627227,
     ),
-    'App\\Model\\UserManager' => 
-    array (
-      'file' => 'C:\\xampp\\htdocs\\sandbox\\app\\model\\UserManager.php',
-      'time' => 1504882448,
-    ),
-    'App\\Model\\DuplicateNameException' => 
-    array (
-      'file' => 'C:\\xampp\\htdocs\\sandbox\\app\\model\\UserManager.php',
-      'time' => 1504882448,
-    ),
     'App\\Presenters\\BasePresenter' => 
     array (
       'file' => 'C:\\xampp\\htdocs\\sandbox\\app\\presenters\\BasePresenter.php',
@@ -60,7 +50,12 @@ return array (
     'App\\Presenters\\CitackaPresenter' => 
     array (
       'file' => 'C:\\xampp\\htdocs\\sandbox\\app\\presenters\\CitackaPresenter.php',
-      'time' => 1523627063,
+      'time' => 1528831601,
+    ),
+    'App\\Presenters\\DochadzkaPresenter' => 
+    array (
+      'file' => 'C:\\xampp\\htdocs\\sandbox\\app\\presenters\\DochadzkaPresenter.php',
+      'time' => 1528831636,
     ),
     'App\\Presenters\\Error4xxPresenter' => 
     array (
@@ -80,31 +75,35 @@ return array (
     'App\\Presenters\\OsobyPresenter' => 
     array (
       'file' => 'C:\\xampp\\htdocs\\sandbox\\app\\presenters\\OsobyPresenter.php',
-      'time' => 1501530178,
+      'time' => 1528831601,
     ),
     'App\\Presenters\\RFIDPresenter' => 
     array (
       'file' => 'C:\\xampp\\htdocs\\sandbox\\app\\presenters\\RFIDPresenter.php',
-      'time' => 1523627287,
-    ),
-    'App\\Presenters\\SignPresenter' => 
-    array (
-      'file' => 'C:\\xampp\\htdocs\\sandbox\\app\\presenters\\SignPresenter.php',
-      'time' => 1503517121,
+      'time' => 1528831601,
     ),
     'App\\RouterFactory' => 
     array (
       'file' => 'C:\\xampp\\htdocs\\sandbox\\app\\router\\RouterFactory.php',
       'time' => 1504882448,
     ),
-    'App\\Presenters\\DochadzkaPresenter' => 
+    'App\\Model\\UserManager' => 
     array (
-      'file' => 'C:\\xampp\\htdocs\\sandbox\\app\\presenters\\DochadzkaPresenter.php',
-      'time' => 1528485462,
+      'file' => 'C:\\xampp\\htdocs\\sandbox\\app\\model\\UserManager.php',
+      'time' => 1529058403,
+    ),
+    'App\\Presenters\\SignPresenter' => 
+    array (
+      'file' => 'C:\\xampp\\htdocs\\sandbox\\app\\presenters\\SignPresenter.php',
+      'time' => 1529059086,
     ),
   ),
   1 => 
   array (
-    'Nette\\Environment' => 3,
+    'Nette\\Environment' => 16,
+    'App\\Model\\Exception' => 3,
+    'Nette\\Exception' => 1,
+    'App\\Model\\Usermanager' => 1,
+    'App\\Presenters\\Model\\UserManager' => 3,
   ),
 );

@@ -69,13 +69,13 @@ class CitackaPresenter extends BasePresenter
 
         if ($postId) { //uz mame, upravujeme
             $this->citacka->updateCitackaToDatabaseFromFormular($values, $postId);
-            $this->flashMessage($this->translator->translate('ui.message.change_success'), 'bg-success');
+            $this->flashMessage($this->translator->translate('ui.message.change_success'), 'alert alert-success');
             $this->redirect('Citacka:default');
         }
         else { //este nemame, pridavame novu
             if ( $vysl = $this->citacka->InsertCitackaToDatabaseFromFormular($values, $active_user_id ) )
             {
-                $this->flashMessage($this->translator->translate('ui.message.add_reader'), 'bg-success');
+                $this->flashMessage($this->translator->translate('ui.message.add_reader'), 'alert alert-success');
                 $this->redirect('Citacka:default');
             }  
         }      
@@ -99,7 +99,7 @@ class CitackaPresenter extends BasePresenter
                 $this->redirect('Citacka:default');
             }
             else {
-                $this->flashMessage($this->translator->translate('ui.message.change_fail'), 'bg-danger');
+                $this->flashMessage($this->translator->translate('ui.message.change_fail'), 'alert alert-warning');
                 $this->redirect('Citacka:default');
             }
         }//end if proceed = 1

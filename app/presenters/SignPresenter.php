@@ -5,11 +5,12 @@ namespace App\Presenters;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Security\Passwords;
+use App\UserManager;
 
 
 class SignPresenter extends BasePresenter
 {
-
+    
     protected function createComponentSignInForm()
     {
         $form = new Form;
@@ -39,13 +40,16 @@ class SignPresenter extends BasePresenter
     public function actionOut()
     {
         $this->getUser()->logout();
-        $this->flashMessage( $this->translator->translate('ui.message.success_logout') );
+        $this->flashMessage( $this->translator->translate('ui.message.success_logout'), "alert alert-success" );
         $this->redirect('Homepage:');
     }
     
     protected function createComponentRegisterForm() {
         $form = new Form;
-        $form->addText('name', $this->translator->translate('ui.form.name') );
+        $form->addText('name', $this->translator->translate('ui.form.name') )
+                ->setOption('description', $this->translator->translate('ui.message.required' ) )
+                ->addRule(Form::FILLED, $this->translator->translate('ui.message.required') )
+                ->addRule(Form::FILLED, $this->translator->translate('ui.message.fill_name') );
         $form->addText('email', $this->translator->translate('ui.form.email'), 35)
 		->setOption('description', $this->translator->translate('ui.message.required' ) )
                 ->setEmptyValue('@')
@@ -68,15 +72,20 @@ class SignPresenter extends BasePresenter
         return $form;
     }
     
-    public function registerFormSubmitted( $form, $values) { //spusti metodu na spracovanie registracneho formulara   
-        $this->database->table('users')->insert([
-            'name' => $values->name,
-            'email' => $values->email,
-            'password' => Passwords::hash($values->password),
-            'role' => 'guest' //prenastavena zakladna uroven
-        ]);
+    public function registerFormSubmitted( $form, $values) { //spusti metodu na spracovanie registracneho formulara 
+        $uzivatel = new \App\Model\UserManager($this->database); //vytvorenie uzivatela
+        $username = $values->name;
+        $email = $values->email;
+        $password = $values->password;
+        try {
+            $uzivatel->add( $username, $email, $password );
+            $this->flashMessage( $this->translator->translate('ui.message.successfull_registration' ), "alert alert-success" );
+            $this->redirect('Homepage:default');
+        } catch (\ErrorException $e) {
+            $form["email"]->addError( $this->translator->translate('ui.message.used_email' ) );
+            $this->flashMessage( $this->translator->translate('ui.message.NOTsuccessfull_registration' ), "alert alert-warning" );
+        }
         
-        $this->flashMessage( $this->translator->translate('ui.message.successfull_registration' ) );
-        $this->redirect('Sign:in');
+        
     }
 }

@@ -66,6 +66,8 @@ class DochadzkaPresenter extends BasePresenter
         //uvodne nastavovacky
         $this->dochadzka->setUserId( $this->getUser()->id );
         $this->dochadzka->setZaokruhlovanieFromDatabase();
+        $this->dochadzka->setToleranciaFromDatabase(); //nastavenie predvolenej tolerancie neskorzch prichodov
+        $this->dochadzka->setVypisRealCasovFromDatabase(); //nastavenie  ci sa maju vypisvat aj realne, hrube casy popri zaokruhlenych
         $od = $values['datum_od'];
         $do = $values['datum_do'];
         $osoby = $values['osoby'];
@@ -73,6 +75,7 @@ class DochadzkaPresenter extends BasePresenter
         $this->template->osoby = $osoby;//hodime naspet zoznam id osob z formulara
         
         $pole_dochadzka_zaokruhlena = array();
+        $pole_raw_dochadzka = array();
         $pole_meno_osoby = array();
         $pole_celkovy_cas_dochadzky = array();
         //ziskanie  dochadzky
@@ -83,8 +86,11 @@ class DochadzkaPresenter extends BasePresenter
             $o->InitializeFromDatabase($clovek); //inicializacia z databazy 
             $pole_meno_osoby[$clovek] = $o->getMeno();
  
+            $this->dochadzka->vycisti(); //vyprazdnime udaje predosleho cloveka
+            $this->dochadzka->generuj_raw_dochadzku_cloveka($clovek, $od, $do); //naplni objekt udajmi o raw dochaddzke cloveka
             $this->dochadzka->generuj_zaokruhlenu_dochadzku_cloveka($clovek, $od, $do);//naplni objekt udajmi o dochaddzke cloveka
             $pole_dochadzka_zaokruhlena[$clovek]= $this->dochadzka->getPoleDochadzky(); //zaokruhli dochadzku podla nastaveneho zaokruhlovania
+            $pole_raw_dochadzka[$clovek] = $this->dochadzka->getPoleRawDochadzky();
             $this->dochadzka->sumarizuj(); //spocitame celkovy cas za obdobie
             $temp_celkovy_cas = $this->dochadzka->getCelkovyCasDochadzky(); //ziskame hodnotu v DateInterval objekte
             $temp_hodiny = ($temp_celkovy_cas->days*24) + ($temp_celkovy_cas->h); //pocet hodin
@@ -92,15 +98,20 @@ class DochadzkaPresenter extends BasePresenter
             $pole_celkovy_cas_dochadzky[$clovek]["hodiny"] = $temp_hodiny;
             $pole_celkovy_cas_dochadzky[$clovek]["minuty"] = $temp_minuty;
         }
+        
         $this->template->meno_osoby = $pole_meno_osoby;
-        $this->template->posts2 = $pole_dochadzka_zaokruhlena;
+        $this->template->posts_zaokruhlena_dochadzka = $pole_dochadzka_zaokruhlena;
+        $this->template->posts_raw_dochadzka = $pole_raw_dochadzka;
         $this->template->celkovy_cas_dochadzky = $pole_celkovy_cas_dochadzky;
+        $this->template->vypisovat_realne_casy = $this->dochadzka->getVypisRealCasov(); //priznak, ze ci budemem vypisovat aj realne casy
     }
     
     protected function createComponentNastavenieForm() {
         //uvodne nastavovacky
         $this->dochadzka->setUserId( $this->getUser()->id );
-        $this->dochadzka->setZaokruhlovanieFromDatabase();
+        $this->dochadzka->setZaokruhlovanieFromDatabase(); //nastavenie predvoleneho zaokruhlovania casov prichodov a odchodov
+        $this->dochadzka->setToleranciaFromDatabase(); //nastavenie predvolenej tolerancie neskorzch prichodov
+        $this->dochadzka->setVypisRealCasovFromDatabase(); //nastavenie  ci sa maju vypisvat aj realne, hrube casy popri zaokruhlenych
         
         $form = new Form;
         
@@ -115,7 +126,21 @@ class DochadzkaPresenter extends BasePresenter
         $form->addRadioList('zaokruhlenie', $this->translator->translate('ui.form.zaokruhlovanie') , $items)
             ->setDefaultValue($this->dochadzka->getZaokruhlovanie());
         
-        $form->addSubmit('send', 'Nastav');
+        $form->addText('late_arrival', $this->translator->translate('ui.form.late_arrival') )
+            ->setRequired(true)
+            ->addRule(Form::INTEGER, $this->translator->translate('ui.form.late_arrival_integer'))
+            ->addRule(Form::RANGE, $this->translator->translate('ui.form.late_arrival_range'), [0, 10])
+            ->setDefaultValue( $this->dochadzka->getTolerancia() )
+            ->setOption('description', $this->translator->translate('ui.form.late_arrival_explanation') );
+        
+       $times_options = array (
+           '1' => $this->translator->translate('ui.form.yes'), 
+           '0' => $this->translator->translate('ui.form.no')
+       );
+       $form->addRadioList('real_times',$this->translator->translate('ui.form.real_times')  , $times_options  )
+            ->setDefaultValue(  $this->dochadzka->getVypisRealCasov()  );
+        
+        $form->addSubmit('send', $this->translator->translate('ui.form.save'));
         $form->onSuccess[] = [$this, 'nastavenieFormSubmitted']; //spracovanie formulara bude mat na starosti funckia tejto triedy s nazvom: pridajRFIDFormSubmitted
         
         return $form;
@@ -124,8 +149,13 @@ class DochadzkaPresenter extends BasePresenter
     public function nastavenieFormSubmitted( $form, $values ) {
         //uvodne nastavovacky
         $this->dochadzka->setUserId( $this->getUser()->id );
+        try {
+            $this->dochadzka->updateNastavenie ($values);
+            $this->flashMessage($this->translator->translate('ui.message.change_success'), 'alert alert-success');
+        } catch (\ErrorException $e){
+             $this->flashMessage($this->translator->translate('ui.message.change_fail'), 'alert alert-warning'); // informování uživatele o chybě
+        }
         
-        $this->dochadzka->updateNastavenie ($values);
     }
     
 }

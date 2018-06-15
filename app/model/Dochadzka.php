@@ -22,10 +22,12 @@ class Dochadzka extends Nette\Object
     // na kolko sa bude zaokruhlovat dochadzka
     //        '0' => ' Ziadne',
     //        '1' => ' Minuty',
-    //        '2' => ' 15 minut',
-    //        '3' => ' 30 minut',
-    //        '4' => ' 1 hodina'
+    //        '15' => ' 15 minut',
+    //        '30' => ' 30 minut',
+    //        '60' => ' 1 hodina'
     private $zaokruhlovanie; 
+    private $tolerancia; // tolerancia neskoreho prichodu, napr 7:02 pri tolerancii 2 minuty este da prichod ako 07:00
+    private $vypis_real_casov; //priznak, ci bude vo vypisoch vypisovat aj realne caso popri zaokruhlenym
     
     private $clovek_id;//clovek, ktoreho dochadzku riesime
     private $datum_od; //odkedy pocitame, objedkt DateTime
@@ -37,10 +39,12 @@ class Dochadzka extends Nette\Object
      * pole najdenej dochadzky podla datumu od-do
      * pole ma tvar $pole_dochadzky[id zaznamu][prichod] -> Nette\Utils\DateTime 
      *                                         [odchod]  -> Nette\Utils\DateTime 
-     *                                         [cas_v_praci] -> hodnota v sekundach
-     *                                         [text_cas_v_praci] -> textovy retazec 
-     */
-    private $pole_dochadzky; 
+     *                                         [cas_v_praci] -> objekt DateInterval 
+     *                              
+     *      */
+    private $pole_dochadzky; //dochadzka ludi za dany interval
+    private $raw_pole_dochadzky; // nezaokruhlena dochadzka ludi, ma rovnku strukturu ako $pole_dochadzky
+    
     
     function __construct(Nette\Database\Context $database)
     {
@@ -194,24 +198,85 @@ class Dochadzka extends Nette\Object
         }
     }
     
-    public function getZaokruhlovanie() {return $this->zaokruhlovanie;}
-    public function getPoleDochadzky() { return $this->pole_dochadzky; }
-    public function getCelkovyCasDochadzky() { return $this->celkovy_cas; }
-    
-    //updatne nastavenia aplikacie dochadzka v databaze
-    public function updateNastavenie ( $values ){
-        //naastavenie zaokruhlovania
-        $pole = array ( 'hodnota' => $values['zaokruhlenie']);
-        
+    public function setToleranciaFromDatabase () {
+        //zisti nastavenie zaokruhlovania
         $row= $this->database->table('dochadzka_nastavenie')
                 ->where('user_id = ?', $this->user_id)
-                ->where('vlastnost = ?', 'zaokruhlovanie');
-        $row->update($pole);//teda pokusne 
+                ->where('vlastnost = ?', 'tolerancia');
+        
+        if ($row->count() != 0)  { 
+            $temp = $row->fetch();
+            $this->tolerancia = $temp->hodnota;
+        }
+        else {//este nemame taky zaznam v databaze, tak ho tam rovno doplnime a aj nastavime defaultnu hodnotu
+            $pole = array ( 
+                'hodnota' => '0',
+                'user_id' => $this->user_id,
+                'vlastnost' => 'tolerancia'
+                );
+            $this->database->table('dochadzka_nastavenie')->insert($pole);
+            $this->tolerancia = '0';
+        }
+    }
+    
+    public function setVypisRealCasovFromDatabase () {
+        //zisti nastavenie zaokruhlovania
+        $row= $this->database->table('dochadzka_nastavenie')
+                ->where('user_id = ?', $this->user_id)
+                ->where('vlastnost = ?', 'vypis_real_casov');
+        
+        if ($row->count() != 0)  { 
+            $temp = $row->fetch();
+            $this->vypis_real_casov = $temp->hodnota;
+        }
+        else {//este nemame taky zaznam v databaze, tak ho tam rovno doplnime a aj nastavime defaultnu hodnotu
+            $pole = array ( 
+                'hodnota' => '0',
+                'user_id' => $this->user_id,
+                'vlastnost' => 'vypis_real_casov'
+                );
+            $this->database->table('dochadzka_nastavenie')->insert($pole);
+            $this->vypis_real_casov = '0';
+        }
+    }
+    
+    public function getZaokruhlovanie() {return $this->zaokruhlovanie;}
+    public function getPoleDochadzky() { return $this->pole_dochadzky; }
+    public function getPoleRawDochadzky() { return $this->raw_pole_dochadzky; }
+    public function getCelkovyCasDochadzky() { return $this->celkovy_cas; }
+    public function getTolerancia () { return $this->tolerancia; }
+    public function getVypisRealCasov() { return $this->vypis_real_casov; }
+    
+    //updatne nastavenia aplikacie dochadzka v databaze
+    /*
+     * @throws Exception
+     */
+    public function updateNastavenie ( $values ){
+        //naastavenie zaokruhlovania
+            $pole = array ( 'hodnota' => $values['zaokruhlenie'] );
+            $row= $this->database->table('dochadzka_nastavenie')
+                    ->where('user_id = ?', $this->user_id)
+                    ->where('vlastnost = ?', 'zaokruhlovanie');
+            
+            $navrt = $row->update($pole);
+            if ($navrt  > 1) throw new \ErrorException;
+            //nastavenie tolerancie neskoreho prichodu
+            $pole = array ( 'hodnota' => $values['late_arrival'] );
+            $row= $this->database->table('dochadzka_nastavenie')
+                    ->where('user_id = ?', $this->user_id)
+                    ->where('vlastnost = ?', 'tolerancia');
+            $navrt = $row->update($pole);
+            if ($navrt  > 1) throw new \ErrorException;
+            //nastavenie realneho vypisovania casov popri zaokruhlenych
+            $pole = array ( 'hodnota' => $values['real_times'] );
+            $row= $this->database->table('dochadzka_nastavenie')
+                    ->where('user_id = ?', $this->user_id)
+                    ->where('vlastnost = ?', 'vypis_real_casov');
+            $navrt = $row->update($pole);
+            if ($navrt  > 1) throw new \ErrorException;
     }
     
     public function generuj_zaokruhlenu_dochadzku_cloveka( $clovek_id, $od, $do ){
-        //musime vycistit triedu dochadzky aby si neprenasala udaje medyi iteraciami cyklu pri zmene osob
-        $this->vycisti();
         //nacitanie udajov do triedy
         $this->clovek_id = $clovek_id;
         //vyrobenie formatu datumu porozumentelneho sql serverom
@@ -231,26 +296,57 @@ class Dochadzka extends Nette\Object
             $this->pole_dochadzky[$row->id]['prichod'] = $row->prichod_timestamp;
             $this->pole_dochadzky[$row->id]['odchod'] = $row->odchod_timestamp;
         }
-        $this->zaokruhliCasVPraci(); //zaokruhli cas v praci
+        $this->zaokruhliCasVPraci(); //zaokruhli cas v pracipre tohto cloveka v danom intervale
         //\Tracy\Dumper::dump($this->pole_dochadzky);
+    }
+    
+    public function generuj_raw_dochadzku_cloveka ( $clovek_id, $od, $do ) {
+        //nacitanie udajov do triedy
+        $this->clovek_id = $clovek_id;
+        //vyrobenie formatu datumu porozumentelneho sql serverom
+        $this->datum_od = $this->createArrivalDatetime( $od );
+        $this->datum_do = $this->createLeaveDatetime( $do );
+        
+        //natiahneme riadky s dochadzko v danom termine
+        //prebehneme zaskrtnute osoby
+        $rows_raw_dochadzka = $this->database->table('dochadzka')
+                    ->where('users_id = ?', $this->user_id)
+                    ->where ( 'people_id = ?', $this->clovek_id )
+                    ->where ('prichod_timestamp >= ?', $this->datum_od->format('Y-m-d H:i:s') )
+                    ->where ('prichod_timestamp <= ?', $this->datum_do->format('Y-m-d H:i:s') )
+                    ->where ('odchod_timestamp <= ? ', $this->datum_do->format('Y-m-d H:i:s') );   
+        $navrat_raw_dochadzka = $rows_raw_dochadzka->fetchAll(); //no tot musi byt inak to nenaplni data v selection
+        foreach ($rows_raw_dochadzka as $row_raw_dochadzka){
+            //naplnime aj hrube casy
+            $this->raw_pole_dochadzky[$row_raw_dochadzka->id]['prichod'] = $row_raw_dochadzka->prichod_timestamp;
+            $this->raw_pole_dochadzky[$row_raw_dochadzka->id]['odchod'] = $row_raw_dochadzka->odchod_timestamp;
+        }
     }
     
     public function zaokruhliCasVPraci(){
         if ( isset($this->pole_dochadzky) ){ //mozeme vratit nejaky cas az ked to mame nahodene
             $this->setZaokruhlovanieFromDatabase();//zistime si zaokruhlovanie
+            $this->setToleranciaFromDatabase(); //zistime ci je nastavena tolerancia oneskoreneho prichodu
             //prebehneme si dochadzku a zratame
             foreach ( $this->pole_dochadzky as $key => $den ){
                     //prichod
-                    $temp = $this->getZaokruhlovanie() ? $den['prichod']->getTimestamp() / ($this->getZaokruhlovanie() * 60 ) : $den['prichod']->getTimestamp(); //vylucenie delenia 0 cez ternarny operator   
+                    //$temp je hodnota prichodu v timestampe, teda v sekundach
+                    $temp = $this->zaokruhlovanie ? $den['prichod']->getTimestamp() / ($this->zaokruhlovanie * 60 ) : $den['prichod']->getTimestamp(); //vylucenie delenia 0 cez ternarny operator   
                     $temp = ceil ($temp); //zaokruhlime nadol aby sme dostali cele jednoty
-                    $temp = $this->getZaokruhlovanie() ? $temp * $this->getZaokruhlovanie() * 60 : $temp; //vypocitame spet zaokruhleny cas, ale len v pripade, kedy zaokruhlovanie je rozdielne od 0
-                    $den['prichod']->setTimestamp($temp) ; //nastavime spet
+                    $temp = $this->zaokruhlovanie ? $temp * $this->zaokruhlovanie * 60 : $temp; //vypocitame spet zaokruhleny cas, ale len v pripade, kedy zaokruhlovanie je rozdielne od 0
+                    $temp_o_jeden_menej = ( $temp - ( $this->zaokruhlovanie * 60 )) ; //skok o jednu zaokruhlenu polozku menej
+                    $rozdiel = $den['prichod']->getTimestamp() - $temp_o_jeden_menej ; //zistime o kolko meska nas pracovnik v sekundach
+                    if ( $rozdiel <= ($this->tolerancia*60) ) { //este je v meskani v tolerancii prichodu
+                       $den['prichod']->setTimestamp($temp_o_jeden_menej); // dame mu o jeden zaokruhlovaci skok menej 
+                    } else {
+                        $den['prichod']->setTimestamp($temp) ; //nastavime spet
+                    }
                     //odchod
                     //len v pripade ze je odchod uz nastaveny, a nieje NULL
                     if ( $den['odchod'] != NULL ){
-                        $temp = $this->getZaokruhlovanie() ? $den['odchod']->getTimestamp() / ($this->getZaokruhlovanie() * 60 ) : $den['odchod']->getTimestamp(); //vylucenie delenia 0 cez ternarny operator
+                        $temp = $this->zaokruhlovanie ? $den['odchod']->getTimestamp() / ($this->zaokruhlovanie * 60 ) : $den['odchod']->getTimestamp(); //vylucenie delenia 0 cez ternarny operator
                         $temp = floor($temp); //zaokruhlime nadol aby sme dostali cele jednoty
-                        $temp = $this->getZaokruhlovanie() ? $temp * $this->getZaokruhlovanie() * 60 : $temp; //vypocitame spet zaokruhleny cas, ale len v pripade, kedy zaokruhlovanie je rozdielne od 0
+                        $temp = $this->zaokruhlovanie ? $temp * $this->zaokruhlovanie * 60 : $temp; //vypocitame spet zaokruhleny cas, ale len v pripade, kedy zaokruhlovanie je rozdielne od 0
                         $den['odchod']->setTimestamp($temp) ; //nastavime spet
                         //prepocitanie casu v praci
                         //$hodnota_casu = $den['odchod']->getTimestamp() - $den['prichod']->getTimestamp();
@@ -268,6 +364,9 @@ class Dochadzka extends Nette\Object
     public function vycisti() {
         if ( is_array($this->pole_dochadzky) ){ 
             array_splice($this->pole_dochadzky, 0); //vycistene pole
+        }
+        if ( is_array($this->raw_pole_dochadzky) ){ 
+            array_splice($this->raw_pole_dochadzky, 0); //vycistene pole
         }
     }
     

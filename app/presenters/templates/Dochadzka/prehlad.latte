@@ -55,7 +55,7 @@
     <div class="table-responsive">
         <h3>{$meno_osoby[$osoba]} ( {$osoba} )</h3>
         
-        {ifset $posts2[$osoba]  }
+        {ifset $posts_zaokruhlena_dochadzka[$osoba]  }
             
         {_ui.celkovy_cas}: {$celkovy_cas_dochadzky[$osoba]["hodiny"]} : {$celkovy_cas_dochadzky[$osoba]["minuty"]}
         <table class=" table table-hover">
@@ -65,11 +65,25 @@
                 <th>{_ui.time_at_work}</th>
             </tr>
         
-        {foreach $posts2[$osoba] as $post2}
+        {foreach $posts_zaokruhlena_dochadzka[$osoba] as $index => $post2}
             <tr>
-                <td>{$post2['prichod']|date:"d. m. Y G:i:s"}</td>
-                <td>{$post2['odchod']|date:"d. m. Y G:i:s"}</td>
-                <td>{$post2['cas_v_praci']|date:"%h:%I"} </td>
+                <td>
+                    {$post2['prichod']|date:"d. m. Y G:i:s"}
+                    {if $vypisovat_realne_casy}
+                        <br>
+                        ( {$posts_raw_dochadzka[$osoba][$index]['prichod']|date:"G:i:s"} )
+                    {/if}
+                </td>
+                <td>
+                    {$post2['odchod']|date:"d. m. Y G:i:s"}
+                    {if $vypisovat_realne_casy}
+                        <br>
+                        ( {$posts_raw_dochadzka[$osoba][$index]['odchod']|date:"G:i:s"} )
+                    {/if}
+                </td>
+                <td>
+                    {$post2['cas_v_praci']|date:"%h:%I"} 
+                </td>
             </tr>
         {/foreach}
         </table>

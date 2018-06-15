@@ -85,7 +85,6 @@ class Template2c187e53e3 extends Latte\Runtime\Template
 			$_tmp->render();
 ?>
 
-
 <?php
 		}
 ?> 

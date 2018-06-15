@@ -41,11 +41,11 @@ class OsobyPresenter extends BasePresenter
         //pokial bolo potvrdene, tak ho deaktivujeme, teda nastavime priznak active=0
         if ( $this->getParameter('proceed') ){
             if ( $this->osoba->deaktivuj() ){
-                $this->flashMessage($this->translator->translate('ui.message.change_success'),'bg-success');
+                $this->flashMessage($this->translator->translate('ui.message.change_success'),'alert alert-success');
                 $this->redirect('RFID:default');
             }
             else {
-                $this->flashMessage($this->translator->translate('ui.message.change_fail'), 'bg-danger');
+                $this->flashMessage($this->translator->translate('ui.message.change_fail'), 'alert alert-warning');
                 $this->redirect('RFID:default');
             }
         }//end if proceed = 1
