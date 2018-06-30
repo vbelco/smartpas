@@ -18,7 +18,9 @@ class SignPresenter extends BasePresenter
             ->setRequired( $this->translator->translate('ui.message.fill_email') );
 
         $form->addPassword('password', $this->translator->translate('ui.form.passwd').':' )
-            ->setRequired( $this->translator->translate('ui.message.fill_passwd') );
+            ->setRequired( $this->translator->translate('ui.message.fill_passwd') )
+            ->addRule(Form::MIN_LENGTH, '-Položka %label musí obsahovat min. %d znaků-', 6)
+            ->addRule(Form::MAX_LENGTH, '-Položka %label může obsahovat max. %d znaků-', 255);
 
         $form->addSubmit('send', $this->translator->translate('ui.form.login') );
 
@@ -28,13 +30,13 @@ class SignPresenter extends BasePresenter
     
     public function signInFormSucceeded($form, $values)
     {
-    try {
-        $this->getUser()->login($values->email, $values->password);
-        $this->redirect('Homepage:');
+        try {
+            $this->getUser()->login($values->email, $values->password);
+            $this->redirect('Homepage:');
 
-    } catch (Nette\Security\AuthenticationException $e) {
-        $form->addError( $this->translator->translate('ui.message.wrong_passwd'));
-    }
+        } catch (Nette\Security\AuthenticationException $e) {
+            $form->addError( $this->translator->translate('ui.message.wrong_passwd'));
+        }
     }
 
     public function actionOut()
@@ -73,12 +75,12 @@ class SignPresenter extends BasePresenter
     }
     
     public function registerFormSubmitted( $form, $values) { //spusti metodu na spracovanie registracneho formulara 
-        $uzivatel = new \App\Model\UserManager($this->database); //vytvorenie uzivatela
+        $temp_uzivatel = new \App\Model\UserManager($this->database); //vytvorenie uzivatela
         $username = $values->name;
         $email = $values->email;
         $password = $values->password;
         try {
-            $uzivatel->add( $username, $email, $password );
+            $temp_uzivatel->add( $username, $email, $password );
             $this->flashMessage( $this->translator->translate('ui.message.successfull_registration' ), "alert alert-success" );
             $this->redirect('Homepage:default');
         } catch (\ErrorException $e) {

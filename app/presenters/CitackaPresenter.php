@@ -6,14 +6,15 @@ use Nette;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\Multiplier;
 use App\Model\Citacka; //pripojime triedu RFID
-
+use App\Model\Uzivatel;
 
 class CitackaPresenter extends BasePresenter
 {
     /** @var Citacka */
     private $citacka; //trieda rfid
     
-    public function __construct(Citacka $citacka) {
+    public function __construct(Nette\Database\Context $database, Uzivatel $uzivatel, Citacka $citacka) {
+        parent::__construct($database, $uzivatel);
         $this->citacka = $citacka;
     }
     

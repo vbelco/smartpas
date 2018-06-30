@@ -9,6 +9,7 @@ use Nette\Utils\DateTime;
 
 use App\Model\RFID; //pripojime triedu RFID
 use App\Model\Citacka; //pripojime triedu Citacky
+use App\Model\Uzivatel;
 
 class RFIDPresenter extends BasePresenter
 {
@@ -21,8 +22,8 @@ class RFIDPresenter extends BasePresenter
     //pomocne premenne
     private $timestamp = 0; //premenna na uchovanie casu spustenia formulara na nacitavanie novych rfidiek
     
-    public function __construct(Nette\Database\Context $database, RFID $rfid) {
-        parent::__construct($database);
+    public function __construct(Nette\Database\Context $database, Uzivatel $uzivatel, RFID $rfid) {
+        parent::__construct($database, $uzivatel);
         $this->rfid = $rfid;
     }
     

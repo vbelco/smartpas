@@ -4,7 +4,8 @@ namespace App\Presenters;
 
 use Nette;
 use Nette\Application\UI\Form;
-use App\Model\Osoba; //pripojime triedu RFID
+use App\Model\Osoba; //pripojime triedu Osoby
+use App\Model\Uzivatel;
 
 
 class OsobyPresenter extends BasePresenter
@@ -12,8 +13,8 @@ class OsobyPresenter extends BasePresenter
     /** @var Osoba */
     private $osoba; //trieda Osoba
     
-    public function __construct(Nette\Database\Context $database, Osoba $os) {
-        parent::__construct($database);
+    public function __construct(Nette\Database\Context $database, Uzivatel $uzivatel, Osoba $os) {
+        parent::__construct($database, $uzivatel);
         $this->osoba = $os;
     }
     
@@ -42,11 +43,11 @@ class OsobyPresenter extends BasePresenter
         if ( $this->getParameter('proceed') ){
             if ( $this->osoba->deaktivuj() ){
                 $this->flashMessage($this->translator->translate('ui.message.change_success'),'alert alert-success');
-                $this->redirect('RFID:default');
+                $this->redirect('Osoby:default');
             }
             else {
                 $this->flashMessage($this->translator->translate('ui.message.change_fail'), 'alert alert-warning');
-                $this->redirect('RFID:default');
+                $this->redirect('Osoby:default');
             }
         }//end if proceed = 1
     }

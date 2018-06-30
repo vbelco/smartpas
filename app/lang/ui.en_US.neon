@@ -54,6 +54,7 @@ celkovy_cas: "Total time"
 hod: "hrs"
 minut: "min"
 definovanie_obrazovky_citacky: "Reader screen settings"
+user_management: "Your account"
 form:
     yes: "Yes"
     no: "No"

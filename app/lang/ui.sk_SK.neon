@@ -54,6 +54,7 @@ celkovy_cas: "Celkový čas"
 hodin: "hod"
 minut: "min"
 definovanie_obrazovky_citacky: "Definovanie obrazovky čítačky"
+user_management: "Váš účet"
 form:
     yes: "Áno"
     no: "Nie"

@@ -20,6 +20,8 @@ services:
 	- App\Model\Osoba
 	- App\Model\Citacka
 	- App\Model\Dochadzka
+	- App\Model\Uzivatel
+	- App\Model\Organizacia
 	authenticator: MyAuthenticator
 
 database:

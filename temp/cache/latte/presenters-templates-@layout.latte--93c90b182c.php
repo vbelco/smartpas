@@ -97,11 +97,17 @@ class Template93c90b182c extends Latte\Runtime\Template
 				?>class="active"<?php
 			}
 			?>><a href="<?php echo LR\Filters::escapeHtmlAttr($this->global->uiControl->link("Sign:out")) ?>"><?php
-			echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "menu.sign_out")) ?></a></li>           
+			echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "menu.sign_out")) ?></a></li> 
+                <li <?php
+			if ($this->global->uiPresenter->isLinkCurrent("User:default")) {
+				?>class="active"<?php
+			}
+			?>><a href="<?php echo LR\Filters::escapeHtmlAttr($this->global->uiControl->link("User:default")) ?>"><?php
+			echo LR\Filters::escapeHtmlText($meno_uzivatela) /* line 47 */ ?></a></li> 
                 <li style="margin-top: 8px;">
                     <div class="dropdown">
                         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                        <span class="lang-xs lang-lbl" lang="<?php echo LR\Filters::escapeHtmlAttr($activeLocale) /* line 50 */ ?>"></span>
+                        <span class="lang-xs lang-lbl" lang="<?php echo LR\Filters::escapeHtmlAttr($activeLocale) /* line 51 */ ?>"></span>
                         </button>
                         <ul class="dropdown-menu" role="menu">
                             <li><a href="<?php echo LR\Filters::escapeHtmlAttr($this->global->uiControl->link("this", ['locale' => 'en'])) ?>"><span class="lang-xs lang-lbl" lang="en"></span></a></li>
@@ -125,7 +131,7 @@ class Template93c90b182c extends Latte\Runtime\Template
                 <li style="margin-top: 8px;">
                     <div class="btn-group dropdown">
                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                            <span class="lang-xs lang-lbl" lang="<?php echo LR\Filters::escapeHtmlAttr($activeLocale) /* line 69 */ ?>"></span>
+                            <span class="lang-xs lang-lbl" lang="<?php echo LR\Filters::escapeHtmlAttr($activeLocale) /* line 70 */ ?>"></span>
                         </button>
                         <ul class="dropdown-menu" >
                             <li><a href="<?php echo LR\Filters::escapeHtmlAttr($this->global->uiControl->link("this", ['locale' => 'en'])) ?>"><span class="lang-xs lang-lbl" lang="en"></span></a></li>

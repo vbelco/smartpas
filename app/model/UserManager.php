@@ -8,10 +8,20 @@ use Nette\Security\Passwords;
 
 /**
  * Users management.
+ * Trieda sluzi len na prihlasovanie a registraciu uzivatela
  */
 class UserManager implements Nette\Security\IAuthenticator
 {
 	use Nette\SmartObject;
+        
+        /*
+         * Udaje uzivatela
+         */
+        private $meno; // meno uzivatela
+        private $email; //email uzivatela
+        private $role; //rola uzivatela
+        private $organizacia; //objekt organizacie
+        
 
 	const
 		TABLE_NAME = 'users',
@@ -39,10 +49,10 @@ class UserManager implements Nette\Security\IAuthenticator
 	 */
 	public function authenticate(array $credentials)
 	{
-		list($username, $password) = $credentials;
+		list($email, $password) = $credentials;
 
 		$row = $this->database->table(self::TABLE_NAME)
-			->where(self::COLUMN_NAME, $username)
+			->where(self::COLUMN_EMAIL, $email)
 			->fetch();
 
 		if (!$row) {
@@ -84,4 +94,5 @@ class UserManager implements Nette\Security\IAuthenticator
 			throw new \ErrorException;
 		}
 	}
+        
 }

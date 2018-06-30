@@ -6,7 +6,7 @@ use Nette;
 use Nette\Application\UI\Form;
 use App\Model\Dochadzka; //pripojime triedu 
 use App\Model\Osoba; //pripojime triedu 
-
+use App\Model\Uzivatel;
 
 class DochadzkaPresenter extends BasePresenter
 {
@@ -14,8 +14,8 @@ class DochadzkaPresenter extends BasePresenter
     /** @var Dochadzka */
     private $dochadzka; //trieda dochadzky
     
-    public function __construct(Nette\Database\Context $database, Dochadzka $dochadzka) {
-        parent::__construct($database);
+    public function __construct(Nette\Database\Context $database, Uzivatel $uzivatel, Dochadzka $dochadzka) {
+        parent::__construct($database, $uzivatel);
         $this->dochadzka = $dochadzka; 
     }
     

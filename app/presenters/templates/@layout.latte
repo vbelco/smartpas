@@ -43,7 +43,8 @@
                 <li {ifCurrent Dochadzka:default}class="active"{/ifCurrent}><a n:href="Dochadzka:default">{_menu.dochadzka}</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li {ifCurrent Sign:out}class="active"{/ifCurrent}><a n:href="Sign:out">{_menu.sign_out}</a></li>           
+                <li {ifCurrent Sign:out}class="active"{/ifCurrent}><a n:href="Sign:out">{_menu.sign_out}</a></li> 
+                <li {ifCurrent User:default}class="active"{/ifCurrent}><a n:href="User:default">{$meno_uzivatela}</a></li> 
                 <li style="margin-top: 8px;">
                     <div class="dropdown">
                         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">

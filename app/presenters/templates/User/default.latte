@@ -1,0 +1,35 @@
+{* Latte template *}
+{block banner}
+{/block}
+
+{block title}
+    <h1>{_ui.user_management}</h1>
+{/block}
+
+
+{block content}
+{if $user->loggedIn} {*uz sme vnutri, len pre prihlasenych *}
+
+<div>
+    <ul class="nav nav-pills">
+        <li class="active"><a n:href="User:default"> -Vase udaje- </a></li>
+        <li><a n:href="User:organizacia"> -Organizacia- </a></li>
+    </ul>
+</div>    
+
+<div class="panel panel-default"> 
+    <h2>-Vase udaje-</h2>
+    <div class="panel-body">
+        {control userFormEdit}
+    </div>
+</div>    
+
+<div class="panel panel-default">    
+    <h2>-Zmena hesla-</h2>
+    <div class="panel-body">
+        {control userFormPasswordEdit}
+    </div>
+</div>     
+    
+{/if}
+{/block}
