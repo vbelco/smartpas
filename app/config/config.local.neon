@@ -12,7 +12,8 @@ application:
 
 session:
 	expiration: 14 days
-
+	debugger: true
+	name: smartpas
 
 services:
 	router: App\RouterFactory::createRouter
@@ -25,9 +26,9 @@ services:
 	authenticator: MyAuthenticator
 
 database:
-	dsn: 'mysql:host=46.229.230.86;dbname=hz024701db'
-	user: hz024700
-	password: dhynydor
+	dsn: 'mysql:host=127.0.0.1;dbname=nette'
+	user: root
+	password: 
 
 extensions:
 	translation: Kdyby\Translation\DI\TranslationExtension

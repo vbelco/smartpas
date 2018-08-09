@@ -88,4 +88,57 @@ class OsobyPresenter extends BasePresenter
             }      
         }//end else
     }
+    
+    /*
+     * moznost uivatelov nastavit kontrolu vlastnej dochadzky
+     */
+    public function actionKontrola($osoba_id){
+        $this->osoba->InitializeFromDatabase($osoba_id);//nahrame si do objektu aktualnu osobu, ktoru budeme riesit
+        $this->template->meno = $this->osoba->getMeno();
+        $this->template->definovane = $this->osoba->getLogin() ? 1 : 0 ; //nastavenie priznaku podla toho ci je logi uz definovany alebo nie
+        if (!$this->osoba->getLogin()){ //ak este nemame priradeny login, jeden sivzgenerujeme
+            $this->osoba->generujLogin(); //vytvorime si login meno
+        }
+    }
+    
+    /*
+     * formular na vztvorenie moznosti odoby kontrolvat si svoju dochadzku
+     */
+    protected function createComponentKontrolaForm() {
+        $form = new Form;
+        $form->addText('login', 'login:')
+                ->setOption('description', '-Vygenerovane prihlasovacie meno osoby-' )
+                ->setDisabled(true)
+                ->setDefaultValue( $this->osoba->getLogin() );
+        $form->addHidden('prihl_meno', $this->osoba->getLogin() ); //musim cez hidden, pretoze ked je addtext nastavenz ako diabled, tak neprenasa hodnotu
+        
+        $form->addPassword('password', '-Nove heslo:-')
+            ->setOption('description', '-Heslo musi mat minimalne 6 znakov-' )
+            ->addCondition(Form::FILLED)
+            ->addRule(Form::MIN_LENGTH, '-Položka %label musí obsahovat min. %d znaků-', 6)
+            ->addRule(Form::MAX_LENGTH, '-Položka %label může obsahovat max. %d znaků-', 255);
+        $form['password']->getControlPrototype()->autocomplete('off');
+        
+        $form->addPassword('password_again', '-Heslo (znovu):-')            
+            ->setRequired( $this->translator->translate('ui.message.fill_passwd') )
+            ->addConditionOn($form["password"], Form::FILLED)
+            ->addRule(Form::EQUAL, "-Hesla se musí shodovat!-", $form["password"])
+            ->addRule(Form::MIN_LENGTH, '-Položka %label musí obsahovat min. %d znaků-', 6)
+            ->addRule(Form::MAX_LENGTH, '-Položka %label může obsahovat max. %d znaků-', 255);
+        
+        $form->addSubmit('send', $this->translator->translate('ui.form.save'));
+        $form->onSuccess[] = [$this, 'kontrolaFormSubmitted']; //spracovanie formulara bude mat na starosti funckia tejto triedy s nazvom: pridajRFIDFormSubmitted
+        return $form;
+    }
+    
+    public function KontrolaFormSubmitted( $form, $values ){
+        try { 
+            $this->osoba->saveLoginToDatabase($values->prihl_meno);
+            $this->osoba->savePasswordToDatabase($values->password);
+            $this->redirect('Osoby:default');
+            $this->flashMessage("-Zmeny sa podarili-", "alert alert-success" );
+        } catch (Exception $ex) {
+            $this->flashMessage("-Nepodarilo sa zmenit heslo-", "alert alert-warning" );
+        }    
+    }
 }

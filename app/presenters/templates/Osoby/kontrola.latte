@@ -1,0 +1,29 @@
+{* Latte template *}
+{block banner}
+{/block}
+
+{block title}
+    <h1>-Moznost osob vykonavat kontrolu svojej vlastnej dochadzky-</h1>
+{/block}
+
+
+{block content}
+{if $user->loggedIn} {*uz sme vnutri, len pre prihlasenych *}
+    
+<div>
+    <ul class="nav nav-pills">
+        <li class="active"><a n:href="Osoby:default">{_menu.section_osoby.prehlad}</a></li>
+        <li><a n:href="Osoby:pridaj">{_menu.section_osoby.pridaj}</a></li>
+    </ul>
+</div>
+    <h2>{$meno}</h2>
+    {if !$definovane}
+        <div>-{$meno} zatial nema moznost prezerat si svoju dochadzku. Vytvorte ju-</div>
+    {else}
+        <div>-{$meno} uz ma moznost prezerat si svoju dochadzku. Mozete mu zmenit heslo-</div>
+    {/if}
+    
+    {control kontrolaForm}
+
+{/if}
+{/block}

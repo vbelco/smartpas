@@ -1,8 +1,7 @@
-#
-# WARNING: it is CRITICAL that this file & directory are NOT accessible directly via a web browser!
-# https://nette.org/security-warning
-#
 parameters:
+
+php:
+	date.timezone: Europe/Prague
 
 
 application:
@@ -13,19 +12,26 @@ application:
 
 session:
 	expiration: 14 days
-
-
-database:
-	dsn: 'mysql:host=127.0.0.1;dbname=test'
-	user:
-	password:
-	options:
-		lazy: yes
-
+	debugger: true
+	name: smartpas
 
 services:
-	- App\Model\UserManager
-	- App\Forms\FormFactory
-	- App\Forms\SignInFormFactory
-	- App\Forms\SignUpFormFactory
 	router: App\RouterFactory::createRouter
+	- App\Model\RFID
+	- App\Model\Osoba
+	- App\Model\Citacka
+	- App\Model\Dochadzka
+	- App\Model\Uzivatel
+	- App\Model\Organizacia
+	authenticator: MyAuthenticator
+
+database:
+	dsn: 'mysql:host=46.229.230.86;dbname=hz024701db'
+	user: hz024700
+	password: dhynydor
+
+extensions:
+	translation: Kdyby\Translation\DI\TranslationExtension
+
+translation:
+	whitelist: [sk, en]

@@ -765,8 +765,8 @@ class Container_5080e879cd extends Nette\DI\Container
 
 	public function createServiceDatabase__default__connection(): Nette\Database\Connection
 	{
-		$service = new Nette\Database\Connection('mysql:host=46.229.230.86;dbname=hz024701db',
-			'hz024700', 'dhynydor', null);
+		$service = new Nette\Database\Connection('mysql:host=127.0.0.1;dbname=nette', 'root',
+			null, null);
 		$this->getService('tracy.blueScreen')->addPanel('Nette\Bridges\DatabaseTracy\ConnectionPanel::renderException');
 		Nette\Database\Helpers::createDebugPanel($service, true, 'default');
 		return $service;
@@ -897,6 +897,8 @@ class Container_5080e879cd extends Nette\DI\Container
 	{
 		$service = new Nette\Http\Session($this->getService('http.request'), $this->getService('http.response'));
 		$service->setExpiration('14 days');
+		$this->getService('tracy.bar')->addPanel(new Nette\Bridges\HttpTracy\SessionPanel);
+		$service->setOptions(['name' => 'smartpas']);
 		return $service;
 	}
 

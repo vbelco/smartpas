@@ -25,6 +25,7 @@ class Osoba extends Nette\Object
     private $id;
     private $meno; //
     private $active; // 
+    private $login; //login osoby na kontrolu svojej dochadky    
 
     function __construct(Nette\Database\Context $database)
     {
@@ -48,11 +49,13 @@ class Osoba extends Nette\Object
             $this->id = $row->id;
             $this->meno = $row->meno;
             $this->active = $row->active;
+            $this->login = $row->login;
         }
         else { //osoba sa v databaze nenachadza
             $this->id = NULL;
             $this->meno = "";
             $this->active = 0;
+            $this->login = NULL;
         }
     }
     
@@ -60,7 +63,8 @@ class Osoba extends Nette\Object
         $row = $this->database->table('people')->get( $this->id ); //nacitame riadok uzivatela
         $values = array (
             'meno' => $this->meno,
-            'active' => $this->active
+            'active' => $this->active,
+            'login' => $this->login
         );
         $row->update($values);    
     }
@@ -80,15 +84,56 @@ class Osoba extends Nette\Object
         else return NULL;
     }
     
-    public function getMeno() {
-        return $this->meno;
-    }
+    public function getMeno() { return $this->meno; }  
+    public function getId(){ return $this->id; }
+    public function getLogin() { return $this->login; }
     
-    public function getId(){
-        return $this->id;
-    }
+    public function setLogin($login) { $this->login = $login; }
+    public function setId($id) { $this->id = $id; }
     
     public function setValuesFromFormular($values){
         $this->meno = $values->meno;
+    }
+    
+    public function savePasswordToDatabase ($password) {
+        try{
+            $this->database->table('people')
+                ->where('id', $this->id) // must be called before update()
+                ->update([ 'password' => \Nette\Security\Passwords::hash($password)  ]);
+        } catch ( Nette\Database\ConnectionException $e ){
+            throw new \ErrorException;
+        }
+    }
+    
+    public function saveLoginToDatabase () {
+        try{
+            $this->database->table('people')
+                ->where('id', $this->id) // must be called before update()
+                ->update([ 'login' => $this->login]);
+        } catch ( Nette\Database\ConnectionException $e ){
+            throw new \ErrorException;
+        }
+    }
+    
+    public function generujLogin(){
+        $temp = preg_replace('/&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml|caron);/i','$1',htmlentities($this->meno));
+        $temp = mb_strtolower($temp); //zmeni na male pismena
+        $array_temp = explode(" ",$temp); //rozdelime na pole retazcov
+        $pocet = count ($array_temp); 
+        $temp = $array_temp[$pocet-1]; //posledne priezvisko
+        $this->login = $temp; //hodime si pociatocny login do objektu
+        $pocet = 1; //pomocny ciselnicek
+        while ( !$this->kontrolujJedinecnostLoginu() ){ //bude skusat jedinecnost loginov, kde na konci priezviska rida cislo 1,2,3...
+            $this->login = $temp.$pocet;
+            $pocet++;
+        }
+        
+            
+    }
+    
+    public function kontrolujJedinecnostLoginu(){
+        $row = $this->database->table('people')->where('login = ?', $this->login)->count();// ze ci uz nahodou nemame taky login v databaze
+        if ($row == 0 ) return true; //login je deninecny
+        else return false; //taky login uz mame
     }
 }

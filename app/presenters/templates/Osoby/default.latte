@@ -25,6 +25,9 @@
             <td>{$post->id} </td>
             <td>{$post->meno}</td>
             <td>
+                <a n:href="kontrola $post->id" class="btn btn-default" role="button">-Kontrola-</a>
+            </td>
+            <td>
                 <a n:href="edituj $post->id" class="btn btn-default" role="button">{_ui.form.edit}</a> 
             </td> 
         </tr>
