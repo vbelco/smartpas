@@ -41,7 +41,12 @@ class Organizacia extends Nette\Object
      */    
     public function getId() { return $this->id; }
     public function getNazov() { return $this->nazov; }
-    
+    public function getAdresa() { return $this->adresa; }
+    public function getVAT() { return $this->vat; }
+    public function getMesto() { return $this->mesto; }
+    public function getPSC() { return $this->psc; }
+    public function getKrajina() { return $this->krajina; }
+       
     /*
      * settery
      */

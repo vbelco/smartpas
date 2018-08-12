@@ -84,13 +84,33 @@ class UserPresenter extends BasePresenter
             $organizacia = new Organizacia($this->database, $this->translator); //vytvorime si nulovu organizaciu
             $organizacia->loadFromDatabase( $this->uzivatel->getOrganizaciaId() );
             $nazov = $organizacia->getNazov();
+            $adresa = $organizacia->getAdresa();
+            $vat = $organizacia->getVAT();
+            $mesto = $organizacia->getMesto();
+            $psc = $organizacia->getPSC();
+            $krajina = $organizacia->getKrajina();
         } else{ //este nemame definovanu organizaciu
             $nazov = "-Uvedte nazov organizacie-";
+            $adresa = "-Adresa-";
+            $vat = "-ICO-";
+            $mesto = "-mesto-";
+            $psc = "-PSC-";
+            $krajina = "-krajina-";
         }
-        
+           
         $form = new Form;
         $form->addText('nazov', '-Nazov-:' )
                 ->setDefaultValue( $nazov );
+        $form->addText('vat', '-ICO-:' )
+                ->setDefaultValue( $vat );
+        $form->addText('adresa', '-Adresa-:' )
+                ->setDefaultValue( $adresa );
+        $form->addText('psc', '-PSC-:' )
+                ->setDefaultValue( $psc );
+        $form->addText('mesto', '-Mesto-:' )
+                ->setDefaultValue( $mesto );
+        $form->addText('krajina', '-Krajina-:' )
+                ->setDefaultValue( $krajina );
 
         $form->addSubmit('send', $this->translator->translate('ui.form.save') );
         $form->onSuccess[] = [$this, 'OrganizaciaFormSubmitted']; //spracovanie formulara bude mat na starosti funckia tejto triedy s nazvom: pridajRFIDFormSubmitted
@@ -103,12 +123,24 @@ class UserPresenter extends BasePresenter
             $this->uzivatel->loadUserFromDatabase( $this->getUser()->id ); //nahrame uzivatela z databazy a kemu pprisluchajucej organizacie
             if ($this->uzivatel->getOrganizaciaId()){ //uz mame definovanu organizaciu k uzivatelovi
                 $organizacia = new Organizacia($this->database, $this->translator); //vytvorime si nulovu organizaciu
-                $organizacia->nastavOrganizaciu($this->uzivatel->getOrganizaciaId() , $values->nazov, '', '', '', '', '');
+                $organizacia->nastavOrganizaciu($this->uzivatel->getOrganizaciaId() , 
+                                                $values->nazov, 
+                                                $values->vat, 
+                                                $values->adresa, 
+                                                $values->mesto, 
+                                                $values->psc,
+                                                $values->krajina);
                 $organizacia->updateToDatabase(); //updatneme udaje v databaze
                 $this->flashMessage("-Zmeny sa podarili-", "alert alert-success" );
             } else {
                 $organizacia = new Organizacia($this->database, $this->translator); //vytvorime si nulovu organizaciu
-                $organizacia->nastavOrganizaciu($this->uzivatel->getOrganizaciaId() , $values->nazov, '', '', '', '', '');
+                $organizacia->nastavOrganizaciu($this->uzivatel->getOrganizaciaId() , 
+                                                $values->nazov, 
+                                                $values->vat, 
+                                                $values->adresa, 
+                                                $values->mesto, 
+                                                $values->psc,
+                                                $values->krajina);
                 $row = $organizacia->insertToDatabase(); //vytvorime novu organizaciu v databaze
                 $this->uzivatel->setOrganizaciaId( $row->id ); //ulozime si novovytvorenu organizaciu do objektu uzivatel
                 $this->uzivatel->saveOrganizaciaIdToDatabase();

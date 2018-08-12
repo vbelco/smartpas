@@ -34,6 +34,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         if ( $this->getUser()->isLoggedIn() ) {
             $this->uzivatel->loadUserFromDatabase( $this->getUser()->id );
             $this->template->meno_uzivatela = $this->uzivatel->getName();
+            $this->template->nazov_planu = $this->uzivatel->getPlanName();
         }
     }
        

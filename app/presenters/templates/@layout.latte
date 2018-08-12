@@ -32,7 +32,13 @@
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" n:href="Homepage:">S M A R T  P A S</a>
+                <a class="navbar-brand" n:href="Homepage:">
+                    {if $user->loggedIn}
+                        SmartPAS {$nazov_planu}
+                    {else}
+                        SmartPAS
+                    {/if}
+                </a>
             </div>
             {if $user->loggedIn}
             <ul class="nav navbar-nav">
