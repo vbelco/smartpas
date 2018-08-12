@@ -39,7 +39,7 @@ class Template25ca343b3b extends Latte\Runtime\Template
 	function prepare()
 	{
 		extract($this->params);
-		if (isset($this->params['post'])) trigger_error('Variable $post overwritten in foreach on line 28');
+		if (isset($this->params['post'])) trigger_error('Variable $post overwritten in foreach on line 34');
 		Nette\Bridges\ApplicationLatte\UIRuntime::initialize($this, $this->parentName, $this->blocks);
 		
 	}
@@ -72,7 +72,25 @@ class Template25ca343b3b extends Latte\Runtime\Template
 			echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "menu.section_rfid.add")) ?></a></li>
     </ul>
 </div>
-
+<div>
+<ul class="nav nav-pills">
+    <li class="odsadenie <?php
+			if ($ktore == "all") {
+				?>  active <?php
+			}
+			?>" ><a href="<?php echo LR\Filters::escapeHtmlAttr($this->global->uiControl->link("Filter!", ['all'])) ?>">-Vsetky-</a></li>
+    <li class="odsadenie <?php
+			if ($ktore == "nepr") {
+				?> active <?php
+			}
+			?>" ><a href="<?php echo LR\Filters::escapeHtmlAttr($this->global->uiControl->link("Filter!", ['nepr'])) ?>">-Len nepriradene-</a></li>
+    <li class="odsadenie <?php
+			if ($ktore == "prir") {
+				?> active <?php
+			}
+			?>" ><a href="<?php echo LR\Filters::escapeHtmlAttr($this->global->uiControl->link("Filter!", ['prir'])) ?>">-Len priradene-</a></li>
+</div>
+    
 <div class="table-responsive">
 <table class=" table table-hover">
     <tr>
@@ -85,11 +103,11 @@ class Template25ca343b3b extends Latte\Runtime\Template
 			foreach ($posts as $post) {
 ?>
             <tr>
-                <td><?php echo LR\Filters::escapeHtmlText($post->number) /* line 30 */ ?></td>
+                <td><?php echo LR\Filters::escapeHtmlText($post->number) /* line 36 */ ?></td>
                 <td>
                     <?php
 				if (($post->people_id != NULL)) {
-					?>                        <?php echo LR\Filters::escapeHtmlText($post->people->meno) /* line 33 */ ?>
+					?>                        <?php echo LR\Filters::escapeHtmlText($post->people->meno) /* line 39 */ ?>
 
                         <a class="btn btn-default" role="button" href="<?php echo LR\Filters::escapeHtmlAttr($this->global->uiControl->link("priradOsobu", [$post->id])) ?>"><?php
 					echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "ui.form.change")) ?></a>

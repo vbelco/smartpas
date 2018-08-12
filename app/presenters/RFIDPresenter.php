@@ -21,15 +21,22 @@ class RFIDPresenter extends BasePresenter
     
     //pomocne premenne
     private $timestamp = 0; //premenna na uchovanie casu spustenia formulara na nacitavanie novych rfidiek
+    private $ktore; //premenna na prepinac priznaku na filtrovanie vypisu rfidiek
+    private $posts; //pole riadkov vzpisu, bude sa menit podla filtra
     
     public function __construct(Nette\Database\Context $database, Uzivatel $uzivatel, RFID $rfid) {
         parent::__construct($database, $uzivatel);
         $this->rfid = $rfid;
+        $this->ktore = "all"; //na zaciatku budemem zobrazovat vsetky rfidky
     }
     
     public function renderDefault() //defaultny vypis nasich rfidiek
-    {
-        $this->template->posts = $this->rfid->getAllRfidByUser( $this->getUser()->id ); //nacitanie rfidiek aktivneho uzivatela
+    { 
+        if ($this->ktore == "all"){  
+            $this->posts = $this->rfid->getAllRfidByUser( $this->getUser()->id ); //nacitanie rfidiek aktivneho uzivatela
+        }
+        $this->template->ktore = $this->ktore; //uvodny prepinac
+        $this->template->posts = $this->posts; //uvodne nacitanie riadkov
     }
     
     public function actionEdituj($rfid_id){
@@ -222,5 +229,23 @@ class RFIDPresenter extends BasePresenter
         }
         
     }//end function PriradOsobuFormSubmitted
+    
+    public function handleFilter($co){ //signal na filtrovanie len nepriradenzch rfidiek
+        switch ( $co ){
+            case "nepr":
+                $this->ktore = "nepr" ; //prepinac, ktore rfidky budeme zobrazovat
+                $this->posts = $this->rfid->getNotAssignedByUser( $this->getUser()->id );
+                break;
+            case "all":
+                $this->ktore = "all" ; //prepinac, ktore rfidky budeme zobrazovat
+                $this->posts = $this->rfid->getAllRfidByUser( $this->getUser()->id );
+                break;
+            case "prir":
+                $this->ktore = "prir" ; //prepinac, ktore rfidky budeme zobrazovat
+                $this->posts = $this->rfid->getOnlyAssignedByUser( $this->getUser()->id );
+                break;
+        }
+        
+    }//end function handleFilter
     
 }

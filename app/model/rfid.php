@@ -64,8 +64,21 @@ class RFID extends Nette\Object
     {
         return $this->database->table('rfid')
                                 ->where("users_id = ?", $user_id ) //natiahneme len rfidky prihlaseneho uzivatelas
+                                ->where("active = 1");  
+    }
+    
+    public function getNotAssignedByUser($user_id){ //vrati vsetky nepriradene rfidky podla uzivatela
+        return $this->database->table('rfid')
+                                ->where("users_id = ?", $user_id ) //natiahneme len rfidky prihlaseneho uzivatelas
                                 ->where("active = 1")
-                                ->limit(10);  
+                                ->where("people_id IS NULL");
+    }
+    
+    public function getOnlyAssignedByUser($user_id){
+        return $this->database->table('rfid')
+                                ->where("users_id = ?", $user_id ) //natiahneme len rfidky prihlaseneho uzivatelas
+                                ->where("active = 1")
+                                ->where("people_id IS NOT NULL");
     }
     
     public function deaktivuj (){
