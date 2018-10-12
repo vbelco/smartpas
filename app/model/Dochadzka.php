@@ -45,6 +45,21 @@ class Dochadzka extends Nette\Object
     private $pole_dochadzky; //dochadzka ludi za dany interval
     private $raw_pole_dochadzky; // nezaokruhlena dochadzka ludi, ma rovnku strukturu ako $pole_dochadzky
     
+    /*
+     * definovanie pracovnej doby
+     */
+    /*
+     * na kolko smien sa pracuje. 
+     * Hodnoty 0= 1smenna prevadzka, 1= 2smenna prevadzka, 2= 3smenna prevadzka
+     */
+    private $pocet_smien; 
+    /*pole nastavenia pracovnej doby, ma tvar:  ->index 0,1,2 znamena o ktoru smenu sa jedna
+    *        $pole_prac_doby[0]['prichod']  -> php DateInterval object
+    *                          ['odchod']   -> php DateInterval object
+    */
+    private $pole_prac_doby; 
+    
+    
     
     function __construct(Nette\Database\Context $database)
     {
@@ -115,16 +130,19 @@ class Dochadzka extends Nette\Object
                 ->fetch();
         
         if($vysl_rfid){ //mame cloveka na ktoreho ukazuje
-            $people_id = $vysl_rfid->people_id; //priradenie cloveka k rfidke
-            if ($people_id != NULL ){ 
+            $this->clovek_id = $vysl_rfid->people_id; //priradenie cloveka k rfidke
+            if ($this->clovek_id != NULL ){ 
                 //pokial mame otvoreny zaznam, tak ho updatneme 
                 //pokial nemame taky zaznam, tak ho zalozime
                 $vysl_dochadzka = $this->database->table('dochadzka')
                     ->where('users_id = ?', $this->user_id)
-                    ->where('people_id = ?', $people_id)
+                    ->where('people_id = ?', $this->clovek_id)
                     ->where('odchod_timestamp IS NULL' )
                    ;
                 if ( $vysl_dochadzka->count() != 0  ){ //mame tento zaznam, ideme ho len updatnut
+                    //kontrola na zabudnute pipnutie, skontrolujeme ci nahodou si clovek vcera nezabudol odpipnut
+                    
+                    
                     $vysl2 = $vysl_dochadzka->fetch();
                     //vypocitame cas v praci          
                     $pole = array (
@@ -134,7 +152,7 @@ class Dochadzka extends Nette\Object
                 }
                 else { //este nemame zaznam, tak tam nahodime prichod
                     $pole = array (
-                        'people_id' => $people_id,
+                        'people_id' => $this->clovek_id,
                         'prichod_timestamp' => $vysl->timestamp,
                         'users_id' => $this->user_id
                         );
@@ -198,6 +216,27 @@ class Dochadzka extends Nette\Object
         }
     }
     
+    public function setPocetSmienFromDatabase () {
+        //zisti nastavenie zaokruhlovania
+        $row= $this->database->table('dochadzka_nastavenie')
+                ->where('user_id = ?', $this->user_id)
+                ->where('vlastnost = ?', 'pocet_smien');
+        
+        if ($row->count() != 0)  { 
+            $temp = $row->fetch();
+            $this->pocet_smien = $temp->hodnota;
+        }
+        else {//este nemame taky zaznam v databaze, tak ho tam rovno doplnime a aj nastavime defaultnu hodnotu
+            $pole = array ( 
+                'hodnota' => '0',
+                'user_id' => $this->user_id,
+                'vlastnost' => 'pocet_smien'
+                );
+            $this->database->table('dochadzka_nastavenie')->insert($pole);
+            $this->pocet_smien = '0';
+        }
+    }
+    
     public function setToleranciaFromDatabase () {
         //zisti nastavenie zaokruhlovania
         $row= $this->database->table('dochadzka_nastavenie')
@@ -246,6 +285,34 @@ class Dochadzka extends Nette\Object
     public function getCelkovyCasDochadzky() { return $this->celkovy_cas; }
     public function getTolerancia () { return $this->tolerancia; }
     public function getVypisRealCasov() { return $this->vypis_real_casov; }
+    public function getPocetSmien() { return $this->pocet_smien; }
+    public function getPolePracovnejDoby() { return $this->pole_prac_doby; }
+    
+    /*pole nastavenia pracovnej doby, ma tvar:  ->index 0,1,2 znamena o ktoru smenu sa jedna
+    *        $pole_prac_doby[0]['prichod']  -> php DateInterval object
+    *                          ['odchod']   -> php DateInterval object
+    */
+    public function loadPolePracovnejDoby () {
+        $row = $this->database->table('dochadzka_smeny')
+                ->where ('user_id = ?', $this->user_id)
+                ->fetch();
+        if ($row) {//ano, mame uz nastavenu pracovnu dobu
+            $this->pole_prac_doby[0]['prichod'] = $row['prichod1'];
+            $this->pole_prac_doby[0]['odchod'] = $row['odchod1'];  
+        } else { //este nemame nastavenu pracovnu dobu
+            $this->pole_prac_doby = NULL;
+        }
+    }//end function loadPolePrcovnejDoby
+    
+    //vypise posledne zaznamy v dochadzke 
+    // vstup: pocet zaznamov
+    //vystup: pole dochadzky
+    public function getDochadzka( $pocet_zaznamov ) {
+        return $this->database->table('dochadzka')
+                ->where('users_id = ?', $this->user_id )
+                ->order('prichod_timestamp DESC')
+                ->limit($pocet_zaznamov);
+    }
     
     //updatne nastavenia aplikacie dochadzka v databaze
     /*
@@ -253,28 +320,65 @@ class Dochadzka extends Nette\Object
      */
     public function updateNastavenie ( $values ){
         //naastavenie zaokruhlovania
-            $pole = array ( 'hodnota' => $values['zaokruhlenie'] );
-            $row= $this->database->table('dochadzka_nastavenie')
+            $pole1 = array ( 'hodnota' => $values['zaokruhlenie'] );
+            $row1= $this->database->table('dochadzka_nastavenie')
                     ->where('user_id = ?', $this->user_id)
                     ->where('vlastnost = ?', 'zaokruhlovanie');
             
-            $navrt = $row->update($pole);
-            if ($navrt  > 1) throw new \ErrorException;
+            $navrt1 = $row1->update($pole1);
+            if ($navrt1  > 1) { throw new \ErrorException; }
             //nastavenie tolerancie neskoreho prichodu
-            $pole = array ( 'hodnota' => $values['late_arrival'] );
-            $row= $this->database->table('dochadzka_nastavenie')
+            $pole2 = array ( 'hodnota' => $values['late_arrival'] );
+            $row2= $this->database->table('dochadzka_nastavenie')
                     ->where('user_id = ?', $this->user_id)
                     ->where('vlastnost = ?', 'tolerancia');
-            $navrt = $row->update($pole);
-            if ($navrt  > 1) throw new \ErrorException;
+            $navrt2 = $row2->update($pole2);
+            if ($navrt2  > 1) { throw new \ErrorException; }
             //nastavenie realneho vypisovania casov popri zaokruhlenych
-            $pole = array ( 'hodnota' => $values['real_times'] );
-            $row= $this->database->table('dochadzka_nastavenie')
+            $pole3 = array ( 'hodnota' => $values['real_times'] );
+            $row3= $this->database->table('dochadzka_nastavenie')
                     ->where('user_id = ?', $this->user_id)
                     ->where('vlastnost = ?', 'vypis_real_casov');
-            $navrt = $row->update($pole);
-            if ($navrt  > 1) throw new \ErrorException;
+            $navrt3 = $row3->update($pole3);
+            if ($navrt3  > 1) { throw new \ErrorException; }
     }
+    
+    /*
+     * zmena nastavenia rozvrhnutia pracovnej doby
+     */
+    public function updatePracovnaDoba ($pocet_smien, $pole_pracovnej_doby ){
+        //nastavenie poctu smien
+        $pole = array ( 'hodnota' => $pocet_smien );
+        $row= $this->database->table('dochadzka_nastavenie')
+                    ->where('user_id = ?', $this->user_id)
+                    ->where('vlastnost = ?', 'pocet_smien');    
+        $navrt = $row->update($pole);
+        if ($navrt  > 1) { throw new \ErrorException; }
+        
+        //nastavenie pola pracovnej doby
+        $row2 = $this->database->table('dochadzka_smeny')
+                ->where('user_id = ?', $this->user_id);
+        if ( $row2->count() != 0 ){ //uz mame zaznam, idme ho updatnut
+            
+            try{
+                $navrt2 = $row2->update($pole_pracovnej_doby);
+                if ( $navrt2 > 1 ) { throw new \ErrorException; }
+            } catch (Exception $ex) {
+                throw $ex;
+            }
+        }
+        else { //este nemame zaznam
+            $pole_pracovnej_doby['user_id'] = $this->user_id; //pridame info o uzivatelovi
+            try {
+                $row2->insert($pole_pracovnej_doby); //insertnutie noveho zaznamu
+            } catch (Exception $ex) {
+                throw $ex;
+            }
+        }//end else
+        
+        
+        
+    }//end function updatePracovnaDoba
     
     public function generuj_zaokruhlenu_dochadzku_cloveka( $clovek_id, $od, $do ){
         //nacitanie udajov do triedy
@@ -290,8 +394,8 @@ class Dochadzka extends Nette\Object
                     ->where ( 'people_id = ?', $this->clovek_id )
                     ->where ('prichod_timestamp >= ?', $this->datum_od->format('Y-m-d H:i:s') )
                     ->where ('prichod_timestamp <= ?', $this->datum_do->format('Y-m-d H:i:s') )
-                    ->where ('odchod_timestamp <= ? ', $this->datum_do->format('Y-m-d H:i:s') );   
-        $navrat = $rows->fetchAll(); //no tot musi byt inak to nenaplni data v selection
+                    ->where ('odchod_timestamp <= ? ', $this->datum_do->format('Y-m-d H:i:s') )
+                ->fetchAll();   //no tot musi byt inak to nenaplni data v selection
         foreach ($rows as $row){
             $this->pole_dochadzky[$row->id]['prichod'] = $row->prichod_timestamp;
             $this->pole_dochadzky[$row->id]['odchod'] = $row->odchod_timestamp;
@@ -379,18 +483,24 @@ class Dochadzka extends Nette\Object
                 $e->add( $this->pole_dochadzky[$key]['cas_v_praci']);
             }
             $this->celkovy_cas = $f->diff($e);//odratame cas
-            
         }//end if ze mame nejaku dochadzku
-        
-/*        
-        $this->celkovy_cas = 0;
-        if ( count($this->pole_dochadzky)  ){
-            foreach ( $this->pole_dochadzky as $key => $den ){
-                $this->celkovy_cas += $this->pole_dochadzky[$key]['cas_v_praci']->getTimestamp();
-            }
-        }//end if ze mame nejaku dochadzku
- * 
- */
+
     }//end function sumarizuj
+    
+    public function jeZaznamPrichod ($timestamp) {
+        //nacitame 5 poslednych prichodov
+        $vysl = $this->database->table('dochadzka')
+                    ->where('users_id = ?', $this->user_id)
+                    ->where ( 'people_id = ?', $this->clovek_id )
+                    ->order('prichod_timestamp DESC')
+                    ->limit('5');
+        //vypocitame si priemerny prichod
+//                    ->aggregation('AVG(prichod_timestamp) as prichod');
+        $aktual_cas = new Nette\Utils\DateTime($timestamp);
+        $priem_prichod = new Nette\Utils\DateTime($vysl['prichod']);
+        
+        
+                
+    }
 
 }

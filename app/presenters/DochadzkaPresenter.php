@@ -21,6 +21,7 @@ class DochadzkaPresenter extends BasePresenter
     
     public function renderDefault() //defaultny vypis nasich rfidiek
     {
+        parent::renderDefault(); //zavolame si nadriadeneho na globalne veci
         $this->dochadzka->setUserId( $this->getUser()->id );
         try {
             $message = $this->dochadzka->initialize();//natiahnutie najnovsich udajov z Log tabulky 
@@ -93,11 +94,16 @@ class DochadzkaPresenter extends BasePresenter
             $pole_raw_dochadzka[$clovek] = $this->dochadzka->getPoleRawDochadzky();
             $this->dochadzka->sumarizuj(); //spocitame celkovy cas za obdobie
             $temp_celkovy_cas = $this->dochadzka->getCelkovyCasDochadzky(); //ziskame hodnotu v DateInterval objekte
-            $temp_hodiny = ($temp_celkovy_cas->days*24) + ($temp_celkovy_cas->h); //pocet hodin
-            $temp_minuty = $temp_celkovy_cas->i; //pocet minut
+            if (isset($temp_celkovy_cas)){
+                $temp_hodiny = ($temp_celkovy_cas->days*24) + ($temp_celkovy_cas->h); //pocet hodin
+                $temp_minuty = $temp_celkovy_cas->i; //pocet minut
+            } else {
+                $temp_hodiny = 0;
+                $temp_minuty = 0;
+            }
             $pole_celkovy_cas_dochadzky[$clovek]["hodiny"] = $temp_hodiny;
             $pole_celkovy_cas_dochadzky[$clovek]["minuty"] = $temp_minuty;
-        }
+        }//end foreach
         
         $this->template->meno_osoby = $pole_meno_osoby;
         $this->template->posts_zaokruhlena_dochadzka = $pole_dochadzka_zaokruhlena;
@@ -106,6 +112,9 @@ class DochadzkaPresenter extends BasePresenter
         $this->template->vypisovat_realne_casy = $this->dochadzka->getVypisRealCasov(); //priznak, ze ci budemem vypisovat aj realne casy
     }
     
+   /*
+    *  formular na nastavenie sposobu vypisovania dochadzky
+    */
     protected function createComponentNastavenieForm() {
         //uvodne nastavovacky
         $this->dochadzka->setUserId( $this->getUser()->id );
@@ -123,15 +132,24 @@ class DochadzkaPresenter extends BasePresenter
             '60' => $this->translator->translate('ui.form.items_array_1hour')
         );
         
-        $form->addRadioList('zaokruhlenie', $this->translator->translate('ui.form.zaokruhlovanie') , $items)
-            ->setDefaultValue($this->dochadzka->getZaokruhlovanie());
+        $tolerancia = array ( '15' , '30', '60' ); //hodnoty pri ktorzch sa bude zobrazovat textove pole na toleranciu prichodu
         
+        $form->addRadioList('zaokruhlenie', $this->translator->translate('ui.form.zaokruhlovanie') , $items)
+            ->setDefaultValue($this->dochadzka->getZaokruhlovanie())
+            ->addCondition($form::EQUAL, $tolerancia)
+            ->toggle('text_late_arrival');
+            
+        
+        //pridame do formulara toleranciu neskoreho prichodu 0 - 10 minut
+        //ale len v pripade, ze radioLis zaokruhlovania bude nastaveny na 15, 30, alebo 60 minut
         $form->addText('late_arrival', $this->translator->translate('ui.form.late_arrival') )
             ->setRequired(true)
             ->addRule(Form::INTEGER, $this->translator->translate('ui.form.late_arrival_integer'))
             ->addRule(Form::RANGE, $this->translator->translate('ui.form.late_arrival_range'), [0, 10])
             ->setDefaultValue( $this->dochadzka->getTolerancia() )
-            ->setOption('description', $this->translator->translate('ui.form.late_arrival_explanation') );
+            ->setOption('description', $this->translator->translate('ui.form.late_arrival_explanation') )
+            ->setOption('id', 'text_late_arrival');
+            
         
        $times_options = array (
            '1' => $this->translator->translate('ui.form.yes'), 
@@ -154,6 +172,82 @@ class DochadzkaPresenter extends BasePresenter
             $this->flashMessage($this->translator->translate('ui.message.change_success'), 'alert alert-success');
         } catch (\ErrorException $e){
              $this->flashMessage($this->translator->translate('ui.message.change_fail'), 'alert alert-warning'); // informování uživatele o chybě
+        }
+        
+    }
+    
+    /*
+    *  formular na nstavenie schemy pracovnej doby
+    */
+    public function createComponentNastaveniePracovnejDobyForm() {
+        //uvodne nasavovacky
+        $this->dochadzka->setUserId( $this->getUser()->id );
+        $this->dochadzka->setPocetSmienFromDatabase();
+        $this->dochadzka->loadPolePracovnejDoby(); //nacitanie nastavenia pracovnej doby z databazy
+        $pracovna_doba = $this->dochadzka->getPolePracovnejDoby();//lokalne si nacitame z dochadzky nastavenie pracovnej doby, aby sme nemuseli stale volat funkcie
+        
+        $form = new Form;
+        
+        $zoznam_doby = array (
+            '0' => $this->translator->translate('ui.form.standard'),
+            '1' => $this->translator->translate('ui.form.shifts'),
+            '2' => $this->translator->translate('ui.form.all_day')
+        );
+        
+        $form->addRadioList('prac_doba', $this->translator->translate('ui.form.prac_doba') , $zoznam_doby)
+            ->addCondition($form::EQUAL, '1')
+            ->toggle('2_smeny')
+            ->endCondition()
+            ->addCondition($form::EQUAL, '2')
+            ->toggle('2_smeny')
+            ->toggle('3_smeny')
+            ->endCondition();
+        $form['prac_doba']->setDefaultValue( $this->dochadzka->getPocetSmien() );
+        
+        $form->addText('prichod1', $this->translator->translate('ui.prichod'))
+                ->setAttribute('class', 'form-control');
+        
+        $form->addText('odchod1', $this->translator->translate('ui.odchod'))
+                ->setAttribute('class', 'form-control');
+        
+        $form->addText('prichod2', $this->translator->translate('ui.prichod'))
+                ->setAttribute('class', 'form-control');
+        
+        $form->addText('odchod2', $this->translator->translate('ui.odchod'))
+                ->setAttribute('class', 'form-control');
+        
+        $form->addText('prichod3', $this->translator->translate('ui.prichod'))
+                ->setAttribute('class', 'form-control');
+        
+        $form->addText('odchod3', $this->translator->translate('ui.odchod'))
+                ->setAttribute('class', 'form-control');
+        
+        if ($pracovna_doba) { //ak uz mame definovanu pracovnu dobu, tak nastavime vstupne hodnoty
+            $form['prichod1']->setDefaultValue( $pracovna_doba[0]['prichod']->format("%H:%I") );
+            $form['odchod1']->setDefaultValue( $pracovna_doba[0]['odchod']->format("%H:%I") );
+        }
+        
+        $form->addSubmit('send', $this->translator->translate('ui.form.save'));
+        $form->onSuccess[] = [$this, 'nastaveniePracovnejDobySubmitted']; //spracovanie formulara bude mat na starosti funckia tejto triedy s nazvom: pridajRFIDFormSubmitted
+        
+        return $form;
+    }
+    
+    public function nastaveniePracovnejDobySubmitted( $form, $values ){
+        $pocet_smien = $values['prac_doba'];
+        $pole_pracovnej_doby = array (
+            'prichod1' => $values['prichod1'],
+            'odchod1' => $values['odchod1'],
+            'prichod2' => $values['prichod2'],
+            'odchod2' => $values['odchod2'],
+            'prichod3' => $values['prichod3'],
+            'odchod3' => $values['odchod3']
+        );
+        try {
+            $this->dochadzka->updatePracovnaDoba($pocet_smien, $pole_pracovnej_doby);
+            $this->flashMessage($this->translator->translate('ui.message.change_success'), 'alert alert-success');
+        } catch (Exception $ex) {
+            $this->flashMessage($this->translator->translate('ui.message.change_fail'), 'alert alert-warning'); // informování uživatele o chybě
         }
         
     }

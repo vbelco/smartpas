@@ -12,7 +12,7 @@
    
 
 {if $user->loggedIn} {*uz sme vnutri, len pre prihlasenych *}
-    
+<h2>{_ui.nastavenie_prehladov}</h2>    
 <div>
     <ul class="nav nav-pills">
         <li><a n:href="Dochadzka:default">{_menu.section_dochadzka.current}</a></li>
@@ -22,6 +22,91 @@
 </div>
     
 {control nastavenieForm}
+
+<hr>
+<h2>{_ui.nastavenie_prac_doby}</h2>
+
+<div>
+        {form nastaveniePracovnejDobyForm}
+    
+        <div class="row required">
+            <div class="col-sm-1 required"> {label prac_doba} </div>
+            <div class="col-sm-2 input-group"> {input prac_doba} </div>
+        </div>
+    
+        <div class="row required">
+            <div class="col-xs-1 required"> {_ui.smena1} </div>
+            <div class="col-xs-1 required"> {label prichod1} </div>
+            <div class="col-xs-2 input-group" id="form-prichod1" data-align="top" data-autoclose="true">
+                 {input prichod1}
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-time"></span>
+                </span>
+            </div>
+            <div class="col-xs-1 required"> {label odchod1} </div>
+            <div class="col-xs-2 input-group" id="form-odchod1" data-align="top" data-autoclose="true">
+                 {input odchod1}
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-time"></span>
+                </span>
+            </div>
+        </div>
+                
+        <div class="row required" id="2_smeny">
+            <div class="col-xs-1 required"> {_ui.smena2} </div>
+            <div class="col-xs-1 required"> {label prichod2} </div>
+            <div class="col-xs-2 input-group" id="form-prichod2" data-align="top" data-autoclose="true">
+                 {input prichod2}
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-time"></span>
+                </span>
+            </div>
+            <div class="col-xs-1 required"> {label odchod2} </div>
+            <div class="col-xs-2 input-group" id="form-odchod2" data-align="top" data-autoclose="true">
+                 {input odchod2}
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-time"></span>
+                </span>
+            </div>
+        </div>
+                
+        <div class="row required" id="3_smeny">
+            <div class="col-xs-1 required"> {_ui.smena3} </div>
+            <div class="col-xs-1 required"> {label prichod3} </div>
+            <div class="col-xs-2 input-group" id="form-prichod3" data-align="top" data-autoclose="true">
+                 {input prichod3}
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-time"></span>
+                </span>
+            </div>
+            <div class="col-xs-1 required"> {label odchod3} </div>
+            <div class="col-xs-2 input-group" id="form-odchod3" data-align="top" data-autoclose="true">
+                 {input odchod3}
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-time"></span>
+                </span>
+            </div>
+        </div> 
+                
+        <div>
+        {input send}
+        </div> 
+    
+        {/form}
+</div>
+
+    
+
+
+
+ <script type="text/javascript">
+    $('#form-prichod1').clockpicker();
+    $('#form-odchod1').clockpicker();
+    $('#form-prichod2').clockpicker();
+    $('#form-odchod2').clockpicker();
+    $('#form-prichod3').clockpicker();
+    $('#form-odchod3').clockpicker();
+</script>   
 
 {/if} {*if user is logged in*}
 {/block}

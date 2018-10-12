@@ -20,6 +20,7 @@ class OsobyPresenter extends BasePresenter
     
     public function renderDefault()
     {
+        parent::renderDefault(); //zavolame si nadriadeneho na globalne veci
         $this->template->posts = $this->database->table('people')
             ->where('users_id = ?', $this->getUser()->id )
             ->where("active = 1")

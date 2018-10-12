@@ -1,7 +1,8 @@
+#
+# WARNING: it is CRITICAL that this file & directory are NOT accessible directly via a web browser!
+# https://nette.org/security-warning
+#
 parameters:
-
-php:
-	date.timezone: Europe/Prague
 
 
 application:
@@ -12,8 +13,13 @@ application:
 
 session:
 	expiration: 14 days
-	debugger: true
-	name: smartpas
+
+
+database:
+	dsn: 'mysql:host=46.229.230.86;dbname=hz024701db'
+	user: hz024700
+	password: dhynydor
+
 
 services:
 	router: App\RouterFactory::createRouter
@@ -24,11 +30,6 @@ services:
 	- App\Model\Uzivatel
 	- App\Model\Organizacia
 	authenticator: MyAuthenticator
-
-database:
-	dsn: 'mysql:host=46.229.230.86;dbname=hz024701db'
-	user: hz024700
-	password: dhynydor
 
 extensions:
 	translation: Kdyby\Translation\DI\TranslationExtension

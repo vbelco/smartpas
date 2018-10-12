@@ -31,7 +31,8 @@ class RFIDPresenter extends BasePresenter
     }
     
     public function renderDefault() //defaultny vypis nasich rfidiek
-    { 
+    {
+        parent::renderDefault(); //zavolame si nadriadeneho na globalne veci
         if ($this->ktore == "all"){  
             $this->posts = $this->rfid->getAllRfidByUser( $this->getUser()->id ); //nacitanie rfidiek aktivneho uzivatela
         }

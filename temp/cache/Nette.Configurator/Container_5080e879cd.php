@@ -632,7 +632,7 @@ class Container_5080e879cd extends Nette\DI\Container
 	public function createServiceApplication__5(): App\Presenters\HomepagePresenter
 	{
 		$service = new App\Presenters\HomepagePresenter($this->getService('database.default.context'),
-			$this->getService('66_App_Model_Uzivatel'));
+			$this->getService('66_App_Model_Uzivatel'), $this->getService('62_App_Model_Dochadzka'));
 		$service->injectPrimary($this, $this->getService('application.presenterFactory'),
 			$this->getService('routing.router'), $this->getService('http.request'),
 			$this->getService('http.response'), $this->getService('session.session'),

@@ -31,10 +31,17 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         parent::beforeRender();
         $this->template->activeLocale = $this->translator->getLocale();
         
-        if ( $this->getUser()->isLoggedIn() ) {
+        if ( $this->getUser()->isLoggedIn() ) { //ak je este prihlaseny, nacitame ho
             $this->uzivatel->loadUserFromDatabase( $this->getUser()->id );
             $this->template->meno_uzivatela = $this->uzivatel->getName();
             $this->template->nazov_planu = $this->uzivatel->getPlanName();
+        }
+    }
+    
+    protected function renderDefault()
+    {
+        if ( !($this->getUser()->isLoggedIn()) ) { //ak NIE JE este prihlaseny, presmerujeme ho na prihlasenie
+            $this->redirect('Sign:in');
         }
     }
        

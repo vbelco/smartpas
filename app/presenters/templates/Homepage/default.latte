@@ -14,12 +14,19 @@
     <div class="table-responsive">
     <table class="table table-hover table-bordered">
     <tr>
-        <th>{_ui.id_zaznam}</th> <th>{_ui.id_reader}</th> <th>{_ui.id_rfid}</th> <th>{_ui.timestamp}</th> <th>{_ui.spracovane}</th>
+        <th>{_ui.name}</th> <th>{_ui.prichod}</th> <th>{_ui.odchod}</th>
     </tr>
 	{foreach $posts as $post}
             <tr>
+                <td> {$post->people->meno} </td>
+                <td> {$post->prichod_timestamp|date:"d. m. Y G:i:s"} </td>
+                <td> {$post->odchod_timestamp|date:"d. m. Y G:i:s"} </td>
+            </tr>
+            
+            {*
+            <tr>
                 <td>{$post->id}</td> 
-                <td>{$post->citacka->id}</td> 
+                <td>{$post->citacka->name}</td> 
                 <td>{$post->rfid_number}</td> 
                 <td>{$post->timestamp}</td>
                 <td>
@@ -28,6 +35,8 @@
                     {/if}
                 </td>
             </tr>
+            *}
+            
         {/foreach}
     </table>
     </div>

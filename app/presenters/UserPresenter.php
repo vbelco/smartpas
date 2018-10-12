@@ -15,7 +15,7 @@ class UserPresenter extends BasePresenter
     
     public function renderDefault() //defaultny vypis nasich rfidiek
     {
-        
+        parent::renderDefault(); //zavolame si nadriadeneho na globalne veci
     }
     
     protected function createComponentUserFormEdit() 
