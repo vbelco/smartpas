@@ -19,24 +19,19 @@
 	{foreach $posts as $post}
             <tr>
                 <td> {$post->people->meno} </td>
-                <td> {$post->prichod_timestamp|date:"d. m. Y G:i:s"} </td>
-                <td> {$post->odchod_timestamp|date:"d. m. Y G:i:s"} </td>
-            </tr>
-            
-            {*
-            <tr>
-                <td>{$post->id}</td> 
-                <td>{$post->citacka->name}</td> 
-                <td>{$post->rfid_number}</td> 
-                <td>{$post->timestamp}</td>
-                <td>
-                    {if $post->spracovane}
-                        {_ui.spracovane}
-                    {/if}
+                <td> {if  $post->prichod_timestamp }
+                        {$post->prichod_timestamp|date:"d. m. Y G:i:s"} 
+                      {else}
+                        {_ui.nedefinovane}
+                      {/if}
+                </td>
+                <td> {if $post->odchod_timestamp }
+                        {$post->odchod_timestamp|date:"d. m. Y G:i:s"} 
+                     {else}
+                        {_ui.nedefinovane}
+                     {/if}
                 </td>
             </tr>
-            *}
-            
         {/foreach}
     </table>
     </div>

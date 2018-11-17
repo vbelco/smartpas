@@ -72,17 +72,25 @@
         {foreach $posts_zaokruhlena_dochadzka[$osoba] as $index => $post2}
             <tr>
                 <td>
-                    {$post2['prichod']|date:"d. m. Y G:i:s"}
-                    {if $vypisovat_realne_casy}
-                        <br>
-                        ( {$posts_raw_dochadzka[$osoba][$index]['prichod']|date:"G:i:s"} )
-                    {/if}
+                    {if  $post2['prichod'] }
+                        {$post2['prichod']|date:"d. m. Y G:i:s"}
+                        {if $vypisovat_realne_casy}
+                            <br>
+                            ( {$posts_raw_dochadzka[$osoba][$index]['prichod']|date:"G:i:s"} )
+                        {/if}
+                      {else}
+                        {_ui.nedefinovane}
+                      {/if}
                 </td>
                 <td>
-                    {$post2['odchod']|date:"d. m. Y G:i:s"}
-                    {if $vypisovat_realne_casy}
-                        <br>
-                        ( {$posts_raw_dochadzka[$osoba][$index]['odchod']|date:"G:i:s"} )
+                    {if  $post2['odchod'] }
+                        {$post2['odchod']|date:"d. m. Y G:i:s"}
+                        {if $vypisovat_realne_casy}
+                            <br>
+                            ( {$posts_raw_dochadzka[$osoba][$index]['odchod']|date:"G:i:s"} )
+                        {/if}
+                    {else}
+                        {_ui.nedefinovane}
                     {/if}
                 </td>
                 <td>

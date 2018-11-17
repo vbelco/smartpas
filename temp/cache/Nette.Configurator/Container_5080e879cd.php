@@ -52,8 +52,9 @@ class Container_5080e879cd extends Nette\DI\Container
 					'62_App_Model_Dochadzka',
 					'63_App_Model_Organizacia',
 					'64_App_Model_Osoba',
-					'65_App_Model_RFID',
-					'66_App_Model_Uzivatel',
+					'65_App_Model_PracovnaDoba',
+					'66_App_Model_RFID',
+					'67_App_Model_Uzivatel',
 					'authenticator',
 					'application.4',
 				],
@@ -176,8 +177,9 @@ class Container_5080e879cd extends Nette\DI\Container
 			'App\Model\Dochadzka' => [1 => ['62_App_Model_Dochadzka']],
 			'App\Model\Organizacia' => [1 => ['63_App_Model_Organizacia']],
 			'App\Model\Osoba' => [1 => ['64_App_Model_Osoba']],
-			'App\Model\RFID' => [1 => ['65_App_Model_RFID']],
-			'App\Model\Uzivatel' => [1 => ['66_App_Model_Uzivatel']],
+			'App\Model\PracovnaDoba' => [1 => ['65_App_Model_PracovnaDoba']],
+			'App\Model\RFID' => [1 => ['66_App_Model_RFID']],
+			'App\Model\Uzivatel' => [1 => ['67_App_Model_Uzivatel']],
 			'Nette\Security\IAuthenticator' => [1 => ['authenticator']],
 			'MyAuthenticator' => [1 => ['authenticator']],
 			'App\Presenters\BasePresenter' => [
@@ -356,8 +358,9 @@ class Container_5080e879cd extends Nette\DI\Container
 			'62_App_Model_Dochadzka' => 'App\Model\Dochadzka',
 			'63_App_Model_Organizacia' => 'App\Model\Organizacia',
 			'64_App_Model_Osoba' => 'App\Model\Osoba',
-			'65_App_Model_RFID' => 'App\Model\RFID',
-			'66_App_Model_Uzivatel' => 'App\Model\Uzivatel',
+			'65_App_Model_PracovnaDoba' => 'App\Model\PracovnaDoba',
+			'66_App_Model_RFID' => 'App\Model\RFID',
+			'67_App_Model_Uzivatel' => 'App\Model\Uzivatel',
 			'application.1' => 'App\Presenters\CitackaPresenter',
 			'application.10' => 'NetteModule\ErrorPresenter',
 			'application.11' => 'NetteModule\MicroPresenter',
@@ -553,14 +556,21 @@ class Container_5080e879cd extends Nette\DI\Container
 	}
 
 
-	public function createService__65_App_Model_RFID(): App\Model\RFID
+	public function createService__65_App_Model_PracovnaDoba(): App\Model\PracovnaDoba
+	{
+		$service = new App\Model\PracovnaDoba($this->getService('database.default.context'));
+		return $service;
+	}
+
+
+	public function createService__66_App_Model_RFID(): App\Model\RFID
 	{
 		$service = new App\Model\RFID($this->getService('database.default.context'), $this->getService('64_App_Model_Osoba'));
 		return $service;
 	}
 
 
-	public function createService__66_App_Model_Uzivatel(): App\Model\Uzivatel
+	public function createService__67_App_Model_Uzivatel(): App\Model\Uzivatel
 	{
 		$service = new App\Model\Uzivatel($this->getService('database.default.context'), $this->getService('translation.default'));
 		return $service;
@@ -570,7 +580,7 @@ class Container_5080e879cd extends Nette\DI\Container
 	public function createServiceApplication__1(): App\Presenters\CitackaPresenter
 	{
 		$service = new App\Presenters\CitackaPresenter($this->getService('database.default.context'),
-			$this->getService('66_App_Model_Uzivatel'), $this->getService('61_App_Model_Citacka'));
+			$this->getService('67_App_Model_Uzivatel'), $this->getService('61_App_Model_Citacka'));
 		$service->injectPrimary($this, $this->getService('application.presenterFactory'),
 			$this->getService('routing.router'), $this->getService('http.request'),
 			$this->getService('http.response'), $this->getService('session.session'),
@@ -599,7 +609,7 @@ class Container_5080e879cd extends Nette\DI\Container
 	public function createServiceApplication__2(): App\Presenters\DochadzkaPresenter
 	{
 		$service = new App\Presenters\DochadzkaPresenter($this->getService('database.default.context'),
-			$this->getService('66_App_Model_Uzivatel'), $this->getService('62_App_Model_Dochadzka'));
+			$this->getService('67_App_Model_Uzivatel'), $this->getService('62_App_Model_Dochadzka'));
 		$service->injectPrimary($this, $this->getService('application.presenterFactory'),
 			$this->getService('routing.router'), $this->getService('http.request'),
 			$this->getService('http.response'), $this->getService('session.session'),
@@ -632,7 +642,7 @@ class Container_5080e879cd extends Nette\DI\Container
 	public function createServiceApplication__5(): App\Presenters\HomepagePresenter
 	{
 		$service = new App\Presenters\HomepagePresenter($this->getService('database.default.context'),
-			$this->getService('66_App_Model_Uzivatel'), $this->getService('62_App_Model_Dochadzka'));
+			$this->getService('67_App_Model_Uzivatel'), $this->getService('62_App_Model_Dochadzka'));
 		$service->injectPrimary($this, $this->getService('application.presenterFactory'),
 			$this->getService('routing.router'), $this->getService('http.request'),
 			$this->getService('http.response'), $this->getService('session.session'),
@@ -646,7 +656,7 @@ class Container_5080e879cd extends Nette\DI\Container
 	public function createServiceApplication__6(): App\Presenters\OsobyPresenter
 	{
 		$service = new App\Presenters\OsobyPresenter($this->getService('database.default.context'),
-			$this->getService('66_App_Model_Uzivatel'), $this->getService('64_App_Model_Osoba'));
+			$this->getService('67_App_Model_Uzivatel'), $this->getService('64_App_Model_Osoba'));
 		$service->injectPrimary($this, $this->getService('application.presenterFactory'),
 			$this->getService('routing.router'), $this->getService('http.request'),
 			$this->getService('http.response'), $this->getService('session.session'),
@@ -660,7 +670,7 @@ class Container_5080e879cd extends Nette\DI\Container
 	public function createServiceApplication__7(): App\Presenters\RFIDPresenter
 	{
 		$service = new App\Presenters\RFIDPresenter($this->getService('database.default.context'),
-			$this->getService('66_App_Model_Uzivatel'), $this->getService('65_App_Model_RFID'));
+			$this->getService('67_App_Model_Uzivatel'), $this->getService('66_App_Model_RFID'));
 		$service->injectPrimary($this, $this->getService('application.presenterFactory'),
 			$this->getService('routing.router'), $this->getService('http.request'),
 			$this->getService('http.response'), $this->getService('session.session'),
@@ -674,7 +684,7 @@ class Container_5080e879cd extends Nette\DI\Container
 	public function createServiceApplication__8(): App\Presenters\SignPresenter
 	{
 		$service = new App\Presenters\SignPresenter($this->getService('database.default.context'),
-			$this->getService('66_App_Model_Uzivatel'));
+			$this->getService('67_App_Model_Uzivatel'));
 		$service->injectPrimary($this, $this->getService('application.presenterFactory'),
 			$this->getService('routing.router'), $this->getService('http.request'),
 			$this->getService('http.response'), $this->getService('session.session'),
@@ -688,7 +698,7 @@ class Container_5080e879cd extends Nette\DI\Container
 	public function createServiceApplication__9(): App\Presenters\UserPresenter
 	{
 		$service = new App\Presenters\UserPresenter($this->getService('database.default.context'),
-			$this->getService('66_App_Model_Uzivatel'));
+			$this->getService('67_App_Model_Uzivatel'));
 		$service->injectPrimary($this, $this->getService('application.presenterFactory'),
 			$this->getService('routing.router'), $this->getService('http.request'),
 			$this->getService('http.response'), $this->getService('session.session'),
@@ -765,8 +775,8 @@ class Container_5080e879cd extends Nette\DI\Container
 
 	public function createServiceDatabase__default__connection(): Nette\Database\Connection
 	{
-		$service = new Nette\Database\Connection('mysql:host=127.0.0.1;dbname=nette', 'root',
-			null, null);
+		$service = new Nette\Database\Connection('mysql:host=46.229.230.86;dbname=hz024701db',
+			'hz024700', 'dhynydor', null);
 		$this->getService('tracy.blueScreen')->addPanel('Nette\Bridges\DatabaseTracy\ConnectionPanel::renderException');
 		Nette\Database\Helpers::createDebugPanel($service, true, 'default');
 		return $service;

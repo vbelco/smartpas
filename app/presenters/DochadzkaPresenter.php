@@ -19,8 +19,8 @@ class DochadzkaPresenter extends BasePresenter
         $this->dochadzka = $dochadzka; 
     }
     
-    public function renderDefault() //defaultny vypis nasich rfidiek
-    {
+    public function renderDefault() 
+    {        
         parent::renderDefault(); //zavolame si nadriadeneho na globalne veci
         $this->dochadzka->setUserId( $this->getUser()->id );
         try {
@@ -180,12 +180,12 @@ class DochadzkaPresenter extends BasePresenter
     *  formular na nstavenie schemy pracovnej doby
     */
     public function createComponentNastaveniePracovnejDobyForm() {
-        //uvodne nasavovacky
-        $this->dochadzka->setUserId( $this->getUser()->id );
-        $this->dochadzka->setPocetSmienFromDatabase();
-        $this->dochadzka->loadPolePracovnejDoby(); //nacitanie nastavenia pracovnej doby z databazy
-        $pracovna_doba = $this->dochadzka->getPolePracovnejDoby();//lokalne si nacitame z dochadzky nastavenie pracovnej doby, aby sme nemuseli stale volat funkcie
-        
+        //uvodne nasavovacky   
+        $pracovna_doba = new \App\Model\PracovnaDoba($this->database, $this->getUser()->id  );
+        $pracovna_doba->setPocetSmienFromDatabase();
+        $pracovna_doba->loadPolePracovnejDoby();
+        $pocet_smien = $pracovna_doba->getPocetSmien();
+                
         $form = new Form;
         
         $zoznam_doby = array (
@@ -202,7 +202,7 @@ class DochadzkaPresenter extends BasePresenter
             ->toggle('2_smeny')
             ->toggle('3_smeny')
             ->endCondition();
-        $form['prac_doba']->setDefaultValue( $this->dochadzka->getPocetSmien() );
+        $form['prac_doba']->setDefaultValue( $pocet_smien );
         
         $form->addText('prichod1', $this->translator->translate('ui.prichod'))
                 ->setAttribute('class', 'form-control');
@@ -222,9 +222,13 @@ class DochadzkaPresenter extends BasePresenter
         $form->addText('odchod3', $this->translator->translate('ui.odchod'))
                 ->setAttribute('class', 'form-control');
         
-        if ($pracovna_doba) { //ak uz mame definovanu pracovnu dobu, tak nastavime vstupne hodnoty
-            $form['prichod1']->setDefaultValue( $pracovna_doba[0]['prichod']->format("%H:%I") );
-            $form['odchod1']->setDefaultValue( $pracovna_doba[0]['odchod']->format("%H:%I") );
+        if ( $pracovna_doba->getPolePracovnejDoby() ) { //ak uz mame definovanu pracovnu dobu, tak nastavime vstupne hodnoty
+            $form['prichod1']->setDefaultValue( $pracovna_doba->getPrichod1()->format("%H:%I") );
+            $form['odchod1']->setDefaultValue( $pracovna_doba->getOdchod1()->format("%H:%I") );
+            $form['prichod2']->setDefaultValue( $pracovna_doba->getPrichod2()->format("%H:%I") );
+            $form['odchod2']->setDefaultValue( $pracovna_doba->getOdchod2()->format("%H:%I") );
+            $form['prichod3']->setDefaultValue( $pracovna_doba->getPrichod2()->format("%H:%I") );
+            $form['odchod3']->setDefaultValue( $pracovna_doba->getOdchod3()->format("%H:%I") );
         }
         
         $form->addSubmit('send', $this->translator->translate('ui.form.save'));
@@ -234,7 +238,8 @@ class DochadzkaPresenter extends BasePresenter
     }
     
     public function nastaveniePracovnejDobySubmitted( $form, $values ){
-        $pocet_smien = $values['prac_doba'];
+        $pocet_smien = $values['prac_doba']; 
+        
         $pole_pracovnej_doby = array (
             'prichod1' => $values['prichod1'],
             'odchod1' => $values['odchod1'],
@@ -243,8 +248,11 @@ class DochadzkaPresenter extends BasePresenter
             'prichod3' => $values['prichod3'],
             'odchod3' => $values['odchod3']
         );
+        
+        //uvodne nasavovacky   
+        $pracovna_doba = new \App\Model\PracovnaDoba($this->database, $this->getUser()->id  );
         try {
-            $this->dochadzka->updatePracovnaDoba($pocet_smien, $pole_pracovnej_doby);
+            $pracovna_doba->updatePracovnaDoba($pocet_smien, $pole_pracovnej_doby);
             $this->flashMessage($this->translator->translate('ui.message.change_success'), 'alert alert-success');
         } catch (Exception $ex) {
             $this->flashMessage($this->translator->translate('ui.message.change_fail'), 'alert alert-warning'); // informování uživatele o chybě

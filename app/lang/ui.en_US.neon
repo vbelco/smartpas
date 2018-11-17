@@ -60,6 +60,7 @@ nastavenie_prehladov: "Listing set up"
 smena1: "1st shift"
 smena2: "2nd shift"
 smena3: "3rd shift"
+nedefinovane: "NO DEFINITION"
 form:
     yes: "Yes"
     no: "No"

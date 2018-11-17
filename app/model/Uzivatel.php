@@ -45,7 +45,8 @@ class Uzivatel extends Nette\Object
     public function getPlanName() {
         try{
             $row =  $this->database->table('plans')->get( $this->plan_id );
-            return $row->nazov;
+            if ($row) { return $row->nazov; }
+            else return "";
         } catch ( Nette\Database\ConnectionException $e ){
             throw new \ErrorException;
         }

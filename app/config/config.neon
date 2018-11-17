@@ -29,6 +29,7 @@ services:
 	- App\Model\Dochadzka
 	- App\Model\Uzivatel
 	- App\Model\Organizacia
+	- App\Model\PracovnaDoba
 	authenticator: MyAuthenticator
 
 extensions:

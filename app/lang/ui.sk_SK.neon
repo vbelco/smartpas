@@ -60,6 +60,7 @@ nastavenie_prehladov: "Nastavenie výpisov"
 smena1: "1. smena"
 smena2: "2. smena"
 smena3: "3. smena"
+nedefinovane: "NEDEFINOVANÉ"
 form:
     yes: "Áno"
     no: "Nie"

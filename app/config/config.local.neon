@@ -23,12 +23,17 @@ services:
 	- App\Model\Dochadzka
 	- App\Model\Uzivatel
 	- App\Model\Organizacia
+	- App\Model\PracovnaDoba
 	authenticator: MyAuthenticator
 
 database:
-	dsn: 'mysql:host=127.0.0.1;dbname=nette'
-	user: root
-	password: 
+#	dsn: 'mysql:host=127.0.0.1;dbname=nette'
+#	user: root
+#	password: 
+	dsn: 'mysql:host=46.229.230.86;dbname=hz024701db'
+	user: hz024700
+	password: dhynydor
+
 
 extensions:
 	translation: Kdyby\Translation\DI\TranslationExtension
