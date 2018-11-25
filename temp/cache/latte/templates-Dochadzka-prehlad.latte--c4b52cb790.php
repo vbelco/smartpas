@@ -9,12 +9,14 @@ class Templatec4b52cb790 extends Latte\Runtime\Template
 		'banner' => 'blockBanner',
 		'title' => 'blockTitle',
 		'content' => 'blockContent',
+		'_vypisArea' => 'blockVypisArea',
 	];
 
 	public $blockTypes = [
 		'banner' => 'html',
 		'title' => 'html',
 		'content' => 'html',
+		'_vypisArea' => 'html',
 	];
 
 
@@ -39,9 +41,9 @@ class Templatec4b52cb790 extends Latte\Runtime\Template
 	function prepare()
 	{
 		extract($this->params);
-		if (isset($this->params['index'])) trigger_error('Variable $index overwritten in foreach on line 72');
-		if (isset($this->params['post2'])) trigger_error('Variable $post2 overwritten in foreach on line 72');
-		if (isset($this->params['osoba'])) trigger_error('Variable $osoba overwritten in foreach on line 58');
+		if (isset($this->params['index'])) trigger_error('Variable $index overwritten in foreach on line 76');
+		if (isset($this->params['post2'])) trigger_error('Variable $post2 overwritten in foreach on line 76');
+		if (isset($this->params['osoba'])) trigger_error('Variable $osoba overwritten in foreach on line 59');
 		Nette\Bridges\ApplicationLatte\UIRuntime::initialize($this, $this->parentName, $this->blocks);
 		
 	}
@@ -124,100 +126,7 @@ class Templatec4b52cb790 extends Latte\Runtime\Template
     </div>
 </div>   
 
-<?php
-			if (isset($meno_osoby)) {
-				$iterations = 0;
-				foreach ($osoby as $osoba) {
-?>
-    <div class="table-responsive">
-        <h3><?php echo LR\Filters::escapeHtmlText($meno_osoby[$osoba]) /* line 60 */ ?> ( <?php echo LR\Filters::escapeHtmlText($osoba) /* line 60 */ ?> )</h3>
-        
-<?php
-					if (isset($posts_zaokruhlena_dochadzka[$osoba])) {
-?>
-            
-        <?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "ui.celkovy_cas")) ?>: <?php
-						echo LR\Filters::escapeHtmlText($celkovy_cas_dochadzky[$osoba]["hodiny"]) /* line 64 */ ?> : <?php
-						echo LR\Filters::escapeHtmlText($celkovy_cas_dochadzky[$osoba]["minuty"]) /* line 64 */ ?>
-
-        <table class=" table table-hover">
-            <tr>
-                <th><?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "ui.prichod")) ?></th>
-                <th><?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "ui.odchod")) ?></th>
-                <th><?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "ui.time_at_work")) ?></th>
-            </tr>
-        
-<?php
-						$iterations = 0;
-						foreach ($posts_zaokruhlena_dochadzka[$osoba] as $index => $post2) {
-?>
-            <tr>
-                <td>
-<?php
-							if ($post2['prichod']) {
-								?>                        <?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->date, $post2['prichod'], "d. m. Y G:i:s")) /* line 76 */ ?>
-
-<?php
-								if ($vypisovat_realne_casy) {
-?>
-                            <br>
-                            ( <?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->date, $posts_raw_dochadzka[$osoba][$index]['prichod'], "G:i:s")) /* line 79 */ ?> )
-<?php
-								}
-							}
-							else {
-?>
-                        NEDEFINOVANE
-<?php
-							}
-?>
-                </td>
-                <td>
-<?php
-							if ($post2['odchod']) {
-								?>                        <?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->date, $post2['odchod'], "d. m. Y G:i:s")) /* line 87 */ ?>
-
-<?php
-								if ($vypisovat_realne_casy) {
-?>
-                            <br>
-                            ( <?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->date, $posts_raw_dochadzka[$osoba][$index]['odchod'], "G:i:s")) /* line 90 */ ?> )
-<?php
-								}
-							}
-							else {
-?>
-                        NEDEFINOVANE
-<?php
-							}
-?>
-                </td>
-                <td>
-                    <?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->date, $post2['cas_v_praci'], "%h:%I")) /* line 97 */ ?>
-
-                </td>
-            </tr>
-<?php
-							$iterations++;
-						}
-?>
-        </table>
-<?php
-					}
-					else {
-						?>        <div><?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "ui.none_definition_attendance")) ?></div>
-<?php
-					}
-?>
-        
-    </div>
-<?php
-					$iterations++;
-				}
-			}
-?>
-    
-
+<div id="<?php echo htmlSpecialChars($this->global->snippetDriver->getHtmlId('vypisArea')) ?>"><?php $this->renderBlock('_vypisArea', $this->params) ?></div>
 
 <script type="text/javascript">
     $('#form-date-od').datetimepicker({
@@ -226,7 +135,7 @@ class Templatec4b52cb790 extends Latte\Runtime\Template
         todayBtn:  1,
         useCurrent: true,
         format: "dd.mm.yyyy",
-        language:  <?php echo LR\Filters::escapeJs($activeLocale) /* line 119 */ ?>
+        language:  <?php echo LR\Filters::escapeJs($activeLocale) /* line 129 */ ?>
 
     });
     $('#form-date-do').datetimepicker({
@@ -234,7 +143,7 @@ class Templatec4b52cb790 extends Latte\Runtime\Template
         autoclose: 1,
         todayBtn:  1,
         format: "dd.mm.yyyy",
-        language:  <?php echo LR\Filters::escapeJs($activeLocale) /* line 126 */ ?>
+        language:  <?php echo LR\Filters::escapeJs($activeLocale) /* line 136 */ ?>
 
     });
 </script> 
@@ -244,6 +153,127 @@ class Templatec4b52cb790 extends Latte\Runtime\Template
 		}
 ?> 
 <?php
+	}
+
+
+	function blockVypisArea($_args)
+	{
+		extract($_args);
+		$this->global->snippetDriver->enter("vypisArea", "static");
+		if (isset($meno_osoby)) {
+			$iterations = 0;
+			foreach ($osoby as $osoba) {
+?>
+    <div class="table-responsive">
+        <h3><?php echo LR\Filters::escapeHtmlText($meno_osoby[$osoba]) /* line 61 */ ?> ( <?php echo LR\Filters::escapeHtmlText($osoba) /* line 61 */ ?> )</h3>
+        
+<?php
+				if (isset($posts_zaokruhlena_dochadzka[$osoba])) {
+?>
+            
+        <?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "ui.celkovy_cas")) ?>: 
+        <div id="<?php echo htmlSpecialChars($this->global->snippetDriver->getHtmlId("celkovyCas-$osoba")) ?>"><?php
+					$this->global->snippetDriver->enter("celkovyCas-$osoba", "dynamic");
+?>
+
+        <?php echo LR\Filters::escapeHtmlText($celkovy_cas_dochadzky[$osoba]["hodiny"]) /* line 67 */ ?> : <?php
+					echo LR\Filters::escapeHtmlText($celkovy_cas_dochadzky[$osoba]["minuty"]) /* line 67 */ ?>
+
+<?php
+					$this->global->snippetDriver->leave();
+					?></div>        <table class=" table table-hover">
+            <tr>
+                <th><?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "ui.prichod")) ?></th>
+                <th><?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "ui.odchod")) ?></th>
+                <th><?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "ui.time_at_work")) ?></th>
+            </tr>
+        
+<?php
+					$iterations = 0;
+					foreach ($posts_zaokruhlena_dochadzka[$osoba] as $index => $post2) {
+?>
+            <tr>
+                <td>
+<?php
+						if ($post2['prichod']) {
+							?>                        <?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->date, $post2['prichod'], "d. m. Y G:i:s")) /* line 80 */ ?>
+
+<?php
+							if ($vypisovat_realne_casy) {
+?>
+                            <br>
+                            ( <?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->date, $posts_raw_dochadzka[$osoba][$index]['prichod'], "G:i:s")) /* line 83 */ ?> )
+<?php
+							}
+						}
+						else {
+							?>                        <div id="<?php echo htmlSpecialChars($this->global->snippetDriver->getHtmlId("prichod-$index")) ?>"><?php
+							$this->global->snippetDriver->enter("prichod-$index", "dynamic");
+?>
+
+                        <?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "ui.nedefinovane")) ?>
+
+                        <a class=ajax href="<?php echo LR\Filters::escapeHtmlAttr($this->global->uiControl->link("Edit!", [$index])) ?>"><button type="button" class="btn btn-default"><?php
+							echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "ui.form.edit")) ?></button></a>
+<?php
+							$this->global->snippetDriver->leave();
+							?></div><?php
+						}
+?>
+                </td>
+                <td>
+<?php
+						if ($post2['odchod']) {
+							?>                        <?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->date, $post2['odchod'], "d. m. Y G:i:s")) /* line 94 */ ?>
+
+<?php
+							if ($vypisovat_realne_casy) {
+?>
+                            <br>
+                            ( <?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->date, $posts_raw_dochadzka[$osoba][$index]['odchod'], "G:i:s")) /* line 97 */ ?> )
+<?php
+							}
+						}
+						else {
+							?>                        <div id="<?php echo htmlSpecialChars($this->global->snippetDriver->getHtmlId("odchod-$index")) ?>"><?php
+							$this->global->snippetDriver->enter("odchod-$index", "dynamic");
+?>
+
+                        <?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "ui.nedefinovane")) ?>
+
+                        <a class=ajax href="<?php echo LR\Filters::escapeHtmlAttr($this->global->uiControl->link("Edit!", [$index])) ?>"><button type="button" class="btn btn-default"><?php
+							echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "ui.form.edit")) ?></button></a>
+<?php
+							$this->global->snippetDriver->leave();
+							?></div><?php
+						}
+?>
+                </td>
+                <td>
+                    <?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->date, $post2['cas_v_praci'], "%h:%I")) /* line 107 */ ?>
+
+                </td>
+            </tr>
+<?php
+						$iterations++;
+					}
+?>
+        </table>
+<?php
+				}
+				else {
+					?>        <div><?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "ui.none_definition_attendance")) ?></div>
+<?php
+				}
+?>
+        
+    </div>
+<?php
+				$iterations++;
+			}
+		}
+		$this->global->snippetDriver->leave();
+		
 	}
 
 }

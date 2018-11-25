@@ -54,6 +54,7 @@
     </div>
 </div>   
 
+{snippet vypisArea}
 {if isset($meno_osoby) }
     {foreach $osoby as $osoba}
     <div class="table-responsive">
@@ -61,7 +62,10 @@
         
         {ifset $posts_zaokruhlena_dochadzka[$osoba]  }
             
-        {_ui.celkovy_cas}: {$celkovy_cas_dochadzky[$osoba]["hodiny"]} : {$celkovy_cas_dochadzky[$osoba]["minuty"]}
+        {_ui.celkovy_cas}: 
+        {snippet celkovyCas-$osoba}
+        {$celkovy_cas_dochadzky[$osoba]["hodiny"]} : {$celkovy_cas_dochadzky[$osoba]["minuty"]}
+        {/snippet}
         <table class=" table table-hover">
             <tr>
                 <th>{_ui.prichod}</th>
@@ -79,7 +83,10 @@
                             ( {$posts_raw_dochadzka[$osoba][$index]['prichod']|date:"G:i:s"} )
                         {/if}
                       {else}
+                        {snippet prichod-$index}
                         {_ui.nedefinovane}
+                        <a n:href="Edit! $index" class=ajax><button type="button" class="btn btn-default">{_ui.form.edit}</button></a>
+                        {/snippet}
                       {/if}
                 </td>
                 <td>
@@ -90,7 +97,10 @@
                             ( {$posts_raw_dochadzka[$osoba][$index]['odchod']|date:"G:i:s"} )
                         {/if}
                     {else}
+                        {snippet odchod-$index}    
                         {_ui.nedefinovane}
+                        <a n:href="Edit! $index" class=ajax><button type="button" class="btn btn-default">{_ui.form.edit}</button></a>
+                        {/snippet}
                     {/if}
                 </td>
                 <td>
@@ -106,7 +116,7 @@
     </div>
     {/foreach}
 {/if}
-    
+{/snippet}    
 
 
 <script type="text/javascript">

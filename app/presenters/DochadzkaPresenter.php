@@ -14,6 +14,10 @@ class DochadzkaPresenter extends BasePresenter
     /** @var Dochadzka */
     private $dochadzka; //trieda dochadzky
     
+    private $od;  //pre formular datumu od
+    private $do;   //pre formular do
+    private $osoby;  //pre formular zoznam osob
+    
     public function __construct(Nette\Database\Context $database, Uzivatel $uzivatel, Dochadzka $dochadzka) {
         parent::__construct($database, $uzivatel);
         $this->dochadzka = $dochadzka; 
@@ -26,11 +30,9 @@ class DochadzkaPresenter extends BasePresenter
         try {
             $message = $this->dochadzka->initialize();//natiahnutie najnovsich udajov z Log tabulky 
             $this->flashMessage($message);
-        } catch (Nette\Application\ApplicationException $e){
-            
+        } catch (Nette\Application\ApplicationException $e){   
             $this->flashMessage( $e->getMessage() );
         }
-      
         $this->template->posts = $this->dochadzka->ludiaVPraci();   
     }
     
@@ -47,6 +49,7 @@ class DochadzkaPresenter extends BasePresenter
         $form->addText('datum_od', $this->translator->translate('ui.form.from') )
                 ->setAttribute('readonly')
                 ->setAttribute('class', 'form-control')
+                ->setDefaultValue($this->od)
                 ->setRequired( $this->translator->translate('ui.message.enter_begin_date') );
         
         $form->addText('datum_do',  $this->translator->translate('ui.form.to') )
@@ -69,11 +72,13 @@ class DochadzkaPresenter extends BasePresenter
         $this->dochadzka->setZaokruhlovanieFromDatabase();
         $this->dochadzka->setToleranciaFromDatabase(); //nastavenie predvolenej tolerancie neskorzch prichodov
         $this->dochadzka->setVypisRealCasovFromDatabase(); //nastavenie  ci sa maju vypisvat aj realne, hrube casy popri zaokruhlenych
-        $od = $values['datum_od'];
-        $do = $values['datum_do'];
-        $osoby = $values['osoby'];
-   
-        $this->template->osoby = $osoby;//hodime naspet zoznam id osob z formulara
+        $this->od = $values['datum_od'];
+        $this->do = $values['datum_do'];
+        $this->osoby = $values['osoby'];
+        
+        \Tracy\Dumper::dump($this->od);
+        
+        $this->template->osoby = $this->osoby;//hodime naspet zoznam id osob z formulara
         
         $pole_dochadzka_zaokruhlena = array();
         $pole_raw_dochadzka = array();
@@ -81,15 +86,15 @@ class DochadzkaPresenter extends BasePresenter
         $pole_celkovy_cas_dochadzky = array();
         //ziskanie  dochadzky
         //prebehneme ludi z formulara a vypise len ludi, sablona potom poziada o dchadzku tychto ludi
-        foreach ( $osoby as $clovek ){
+        foreach ( $this->osoby as $clovek ){
             //nacitanie mena osoby
             $o = new Osoba($this->database); //definovane objektu osoby
             $o->InitializeFromDatabase($clovek); //inicializacia z databazy 
             $pole_meno_osoby[$clovek] = $o->getMeno();
  
             $this->dochadzka->vycisti(); //vyprazdnime udaje predosleho cloveka
-            $this->dochadzka->generuj_raw_dochadzku_cloveka($clovek, $od, $do); //naplni objekt udajmi o raw dochaddzke cloveka
-            $this->dochadzka->generuj_zaokruhlenu_dochadzku_cloveka($clovek, $od, $do);//naplni objekt udajmi o dochaddzke cloveka
+            $this->dochadzka->generuj_raw_dochadzku_cloveka($clovek, $this->od, $this->do); //naplni objekt udajmi o raw dochaddzke cloveka
+            $this->dochadzka->generuj_zaokruhlenu_dochadzku_cloveka($clovek, $this->od, $this->do);//naplni objekt udajmi o dochaddzke cloveka
             $pole_dochadzka_zaokruhlena[$clovek]= $this->dochadzka->getPoleDochadzky(); //zaokruhli dochadzku podla nastaveneho zaokruhlovania
             $pole_raw_dochadzka[$clovek] = $this->dochadzka->getPoleRawDochadzky();
             $this->dochadzka->sumarizuj(); //spocitame celkovy cas za obdobie
@@ -139,7 +144,6 @@ class DochadzkaPresenter extends BasePresenter
             ->addCondition($form::EQUAL, $tolerancia)
             ->toggle('text_late_arrival');
             
-        
         //pridame do formulara toleranciu neskoreho prichodu 0 - 10 minut
         //ale len v pripade, ze radioLis zaokruhlovania bude nastaveny na 15, 30, alebo 60 minut
         $form->addText('late_arrival', $this->translator->translate('ui.form.late_arrival') )
@@ -149,8 +153,7 @@ class DochadzkaPresenter extends BasePresenter
             ->setDefaultValue( $this->dochadzka->getTolerancia() )
             ->setOption('description', $this->translator->translate('ui.form.late_arrival_explanation') )
             ->setOption('id', 'text_late_arrival');
-            
-        
+             
        $times_options = array (
            '1' => $this->translator->translate('ui.form.yes'), 
            '0' => $this->translator->translate('ui.form.no')
@@ -172,8 +175,7 @@ class DochadzkaPresenter extends BasePresenter
             $this->flashMessage($this->translator->translate('ui.message.change_success'), 'alert alert-success');
         } catch (\ErrorException $e){
              $this->flashMessage($this->translator->translate('ui.message.change_fail'), 'alert alert-warning'); // informování uživatele o chybě
-        }
-        
+        } 
     }
     
     /*
@@ -256,8 +258,15 @@ class DochadzkaPresenter extends BasePresenter
             $this->flashMessage($this->translator->translate('ui.message.change_success'), 'alert alert-success');
         } catch (Exception $ex) {
             $this->flashMessage($this->translator->translate('ui.message.change_fail'), 'alert alert-warning'); // informování uživatele o chybě
-        }
-        
+        }  
     }
     
+    public function handleEdit($row_id){
+        if ($this->isAjax()) { //AJAXOVE SPRACOVANIE
+            
+            $this->redrawControl('vypisArea');
+        } else { //PRE NEAJAXOVE SPRACOVANIE
+            $this->redirect('this'); 
+        }
+    }
 }

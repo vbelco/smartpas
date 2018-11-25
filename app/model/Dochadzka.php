@@ -402,8 +402,8 @@ class Dochadzka extends Nette\Object
      */
     public function akyTypZaznamu ($timestamp){
         $navrat = ""; //navratova hodnota
-        //nacitame si posledny den v praci
-            $row = $this->database->table('dochadzka')
+        //nacitame
+        $row = $this->database->table('dochadzka')
                     ->where('users_id = ?', $this->user_id)
                     ->where('people_id = ?', $this->clovek_id)
                     ->order('id DESC')
@@ -414,13 +414,17 @@ class Dochadzka extends Nette\Object
         //                               NULL     cas
         //                                cas     NULL
         //podla posledneho tvaru si nahodime defaultny typ zaznamu
-        if ($row->prichod_timestamp){
-            if($row->odchod_timestamp){ 
-                $navrat = 'prichod'; 
-            }
-            else { 
-                $navrat = 'odchod'; 
-            }
+        if (!$row){ //nemame este row definovane, teda ide o prvy zaznam, takze bude to prichod
+            $navrat = 'prichod';
+            return $navrat; //hned to aj ukoncime prve pipnutie v databaze je jasny prichod
+        }
+        else if ($row->prichod_timestamp){
+                if($row->odchod_timestamp){ 
+                    $navrat = 'prichod'; 
+                }
+                else { 
+                    $navrat = 'odchod'; 
+                }
         } else { 
             $navrat = 'prichod'; 
         }
