@@ -30,11 +30,14 @@ class Template93c90b182c extends Latte\Runtime\Template
         <script  src="<?php echo LR\Filters::escapeHtmlAttr(LR\Filters::safeUrl($basePath)) /* line 18 */ ?>/js/bootstrap-datetimepicker.sk.js"></script>
         <script  src="<?php echo LR\Filters::escapeHtmlAttr(LR\Filters::safeUrl($basePath)) /* line 19 */ ?>/js/bootstrap-clockpicker.js"></script>
         <script  src="<?php echo LR\Filters::escapeHtmlAttr(LR\Filters::safeUrl($basePath)) /* line 20 */ ?>/js/netteForms.js"></script>
-        <script  src="<?php echo LR\Filters::escapeHtmlAttr(LR\Filters::safeUrl($basePath)) /* line 21 */ ?>/js/jquery.nette.js"></script>
+        <script  src="<?php echo LR\Filters::escapeHtmlAttr(LR\Filters::safeUrl($basePath)) /* line 21 */ ?>/js/nette.ajax.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.js" type="text/javascript"></script>
 
-        
-
+        <script>  <!-- spustenie nette ajaxu -->       
+        $(function () {
+            $.nette.init();
+        });
+        </script>
         
         <title>SmartPas app</title>
 </head>
@@ -49,7 +52,7 @@ class Template93c90b182c extends Latte\Runtime\Template
 		$iterations = 0;
 		foreach ($flashes as $flash) {
 			?>    <div<?php if ($_tmp = array_filter(['flash', $flash->type])) echo ' class="', LR\Filters::escapeHtmlAttr(implode(" ", array_unique($_tmp))), '"' ?>><?php
-			echo LR\Filters::escapeHtmlText($flash->message) /* line 34 */ ?></div>
+			echo LR\Filters::escapeHtmlText($flash->message) /* line 37 */ ?></div>
 <?php
 			$iterations++;
 		}
@@ -61,7 +64,7 @@ class Template93c90b182c extends Latte\Runtime\Template
                 <a class="navbar-brand" href="<?php echo LR\Filters::escapeHtmlAttr($this->global->uiControl->link("Homepage:")) ?>">
 <?php
 		if ($user->loggedIn) {
-			?>                        SmartPAS <?php echo LR\Filters::escapeHtmlText($nazov_planu) /* line 41 */ ?>
+			?>                        SmartPAS <?php echo LR\Filters::escapeHtmlText($nazov_planu) /* line 44 */ ?>
 
 <?php
 		}
@@ -120,11 +123,11 @@ class Template93c90b182c extends Latte\Runtime\Template
 				?>class="active"<?php
 			}
 			?>><a href="<?php echo LR\Filters::escapeHtmlAttr($this->global->uiControl->link("User:default")) ?>"><?php
-			echo LR\Filters::escapeHtmlText($meno_uzivatela) /* line 57 */ ?></a></li> 
+			echo LR\Filters::escapeHtmlText($meno_uzivatela) /* line 60 */ ?></a></li> 
                 <li style="margin-top: 8px;">
                     <div class="dropdown">
                         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                        <span class="lang-xs lang-lbl" lang="<?php echo LR\Filters::escapeHtmlAttr($activeLocale) /* line 61 */ ?>"></span>
+                        <span class="lang-xs lang-lbl" lang="<?php echo LR\Filters::escapeHtmlAttr($activeLocale) /* line 64 */ ?>"></span>
                         </button>
                         <ul class="dropdown-menu" role="menu">
                             <li><a href="<?php echo LR\Filters::escapeHtmlAttr($this->global->uiControl->link("this", ['locale' => 'en'])) ?>"><span class="lang-xs lang-lbl" lang="en"></span></a></li>
@@ -148,7 +151,7 @@ class Template93c90b182c extends Latte\Runtime\Template
                 <li style="margin-top: 8px;">
                     <div class="btn-group dropdown">
                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                            <span class="lang-xs lang-lbl" lang="<?php echo LR\Filters::escapeHtmlAttr($activeLocale) /* line 80 */ ?>"></span>
+                            <span class="lang-xs lang-lbl" lang="<?php echo LR\Filters::escapeHtmlAttr($activeLocale) /* line 83 */ ?>"></span>
                         </button>
                         <ul class="dropdown-menu" >
                             <li><a href="<?php echo LR\Filters::escapeHtmlAttr($this->global->uiControl->link("this", ['locale' => 'en'])) ?>"><span class="lang-xs lang-lbl" lang="en"></span></a></li>
@@ -182,7 +185,7 @@ class Template93c90b182c extends Latte\Runtime\Template
 	function prepare()
 	{
 		extract($this->params);
-		if (isset($this->params['flash'])) trigger_error('Variable $flash overwritten in foreach on line 34');
+		if (isset($this->params['flash'])) trigger_error('Variable $flash overwritten in foreach on line 37');
 		Nette\Bridges\ApplicationLatte\UIRuntime::initialize($this, $this->parentName, $this->blocks);
 		
 	}

@@ -207,13 +207,13 @@ class Templatec4b52cb790 extends Latte\Runtime\Template
 							}
 						}
 						else {
-							?>                        <div id="<?php echo htmlSpecialChars($this->global->snippetDriver->getHtmlId("prichod-$index")) ?>"><?php
-							$this->global->snippetDriver->enter("prichod-$index", "dynamic");
+							?>                        <div id="<?php echo htmlSpecialChars($this->global->snippetDriver->getHtmlId("prichod-$osoba-$index")) ?>"><?php
+							$this->global->snippetDriver->enter("prichod-$osoba-$index", "dynamic");
 ?>
 
                         <?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "ui.nedefinovane")) ?>
 
-                        <a class=ajax href="<?php echo LR\Filters::escapeHtmlAttr($this->global->uiControl->link("Edit!", [$index])) ?>"><button type="button" class="btn btn-default"><?php
+                        <a class=ajax href="<?php echo LR\Filters::escapeHtmlAttr($this->global->uiControl->link("Edit!", ['typ'=>'prichod', $osoba, $index])) ?>"><button type="button" class="btn btn-default"><?php
 							echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "ui.form.edit")) ?></button></a>
 <?php
 							$this->global->snippetDriver->leave();
@@ -235,13 +235,13 @@ class Templatec4b52cb790 extends Latte\Runtime\Template
 							}
 						}
 						else {
-							?>                        <div id="<?php echo htmlSpecialChars($this->global->snippetDriver->getHtmlId("odchod-$index")) ?>"><?php
-							$this->global->snippetDriver->enter("odchod-$index", "dynamic");
+							?>                        <div id="<?php echo htmlSpecialChars($this->global->snippetDriver->getHtmlId("odchod-$osoba-$index")) ?>"><?php
+							$this->global->snippetDriver->enter("odchod-$osoba-$index", "dynamic");
 ?>
 
                         <?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "ui.nedefinovane")) ?>
 
-                        <a class=ajax href="<?php echo LR\Filters::escapeHtmlAttr($this->global->uiControl->link("Edit!", [$index])) ?>"><button type="button" class="btn btn-default"><?php
+                        <a class=ajax href="<?php echo LR\Filters::escapeHtmlAttr($this->global->uiControl->link("Edit!", ['typ'=>'odchod', $osoba, $index])) ?>"><button type="button" class="btn btn-default"><?php
 							echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "ui.form.edit")) ?></button></a>
 <?php
 							$this->global->snippetDriver->leave();

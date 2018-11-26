@@ -83,9 +83,9 @@
                             ( {$posts_raw_dochadzka[$osoba][$index]['prichod']|date:"G:i:s"} )
                         {/if}
                       {else}
-                        {snippet prichod-$index}
+                        {snippet prichod-$osoba-$index}
                         {_ui.nedefinovane}
-                        <a n:href="Edit! $index" class=ajax><button type="button" class="btn btn-default">{_ui.form.edit}</button></a>
+                        <a n:href="Edit! typ=>prichod, $osoba, $index" class=ajax><button type="button" class="btn btn-default">{_ui.form.edit}</button></a>
                         {/snippet}
                       {/if}
                 </td>
@@ -97,9 +97,9 @@
                             ( {$posts_raw_dochadzka[$osoba][$index]['odchod']|date:"G:i:s"} )
                         {/if}
                     {else}
-                        {snippet odchod-$index}    
+                        {snippet odchod-$osoba-$index}    
                         {_ui.nedefinovane}
-                        <a n:href="Edit! $index" class=ajax><button type="button" class="btn btn-default">{_ui.form.edit}</button></a>
+                        <a n:href="Edit! typ=>odchod, $osoba, $index" class=ajax><button type="button" class="btn btn-default">{_ui.form.edit}</button></a>
                         {/snippet}
                     {/if}
                 </td>

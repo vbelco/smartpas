@@ -18,11 +18,14 @@
         <script  src="{$basePath}/js/bootstrap-datetimepicker.sk.js"></script>
         <script  src="{$basePath}/js/bootstrap-clockpicker.js"></script>
         <script  src="{$basePath}/js/netteForms.js"></script>
-        <script  src="{$basePath}/js/jquery.nette.js"></script>
+        <script  src="{$basePath}/js/nette.ajax.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.js" type="text/javascript"></script>
 
-        
-
+        <script>  <!-- spustenie nette ajaxu -->       
+        $(function () {
+            $.nette.init();
+        });
+        </script>
         
         <title>SmartPas app</title>
 </head>

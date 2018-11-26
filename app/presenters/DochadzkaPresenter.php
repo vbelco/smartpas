@@ -76,8 +76,6 @@ class DochadzkaPresenter extends BasePresenter
         $this->do = $values['datum_do'];
         $this->osoby = $values['osoby'];
         
-        \Tracy\Dumper::dump($this->od);
-        
         $this->template->osoby = $this->osoby;//hodime naspet zoznam id osob z formulara
         
         $pole_dochadzka_zaokruhlena = array();
@@ -261,7 +259,7 @@ class DochadzkaPresenter extends BasePresenter
         }  
     }
     
-    public function handleEdit($row_id){
+    public function handleEdit($type, $osoba_id, $row_id){
         if ($this->isAjax()) { //AJAXOVE SPRACOVANIE
             
             $this->redrawControl('vypisArea');
