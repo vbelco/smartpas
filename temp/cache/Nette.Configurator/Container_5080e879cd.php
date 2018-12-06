@@ -56,7 +56,7 @@ class Container_5080e879cd extends Nette\DI\Container
 					'66_App_Model_RFID',
 					'67_App_Model_Uzivatel',
 					'authenticator',
-					'application.4',
+					'application.5',
 				],
 				0 => ['translation.userLocaleResolver.param', 'translation.extractor.latte'],
 			],
@@ -186,11 +186,12 @@ class Container_5080e879cd extends Nette\DI\Container
 				1 => [
 					'application.1',
 					'application.2',
-					'application.5',
+					'application.3',
 					'application.6',
 					'application.7',
 					'application.8',
 					'application.9',
+					'application.10',
 				],
 			],
 			'Nette\Application\UI\Presenter' => [
@@ -198,11 +199,12 @@ class Container_5080e879cd extends Nette\DI\Container
 					'application.1',
 					'application.2',
 					'application.3',
-					'application.5',
+					'application.4',
 					'application.6',
 					'application.7',
 					'application.8',
 					'application.9',
+					'application.10',
 				],
 			],
 			'Nette\Application\UI\Control' => [
@@ -210,11 +212,12 @@ class Container_5080e879cd extends Nette\DI\Container
 					'application.1',
 					'application.2',
 					'application.3',
-					'application.5',
+					'application.4',
 					'application.6',
 					'application.7',
 					'application.8',
 					'application.9',
+					'application.10',
 				],
 			],
 			'Nette\Application\UI\Component' => [
@@ -222,11 +225,12 @@ class Container_5080e879cd extends Nette\DI\Container
 					'application.1',
 					'application.2',
 					'application.3',
-					'application.5',
+					'application.4',
 					'application.6',
 					'application.7',
 					'application.8',
 					'application.9',
+					'application.10',
 				],
 			],
 			'Nette\ComponentModel\Container' => [
@@ -234,11 +238,12 @@ class Container_5080e879cd extends Nette\DI\Container
 					'application.1',
 					'application.2',
 					'application.3',
-					'application.5',
+					'application.4',
 					'application.6',
 					'application.7',
 					'application.8',
 					'application.9',
+					'application.10',
 				],
 			],
 			'Nette\ComponentModel\Component' => [
@@ -246,11 +251,12 @@ class Container_5080e879cd extends Nette\DI\Container
 					'application.1',
 					'application.2',
 					'application.3',
-					'application.5',
+					'application.4',
 					'application.6',
 					'application.7',
 					'application.8',
 					'application.9',
+					'application.10',
 				],
 			],
 			'Nette\Application\UI\IRenderable' => [
@@ -258,11 +264,12 @@ class Container_5080e879cd extends Nette\DI\Container
 					'application.1',
 					'application.2',
 					'application.3',
-					'application.5',
+					'application.4',
 					'application.6',
 					'application.7',
 					'application.8',
 					'application.9',
+					'application.10',
 				],
 			],
 			'Nette\ComponentModel\IContainer' => [
@@ -270,11 +277,12 @@ class Container_5080e879cd extends Nette\DI\Container
 					'application.1',
 					'application.2',
 					'application.3',
-					'application.5',
+					'application.4',
 					'application.6',
 					'application.7',
 					'application.8',
 					'application.9',
+					'application.10',
 				],
 			],
 			'Nette\ComponentModel\IComponent' => [
@@ -282,11 +290,12 @@ class Container_5080e879cd extends Nette\DI\Container
 					'application.1',
 					'application.2',
 					'application.3',
-					'application.5',
+					'application.4',
 					'application.6',
 					'application.7',
 					'application.8',
 					'application.9',
+					'application.10',
 				],
 			],
 			'Nette\Application\UI\ISignalReceiver' => [
@@ -294,11 +303,12 @@ class Container_5080e879cd extends Nette\DI\Container
 					'application.1',
 					'application.2',
 					'application.3',
-					'application.5',
+					'application.4',
 					'application.6',
 					'application.7',
 					'application.8',
 					'application.9',
+					'application.10',
 				],
 			],
 			'Nette\Application\UI\IStatePersistent' => [
@@ -306,11 +316,12 @@ class Container_5080e879cd extends Nette\DI\Container
 					'application.1',
 					'application.2',
 					'application.3',
-					'application.5',
+					'application.4',
 					'application.6',
 					'application.7',
 					'application.8',
 					'application.9',
+					'application.10',
 				],
 			],
 			'ArrayAccess' => [
@@ -318,11 +329,12 @@ class Container_5080e879cd extends Nette\DI\Container
 					'application.1',
 					'application.2',
 					'application.3',
-					'application.5',
+					'application.4',
 					'application.6',
 					'application.7',
 					'application.8',
 					'application.9',
+					'application.10',
 				],
 			],
 			'Nette\Application\IPresenter' => [
@@ -338,19 +350,21 @@ class Container_5080e879cd extends Nette\DI\Container
 					'application.9',
 					'application.10',
 					'application.11',
+					'application.12',
 				],
 			],
 			'App\Presenters\CitackaPresenter' => [1 => ['application.1']],
 			'App\Presenters\DochadzkaPresenter' => [1 => ['application.2']],
-			'App\Presenters\Error4xxPresenter' => [1 => ['application.3']],
-			'App\Presenters\ErrorPresenter' => [1 => ['application.4']],
-			'App\Presenters\HomepagePresenter' => [1 => ['application.5']],
-			'App\Presenters\OsobyPresenter' => [1 => ['application.6']],
-			'App\Presenters\RFIDPresenter' => [1 => ['application.7']],
-			'App\Presenters\SignPresenter' => [1 => ['application.8']],
-			'App\Presenters\UserPresenter' => [1 => ['application.9']],
-			'NetteModule\ErrorPresenter' => [1 => ['application.10']],
-			'NetteModule\MicroPresenter' => [1 => ['application.11']],
+			'App\Presenters\EditujDochadzkaPresenter' => [1 => ['application.3']],
+			'App\Presenters\Error4xxPresenter' => [1 => ['application.4']],
+			'App\Presenters\ErrorPresenter' => [1 => ['application.5']],
+			'App\Presenters\HomepagePresenter' => [1 => ['application.6']],
+			'App\Presenters\OsobyPresenter' => [1 => ['application.7']],
+			'App\Presenters\RFIDPresenter' => [1 => ['application.8']],
+			'App\Presenters\SignPresenter' => [1 => ['application.9']],
+			'App\Presenters\UserPresenter' => [1 => ['application.10']],
+			'NetteModule\ErrorPresenter' => [1 => ['application.11']],
+			'NetteModule\MicroPresenter' => [1 => ['application.12']],
 			'Nette\DI\Container' => [1 => ['container']],
 		],
 		'services' => [
@@ -362,16 +376,17 @@ class Container_5080e879cd extends Nette\DI\Container
 			'66_App_Model_RFID' => 'App\Model\RFID',
 			'67_App_Model_Uzivatel' => 'App\Model\Uzivatel',
 			'application.1' => 'App\Presenters\CitackaPresenter',
-			'application.10' => 'NetteModule\ErrorPresenter',
-			'application.11' => 'NetteModule\MicroPresenter',
+			'application.10' => 'App\Presenters\UserPresenter',
+			'application.11' => 'NetteModule\ErrorPresenter',
+			'application.12' => 'NetteModule\MicroPresenter',
 			'application.2' => 'App\Presenters\DochadzkaPresenter',
-			'application.3' => 'App\Presenters\Error4xxPresenter',
-			'application.4' => 'App\Presenters\ErrorPresenter',
-			'application.5' => 'App\Presenters\HomepagePresenter',
-			'application.6' => 'App\Presenters\OsobyPresenter',
-			'application.7' => 'App\Presenters\RFIDPresenter',
-			'application.8' => 'App\Presenters\SignPresenter',
-			'application.9' => 'App\Presenters\UserPresenter',
+			'application.3' => 'App\Presenters\EditujDochadzkaPresenter',
+			'application.4' => 'App\Presenters\Error4xxPresenter',
+			'application.5' => 'App\Presenters\ErrorPresenter',
+			'application.6' => 'App\Presenters\HomepagePresenter',
+			'application.7' => 'App\Presenters\OsobyPresenter',
+			'application.8' => 'App\Presenters\RFIDPresenter',
+			'application.9' => 'App\Presenters\SignPresenter',
 			'application.application' => 'Nette\Application\Application',
 			'application.linkGenerator' => 'Nette\Application\LinkGenerator',
 			'application.presenterFactory' => 'Nette\Application\IPresenterFactory',
@@ -440,6 +455,7 @@ class Container_5080e879cd extends Nette\DI\Container
 				'application.1' => true,
 				'application.10' => true,
 				'application.11' => true,
+				'application.12' => true,
 				'application.2' => true,
 				'application.3' => true,
 				'application.4' => true,
@@ -451,16 +467,17 @@ class Container_5080e879cd extends Nette\DI\Container
 			],
 			'nette.presenter' => [
 				'application.1' => 'App\Presenters\CitackaPresenter',
-				'application.10' => 'NetteModule\ErrorPresenter',
-				'application.11' => 'NetteModule\MicroPresenter',
+				'application.10' => 'App\Presenters\UserPresenter',
+				'application.11' => 'NetteModule\ErrorPresenter',
+				'application.12' => 'NetteModule\MicroPresenter',
 				'application.2' => 'App\Presenters\DochadzkaPresenter',
-				'application.3' => 'App\Presenters\Error4xxPresenter',
-				'application.4' => 'App\Presenters\ErrorPresenter',
-				'application.5' => 'App\Presenters\HomepagePresenter',
-				'application.6' => 'App\Presenters\OsobyPresenter',
-				'application.7' => 'App\Presenters\RFIDPresenter',
-				'application.8' => 'App\Presenters\SignPresenter',
-				'application.9' => 'App\Presenters\UserPresenter',
+				'application.3' => 'App\Presenters\EditujDochadzkaPresenter',
+				'application.4' => 'App\Presenters\Error4xxPresenter',
+				'application.5' => 'App\Presenters\ErrorPresenter',
+				'application.6' => 'App\Presenters\HomepagePresenter',
+				'application.7' => 'App\Presenters\OsobyPresenter',
+				'application.8' => 'App\Presenters\RFIDPresenter',
+				'application.9' => 'App\Presenters\SignPresenter',
 			],
 			'translation.dumper' => [
 				'translation.dumper.csv' => 'csv',
@@ -591,14 +608,28 @@ class Container_5080e879cd extends Nette\DI\Container
 	}
 
 
-	public function createServiceApplication__10(): NetteModule\ErrorPresenter
+	public function createServiceApplication__10(): App\Presenters\UserPresenter
+	{
+		$service = new App\Presenters\UserPresenter($this->getService('database.default.context'),
+			$this->getService('67_App_Model_Uzivatel'));
+		$service->injectPrimary($this, $this->getService('application.presenterFactory'),
+			$this->getService('routing.router'), $this->getService('http.request'),
+			$this->getService('http.response'), $this->getService('session.session'),
+			$this->getService('security.user'), $this->getService('latte.templateFactory'));
+		$service->translator = $this->getService('translation.default');
+		$service->invalidLinkMode = 5;
+		return $service;
+	}
+
+
+	public function createServiceApplication__11(): NetteModule\ErrorPresenter
 	{
 		$service = new NetteModule\ErrorPresenter($this->getService('tracy.logger'));
 		return $service;
 	}
 
 
-	public function createServiceApplication__11(): NetteModule\MicroPresenter
+	public function createServiceApplication__12(): NetteModule\MicroPresenter
 	{
 		$service = new NetteModule\MicroPresenter($this, $this->getService('http.request'),
 			$this->getService('routing.router'));
@@ -620,7 +651,21 @@ class Container_5080e879cd extends Nette\DI\Container
 	}
 
 
-	public function createServiceApplication__3(): App\Presenters\Error4xxPresenter
+	public function createServiceApplication__3(): App\Presenters\EditujDochadzkaPresenter
+	{
+		$service = new App\Presenters\EditujDochadzkaPresenter($this->getService('database.default.context'),
+			$this->getService('67_App_Model_Uzivatel'), $this->getService('62_App_Model_Dochadzka'));
+		$service->injectPrimary($this, $this->getService('application.presenterFactory'),
+			$this->getService('routing.router'), $this->getService('http.request'),
+			$this->getService('http.response'), $this->getService('session.session'),
+			$this->getService('security.user'), $this->getService('latte.templateFactory'));
+		$service->translator = $this->getService('translation.default');
+		$service->invalidLinkMode = 5;
+		return $service;
+	}
+
+
+	public function createServiceApplication__4(): App\Presenters\Error4xxPresenter
 	{
 		$service = new App\Presenters\Error4xxPresenter;
 		$service->injectPrimary($this, $this->getService('application.presenterFactory'),
@@ -632,14 +677,14 @@ class Container_5080e879cd extends Nette\DI\Container
 	}
 
 
-	public function createServiceApplication__4(): App\Presenters\ErrorPresenter
+	public function createServiceApplication__5(): App\Presenters\ErrorPresenter
 	{
 		$service = new App\Presenters\ErrorPresenter($this->getService('tracy.logger'));
 		return $service;
 	}
 
 
-	public function createServiceApplication__5(): App\Presenters\HomepagePresenter
+	public function createServiceApplication__6(): App\Presenters\HomepagePresenter
 	{
 		$service = new App\Presenters\HomepagePresenter($this->getService('database.default.context'),
 			$this->getService('67_App_Model_Uzivatel'), $this->getService('62_App_Model_Dochadzka'));
@@ -653,7 +698,7 @@ class Container_5080e879cd extends Nette\DI\Container
 	}
 
 
-	public function createServiceApplication__6(): App\Presenters\OsobyPresenter
+	public function createServiceApplication__7(): App\Presenters\OsobyPresenter
 	{
 		$service = new App\Presenters\OsobyPresenter($this->getService('database.default.context'),
 			$this->getService('67_App_Model_Uzivatel'), $this->getService('64_App_Model_Osoba'));
@@ -667,7 +712,7 @@ class Container_5080e879cd extends Nette\DI\Container
 	}
 
 
-	public function createServiceApplication__7(): App\Presenters\RFIDPresenter
+	public function createServiceApplication__8(): App\Presenters\RFIDPresenter
 	{
 		$service = new App\Presenters\RFIDPresenter($this->getService('database.default.context'),
 			$this->getService('67_App_Model_Uzivatel'), $this->getService('66_App_Model_RFID'));
@@ -681,23 +726,9 @@ class Container_5080e879cd extends Nette\DI\Container
 	}
 
 
-	public function createServiceApplication__8(): App\Presenters\SignPresenter
+	public function createServiceApplication__9(): App\Presenters\SignPresenter
 	{
 		$service = new App\Presenters\SignPresenter($this->getService('database.default.context'),
-			$this->getService('67_App_Model_Uzivatel'));
-		$service->injectPrimary($this, $this->getService('application.presenterFactory'),
-			$this->getService('routing.router'), $this->getService('http.request'),
-			$this->getService('http.response'), $this->getService('session.session'),
-			$this->getService('security.user'), $this->getService('latte.templateFactory'));
-		$service->translator = $this->getService('translation.default');
-		$service->invalidLinkMode = 5;
-		return $service;
-	}
-
-
-	public function createServiceApplication__9(): App\Presenters\UserPresenter
-	{
-		$service = new App\Presenters\UserPresenter($this->getService('database.default.context'),
 			$this->getService('67_App_Model_Uzivatel'));
 		$service->injectPrimary($this, $this->getService('application.presenterFactory'),
 			$this->getService('routing.router'), $this->getService('http.request'),

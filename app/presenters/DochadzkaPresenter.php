@@ -36,7 +36,7 @@ class DochadzkaPresenter extends BasePresenter
         $this->template->posts = $this->dochadzka->ludiaVPraci();   
     }
     
-    protected function createComponentPrehladForm() {
+    protected function createComponentPrehladForm() {   
         $rows = $this->database->table('people')//nacitali sme si vsetkych nasich aktivnych ludi
                 ->where ("users_id = ?", $this->getUser()->id)
                 ->where ('active = 1')
@@ -49,7 +49,6 @@ class DochadzkaPresenter extends BasePresenter
         $form->addText('datum_od', $this->translator->translate('ui.form.from') )
                 ->setAttribute('readonly')
                 ->setAttribute('class', 'form-control')
-                ->setDefaultValue($this->od)
                 ->setRequired( $this->translator->translate('ui.message.enter_begin_date') );
         
         $form->addText('datum_do',  $this->translator->translate('ui.form.to') )
@@ -260,11 +259,6 @@ class DochadzkaPresenter extends BasePresenter
     }
     
     public function handleEdit($type, $osoba_id, $row_id){
-        if ($this->isAjax()) { //AJAXOVE SPRACOVANIE
-            
-            $this->redrawControl('vypisArea');
-        } else { //PRE NEAJAXOVE SPRACOVANIE
-            $this->redirect('this'); 
-        }
+        
     }
 }

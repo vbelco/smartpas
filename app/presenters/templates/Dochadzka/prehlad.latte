@@ -17,6 +17,7 @@
     <ul class="nav nav-pills">
         <li><a n:href="Dochadzka:default">{_menu.section_dochadzka.current}</a></li>
         <li class="active"><a n:href="Dochadzka:prehlad">{_menu.section_dochadzka.prehlad}</a></li>
+        <li><a n:href="EditujDochadzka:default">{_menu.section_dochadzka.edituj}</a></li>
         <li><a n:href="Dochadzka:nastavenie">{_menu.section_dochadzka.settings}</a></li>
     </ul>
 </div>
@@ -53,19 +54,15 @@
     </div>
     </div>
 </div>   
+    
 
-{snippet vypisArea}
 {if isset($meno_osoby) }
     {foreach $osoby as $osoba}
     <div class="table-responsive">
         <h3>{$meno_osoby[$osoba]} ( {$osoba} )</h3>
-        
         {ifset $posts_zaokruhlena_dochadzka[$osoba]  }
-            
         {_ui.celkovy_cas}: 
-        {snippet celkovyCas-$osoba}
-        {$celkovy_cas_dochadzky[$osoba]["hodiny"]} : {$celkovy_cas_dochadzky[$osoba]["minuty"]}
-        {/snippet}
+            {$celkovy_cas_dochadzky[$osoba]["hodiny"]} : {$celkovy_cas_dochadzky[$osoba]["minuty"]}
         <table class=" table table-hover">
             <tr>
                 <th>{_ui.prichod}</th>
@@ -83,10 +80,8 @@
                             ( {$posts_raw_dochadzka[$osoba][$index]['prichod']|date:"G:i:s"} )
                         {/if}
                       {else}
-                        {snippet prichod-$osoba-$index}
-                        {_ui.nedefinovane}
-                        <a n:href="Edit! typ=>prichod, $osoba, $index" class=ajax><button type="button" class="btn btn-default">{_ui.form.edit}</button></a>
-                        {/snippet}
+                            {_ui.nedefinovane}
+                            <a n:href="Edit! typ=>prichod, osoba_id=>$osoba, dochadzka_id=>$index"><button type="button" class="btn btn-default">{_ui.form.edit}</button></a>
                       {/if}
                 </td>
                 <td>
@@ -96,11 +91,9 @@
                             <br>
                             ( {$posts_raw_dochadzka[$osoba][$index]['odchod']|date:"G:i:s"} )
                         {/if}
-                    {else}
-                        {snippet odchod-$osoba-$index}    
-                        {_ui.nedefinovane}
-                        <a n:href="Edit! typ=>odchod, $osoba, $index" class=ajax><button type="button" class="btn btn-default">{_ui.form.edit}</button></a>
-                        {/snippet}
+                    {else}  
+                            {_ui.nedefinovane}
+                            <a n:href="Edit! typ=>odchod, osoba_id=>$osoba, dochadzka_id=>$index"><button type="button" class="btn btn-default">{_ui.form.edit}</button></a>
                     {/if}
                 </td>
                 <td>
@@ -114,10 +107,9 @@
         {/ifset}
         
     </div>
-    {/foreach}
+    {/foreach}  
 {/if}
-{/snippet}    
-
+  
 
 <script type="text/javascript">
     $('#form-date-od').datetimepicker({

@@ -74,13 +74,15 @@ class Template2c187e53e3 extends Latte\Runtime\Template
 			echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "menu.section_dochadzka.current")) ?></a></li>
         <li ><a href="<?php echo LR\Filters::escapeHtmlAttr($this->global->uiControl->link("Dochadzka:prehlad")) ?>"><?php
 			echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "menu.section_dochadzka.prehlad")) ?></a></li>
+        <li><a href="<?php echo LR\Filters::escapeHtmlAttr($this->global->uiControl->link("EditujDochadzka:default")) ?>"><?php
+			echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "menu.section_dochadzka.edituj")) ?></a></li>
         <li class="active"><a href="<?php echo LR\Filters::escapeHtmlAttr($this->global->uiControl->link("Dochadzka:nastavenie")) ?>"><?php
 			echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "menu.section_dochadzka.settings")) ?></a></li>
     </ul>
 </div>
     
 <?php
-			/* line 24 */ $_tmp = $this->global->uiControl->getComponent("nastavenieForm");
+			/* line 25 */ $_tmp = $this->global->uiControl->getComponent("nastavenieForm");
 			if ($_tmp instanceof Nette\Application\UI\IRenderable) $_tmp->redrawControl(null, false);
 			$_tmp->render();
 ?>
@@ -90,21 +92,21 @@ class Template2c187e53e3 extends Latte\Runtime\Template
 
 <div>
         <?php
-			/* line 30 */
+			/* line 31 */
 			echo Nette\Bridges\FormsLatte\Runtime::renderFormBegin($form = $_form = $this->global->formsStack[] = $this->global->uiControl["nastaveniePracovnejDobyForm"], []);
 ?>
 
     
         <div class="row required">
             <div class="col-sm-1 required"> <?php if ($_label = end($this->global->formsStack)["prac_doba"]->getLabel()) echo $_label ?> </div>
-            <div class="col-sm-2 input-group"> <?php echo end($this->global->formsStack)["prac_doba"]->getControl() /* line 34 */ ?> </div>
+            <div class="col-sm-2 input-group"> <?php echo end($this->global->formsStack)["prac_doba"]->getControl() /* line 35 */ ?> </div>
         </div>
     
         <div class="row required">
             <div class="col-xs-1 required"> <?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "ui.smena1")) ?> </div>
             <div class="col-xs-1 required"> <?php if ($_label = end($this->global->formsStack)["prichod1"]->getLabel()) echo $_label ?> </div>
             <div class="col-xs-2 input-group" id="form-prichod1" data-align="top" data-autoclose="true">
-                 <?php echo end($this->global->formsStack)["prichod1"]->getControl() /* line 41 */ ?>
+                 <?php echo end($this->global->formsStack)["prichod1"]->getControl() /* line 42 */ ?>
 
                 <span class="input-group-addon">
                     <span class="glyphicon glyphicon-time"></span>
@@ -112,7 +114,7 @@ class Template2c187e53e3 extends Latte\Runtime\Template
             </div>
             <div class="col-xs-1 required"> <?php if ($_label = end($this->global->formsStack)["odchod1"]->getLabel()) echo $_label ?> </div>
             <div class="col-xs-2 input-group" id="form-odchod1" data-align="top" data-autoclose="true">
-                 <?php echo end($this->global->formsStack)["odchod1"]->getControl() /* line 48 */ ?>
+                 <?php echo end($this->global->formsStack)["odchod1"]->getControl() /* line 49 */ ?>
 
                 <span class="input-group-addon">
                     <span class="glyphicon glyphicon-time"></span>
@@ -124,7 +126,7 @@ class Template2c187e53e3 extends Latte\Runtime\Template
             <div class="col-xs-1 required"> <?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "ui.smena2")) ?> </div>
             <div class="col-xs-1 required"> <?php if ($_label = end($this->global->formsStack)["prichod2"]->getLabel()) echo $_label ?> </div>
             <div class="col-xs-2 input-group" id="form-prichod2" data-align="top" data-autoclose="true">
-                 <?php echo end($this->global->formsStack)["prichod2"]->getControl() /* line 59 */ ?>
+                 <?php echo end($this->global->formsStack)["prichod2"]->getControl() /* line 60 */ ?>
 
                 <span class="input-group-addon">
                     <span class="glyphicon glyphicon-time"></span>
@@ -132,7 +134,7 @@ class Template2c187e53e3 extends Latte\Runtime\Template
             </div>
             <div class="col-xs-1 required"> <?php if ($_label = end($this->global->formsStack)["odchod2"]->getLabel()) echo $_label ?> </div>
             <div class="col-xs-2 input-group" id="form-odchod2" data-align="top" data-autoclose="true">
-                 <?php echo end($this->global->formsStack)["odchod2"]->getControl() /* line 66 */ ?>
+                 <?php echo end($this->global->formsStack)["odchod2"]->getControl() /* line 67 */ ?>
 
                 <span class="input-group-addon">
                     <span class="glyphicon glyphicon-time"></span>
@@ -144,7 +146,7 @@ class Template2c187e53e3 extends Latte\Runtime\Template
             <div class="col-xs-1 required"> <?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "ui.smena3")) ?> </div>
             <div class="col-xs-1 required"> <?php if ($_label = end($this->global->formsStack)["prichod3"]->getLabel()) echo $_label ?> </div>
             <div class="col-xs-2 input-group" id="form-prichod3" data-align="top" data-autoclose="true">
-                 <?php echo end($this->global->formsStack)["prichod3"]->getControl() /* line 77 */ ?>
+                 <?php echo end($this->global->formsStack)["prichod3"]->getControl() /* line 78 */ ?>
 
                 <span class="input-group-addon">
                     <span class="glyphicon glyphicon-time"></span>
@@ -152,7 +154,7 @@ class Template2c187e53e3 extends Latte\Runtime\Template
             </div>
             <div class="col-xs-1 required"> <?php if ($_label = end($this->global->formsStack)["odchod3"]->getLabel()) echo $_label ?> </div>
             <div class="col-xs-2 input-group" id="form-odchod3" data-align="top" data-autoclose="true">
-                 <?php echo end($this->global->formsStack)["odchod3"]->getControl() /* line 84 */ ?>
+                 <?php echo end($this->global->formsStack)["odchod3"]->getControl() /* line 85 */ ?>
 
                 <span class="input-group-addon">
                     <span class="glyphicon glyphicon-time"></span>
@@ -161,7 +163,7 @@ class Template2c187e53e3 extends Latte\Runtime\Template
         </div> 
                 
         <div>
-        <?php echo end($this->global->formsStack)["send"]->getControl() /* line 92 */ ?>
+        <?php echo end($this->global->formsStack)["send"]->getControl() /* line 93 */ ?>
 
         </div> 
     

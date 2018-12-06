@@ -176,7 +176,9 @@ class Template93c90b182c extends Latte\Runtime\Template
     
    
 </body>
+
 </html>
+
 <?php
 		return get_defined_vars();
 	}

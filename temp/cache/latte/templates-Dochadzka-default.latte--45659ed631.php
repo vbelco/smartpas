@@ -39,7 +39,7 @@ class Template45659ed631 extends Latte\Runtime\Template
 	function prepare()
 	{
 		extract($this->params);
-		if (isset($this->params['post'])) trigger_error('Variable $post overwritten in foreach on line 30');
+		if (isset($this->params['post'])) trigger_error('Variable $post overwritten in foreach on line 31');
 		Nette\Bridges\ApplicationLatte\UIRuntime::initialize($this, $this->parentName, $this->blocks);
 		
 	}
@@ -70,6 +70,8 @@ class Template45659ed631 extends Latte\Runtime\Template
 			echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "menu.section_dochadzka.current")) ?></a></li>
         <li><a href="<?php echo LR\Filters::escapeHtmlAttr($this->global->uiControl->link("Dochadzka:prehlad")) ?>"><?php
 			echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "menu.section_dochadzka.prehlad")) ?></a></li>
+        <li><a href="<?php echo LR\Filters::escapeHtmlAttr($this->global->uiControl->link("EditujDochadzka:default")) ?>"><?php
+			echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "menu.section_dochadzka.edituj")) ?></a></li>
         <li><a href="<?php echo LR\Filters::escapeHtmlAttr($this->global->uiControl->link("Dochadzka:nastavenie")) ?>"><?php
 			echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "menu.section_dochadzka.settings")) ?></a></li>
     </ul>
@@ -89,8 +91,8 @@ class Template45659ed631 extends Latte\Runtime\Template
 			foreach ($posts as $post) {
 ?>
             <tr>
-                <td><?php echo LR\Filters::escapeHtmlText($post->meno) /* line 32 */ ?></td>                
-                <td><?php echo LR\Filters::escapeHtmlText($post->prichod_timestamp) /* line 33 */ ?></td>     
+                <td><?php echo LR\Filters::escapeHtmlText($post->meno) /* line 33 */ ?></td>                
+                <td><?php echo LR\Filters::escapeHtmlText($post->prichod_timestamp) /* line 34 */ ?></td>     
             </tr>
 <?php
 				$iterations++;
