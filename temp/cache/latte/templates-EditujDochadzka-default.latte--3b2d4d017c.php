@@ -38,6 +38,8 @@ class Template3b2d4d017c extends Latte\Runtime\Template
 	function prepare()
 	{
 		extract($this->params);
+		if (isset($this->params['index'])) trigger_error('Variable $index overwritten in foreach on line 65');
+		if (isset($this->params['den'])) trigger_error('Variable $den overwritten in foreach on line 65');
 		Nette\Bridges\ApplicationLatte\UIRuntime::initialize($this, $this->parentName, $this->blocks);
 		
 	}
@@ -117,7 +119,106 @@ class Template3b2d4d017c extends Latte\Runtime\Template
     </div>
     </div>
 </div>   
-    
+
+<?php
+			if (isset ($osoba)) {
+				?>    <h3> <?php echo LR\Filters::escapeHtmlText($osoba->meno) /* line 54 */ ?> </h3>
+<?php
+			}
+?>
+
+<?php
+			if (isset ($dochadzkaOsoby)) {
+?>
+    <div class="table-responsive">
+    <table class="table table-hover"">
+        <tr>
+                <th><?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "ui.date")) ?></th>
+                <th><?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "ui.prichod")) ?></th>
+                <th><?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "ui.odchod")) ?></th>
+            </tr>
+<?php
+				$iterations = 0;
+				foreach ($dochadzkaOsoby->dochadzka_den as $index => $den) {
+?>
+                <tr>
+                    <td>
+                        <?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->date, $den, "d. m. Y")) /* line 68 */ ?>
+
+                    </td>
+                    <td>
+<?php
+					if ($dochadzkaOsoby->dochadzka_prichod) {
+						?>                            <?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->date, $dochadzkaOsoby->dochadzka_prichod[$index], "G:i:s")) /* line 72 */ ?>
+
+<?php
+					}
+					else {
+?>
+                            
+                            <?php
+						/* line 75 */
+						echo Nette\Bridges\FormsLatte\Runtime::renderFormBegin($form = $_form = $this->global->formsStack[] = $this->global->uiControl["editPrichodForm-$index"], []);
+?>
+
+                                <span id="prichod-<?php echo LR\Filters::escapeHtmlAttr($index) /* line 76 */ ?>" data-align="top" data-autoclose="true">
+                                    <?php echo end($this->global->formsStack)["prichod"]->getControl() /* line 77 */ ?>
+
+                                </span>
+                                <?php echo end($this->global->formsStack)["send"]->getControl() /* line 79 */ ?>
+
+                            <?php
+						echo Nette\Bridges\FormsLatte\Runtime::renderFormEnd(array_pop($this->global->formsStack));
+?>
+
+                            <script type="text/javascript">
+                                $("#prichod-<?php echo LR\Filters::escapeJs($index) /* line 82 */ ?>").clockpicker();
+                            </script> 
+<?php
+					}
+?>
+                    </td>
+                    <td>
+<?php
+					if ($dochadzkaOsoby->dochadzka_odchod[$index]) {
+						?>                            <?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->date, $dochadzkaOsoby->dochadzka_odchod[$index], "G:i:s")) /* line 88 */ ?>
+
+<?php
+					}
+					else {
+						?>                            <?php
+						/* line 90 */
+						echo Nette\Bridges\FormsLatte\Runtime::renderFormBegin($form = $_form = $this->global->formsStack[] = $this->global->uiControl["editOdchodForm-$index"], []);
+?>
+
+                                <span id="odchod-<?php echo LR\Filters::escapeHtmlAttr($index) /* line 91 */ ?>" data-align="top" data-autoclose="true">
+                                    <?php echo end($this->global->formsStack)["odchod"]->getControl() /* line 92 */ ?>
+
+                                </span>
+                                <?php echo end($this->global->formsStack)["send"]->getControl() /* line 94 */ ?>
+
+                            <?php
+						echo Nette\Bridges\FormsLatte\Runtime::renderFormEnd(array_pop($this->global->formsStack));
+?>
+
+                            </div>
+                            <script type="text/javascript">
+                                $("#odchod-<?php echo LR\Filters::escapeJs($index) /* line 98 */ ?>").clockpicker();
+                            </script> 
+<?php
+					}
+?>
+                    </td>
+                </tr>
+<?php
+					$iterations++;
+				}
+?>
+    </table>
+    </div>
+<?php
+			}
+?>
 
 <script type="text/javascript">
     $('#form-date-od').datetimepicker({
@@ -126,7 +227,7 @@ class Template3b2d4d017c extends Latte\Runtime\Template
         todayBtn:  1,
         useCurrent: true,
         format: "dd.mm.yyyy",
-        language:  <?php echo LR\Filters::escapeJs($activeLocale) /* line 61 */ ?>
+        language:  <?php echo LR\Filters::escapeJs($activeLocale) /* line 115 */ ?>
 
     });
     $('#form-date-do').datetimepicker({
@@ -134,7 +235,7 @@ class Template3b2d4d017c extends Latte\Runtime\Template
         autoclose: 1,
         todayBtn:  1,
         format: "dd.mm.yyyy",
-        language:  <?php echo LR\Filters::escapeJs($activeLocale) /* line 68 */ ?>
+        language:  <?php echo LR\Filters::escapeJs($activeLocale) /* line 122 */ ?>
 
     });
 </script> 

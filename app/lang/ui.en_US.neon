@@ -48,6 +48,7 @@ people_at_work: "Persons at work..."
 name: "Name"
 prichod: "Arrival"
 odchod: "Departure"
+date: "Deň"
 time_at_work: "Time at work"
 none_definition_attendance: "There is none definition of attendace in system"
 celkovy_cas: "Total time"
@@ -99,6 +100,7 @@ form:
     standard: "Standard"
     shifts: "2 shifts"
     all_day: "3 shifts"
+    choose_1_person: "Choose one person"
 message:
     change_success: "Change has been successfull"
     change_fail: "Change has NOT been successfull"
@@ -122,3 +124,4 @@ message:
     enter_begin_date: "Enter starting date"
     enter_end_date: "Enter ending date"
     choose_least_1_person: "Choose at least one person"
+    

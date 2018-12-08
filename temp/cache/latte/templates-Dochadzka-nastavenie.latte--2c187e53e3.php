@@ -173,10 +173,6 @@ class Template2c187e53e3 extends Latte\Runtime\Template
 
 </div>
 
-    
-
-
-
  <script type="text/javascript">
     $('#form-prichod1').clockpicker();
     $('#form-odchod1').clockpicker();

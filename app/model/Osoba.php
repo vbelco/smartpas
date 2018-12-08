@@ -22,10 +22,10 @@ class Osoba extends Nette\Object
      */
     private $database;
     
-    private $id;
-    private $meno; //
-    private $active; // 
-    private $login; //login osoby na kontrolu svojej dochadky    
+    public $id;
+    public $meno; //
+    public $active; // 
+    public $login; //login osoby na kontrolu svojej dochadky    
 
     function __construct(Nette\Database\Context $database)
     {

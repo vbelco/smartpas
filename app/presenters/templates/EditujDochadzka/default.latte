@@ -49,7 +49,61 @@
     </div>
     </div>
 </div>   
-    
+
+{if isset ($osoba) }
+    <h3> {$osoba->meno} </h3>
+{/if}
+
+{if isset ($dochadzkaOsoby) }
+    <div class="table-responsive">
+    <table class="table table-hover"">
+        <tr>
+                <th>{_ui.date}</th>
+                <th>{_ui.prichod}</th>
+                <th>{_ui.odchod}</th>
+            </tr>
+            {foreach $dochadzkaOsoby->dochadzka_den as $index => $den}
+                <tr>
+                    <td>
+                        {$den|date:"d. m. Y"}
+                    </td>
+                    <td>
+                        {if $dochadzkaOsoby->dochadzka_prichod} 
+                            {$dochadzkaOsoby->dochadzka_prichod[$index]|date:"G:i:s"}
+                        {else}
+                            
+                            {form editPrichodForm-$index}
+                                <span id="prichod-{$index}" data-align="top" data-autoclose="true">
+                                    {input prichod} 
+                                </span>
+                                {input send}
+                            {/form}
+                            <script type="text/javascript">
+                                $("#prichod-{$index}").clockpicker();
+                            </script> 
+                        {/if}
+                    </td>
+                    <td>
+                        {if $dochadzkaOsoby->dochadzka_odchod[$index] }
+                            {$dochadzkaOsoby->dochadzka_odchod[$index]|date:"G:i:s"} 
+                        {else}
+                            {form editOdchodForm-$index}
+                                <span id="odchod-{$index}" data-align="top" data-autoclose="true">
+                                    {input odchod} 
+                                </span>
+                                {input send}
+                            {/form}
+                            </div>
+                            <script type="text/javascript">
+                                $("#odchod-{$index}").clockpicker();
+                            </script> 
+                        {/if}
+                    </td>
+                </tr>
+            {/foreach}
+    </table>
+    </div>
+{/if}
 
 <script type="text/javascript">
     $('#form-date-od').datetimepicker({
