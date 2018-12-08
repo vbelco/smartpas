@@ -29,7 +29,6 @@ class Template3b2d4d017c extends Latte\Runtime\Template
 		$this->renderBlock('title', get_defined_vars());
 ?>
 
-
 <?php
 		$this->renderBlock('content', get_defined_vars());
 		return get_defined_vars();
@@ -39,9 +38,6 @@ class Template3b2d4d017c extends Latte\Runtime\Template
 	function prepare()
 	{
 		extract($this->params);
-		if (isset($this->params['index'])) trigger_error('Variable $index overwritten in foreach on line 73');
-		if (isset($this->params['post2'])) trigger_error('Variable $post2 overwritten in foreach on line 73');
-		if (isset($this->params['osoba'])) trigger_error('Variable $osoba overwritten in foreach on line 60');
 		Nette\Bridges\ApplicationLatte\UIRuntime::initialize($this, $this->parentName, $this->blocks);
 		
 	}
@@ -66,8 +62,6 @@ class Template3b2d4d017c extends Latte\Runtime\Template
 		extract($_args);
 ?>
 
-   
-
 <?php
 		if ($user->loggedIn) {
 ?>    
@@ -88,35 +82,33 @@ class Template3b2d4d017c extends Latte\Runtime\Template
     <div class="panel panel-default"> 
     <div class="panel-body">
     <?php
-			/* line 28 */
+			/* line 25 */
 			echo Nette\Bridges\FormsLatte\Runtime::renderFormBegin($form = $_form = $this->global->formsStack[] = $this->global->uiControl["prehladForm"], []);
 ?>
 
         <div class="row required">
             <div class="col-xs-1 required"> <?php if ($_label = end($this->global->formsStack)["datum_od"]->getLabel()) echo $_label ?></div>
             <div class="col-sm-4 input-group date required" id="form-date-od" >
-                        <?php echo end($this->global->formsStack)["datum_od"]->getControl() /* line 32 */ ?>
+                        <?php echo end($this->global->formsStack)["datum_od"]->getControl() /* line 29 */ ?>
 
                         <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
 			<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
             </div>
             <div class="col-xs-1 required"> <?php if ($_label = end($this->global->formsStack)["datum_do"]->getLabel()) echo $_label ?></div>
             <div class="col-sm-4 input-group date required" id ="form-date-do">
-                        <?php echo end($this->global->formsStack)["datum_do"]->getControl() /* line 38 */ ?>
+                        <?php echo end($this->global->formsStack)["datum_do"]->getControl() /* line 35 */ ?>
 
                         <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
 			<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
             </div>
         </div> 
-                        
-           
         <div class="row">
-            <div class="col-sm-1"> <?php if ($_label = end($this->global->formsStack)["osoby"]->getLabel()) echo $_label ?></div>
-            <div class="col-sm-4"> <?php echo end($this->global->formsStack)["osoby"]->getControl() /* line 47 */ ?></div>
+            <div class="col-sm-1"> <?php if ($_label = end($this->global->formsStack)["osoba"]->getLabel()) echo $_label ?></div>
+            <div class="col-sm-4"> <?php echo end($this->global->formsStack)["osoba"]->getControl() /* line 42 */ ?></div>
         </div>
         <div class="my_last_row">
             <div class="col-sm-1"> </div>
-            <div class="col-sm-4"><?php echo end($this->global->formsStack)["send"]->getControl() /* line 51 */ ?></div>
+            <div class="col-sm-4"><?php echo end($this->global->formsStack)["send"]->getControl() /* line 46 */ ?></div>
         </div>
     <?php
 			echo Nette\Bridges\FormsLatte\Runtime::renderFormEnd(array_pop($this->global->formsStack));
@@ -127,101 +119,6 @@ class Template3b2d4d017c extends Latte\Runtime\Template
 </div>   
     
 
-<?php
-			if (isset($meno_osoby)) {
-				$iterations = 0;
-				foreach ($osoby as $osoba) {
-?>
-    <div class="table-responsive">
-        <h3><?php echo LR\Filters::escapeHtmlText($meno_osoby[$osoba]) /* line 62 */ ?> ( <?php echo LR\Filters::escapeHtmlText($osoba) /* line 62 */ ?> )</h3>
-<?php
-					if (isset($posts_zaokruhlena_dochadzka[$osoba])) {
-						?>        <?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "ui.celkovy_cas")) ?>: 
-            <?php echo LR\Filters::escapeHtmlText($celkovy_cas_dochadzky[$osoba]["hodiny"]) /* line 65 */ ?> : <?php
-						echo LR\Filters::escapeHtmlText($celkovy_cas_dochadzky[$osoba]["minuty"]) /* line 65 */ ?>
-
-        <table class=" table table-hover">
-            <tr>
-                <th><?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "ui.prichod")) ?></th>
-                <th><?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "ui.odchod")) ?></th>
-                <th><?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "ui.time_at_work")) ?></th>
-            </tr>
-        
-<?php
-						$iterations = 0;
-						foreach ($posts_zaokruhlena_dochadzka[$osoba] as $index => $post2) {
-?>
-            <tr>
-                <td>
-<?php
-							if ($post2['prichod']) {
-								?>                        <?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->date, $post2['prichod'], "d. m. Y G:i:s")) /* line 77 */ ?>
-
-<?php
-								if ($vypisovat_realne_casy) {
-?>
-                            <br>
-                            ( <?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->date, $posts_raw_dochadzka[$osoba][$index]['prichod'], "G:i:s")) /* line 80 */ ?> )
-<?php
-								}
-							}
-							else {
-								?>                            <?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "ui.nedefinovane")) ?>
-
-                            <a href="<?php echo LR\Filters::escapeHtmlAttr($this->global->uiControl->link("Edit!", ['typ'=>'prichod', 'osoba_id'=>$osoba, 'dochadzka_id'=>$index])) ?>"><button type="button" class="btn btn-default"><?php
-								echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "ui.form.edit")) ?></button></a>
-<?php
-							}
-?>
-                </td>
-                <td>
-<?php
-							if ($post2['odchod']) {
-								?>                        <?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->date, $post2['odchod'], "d. m. Y G:i:s")) /* line 89 */ ?>
-
-<?php
-								if ($vypisovat_realne_casy) {
-?>
-                            <br>
-                            ( <?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->date, $posts_raw_dochadzka[$osoba][$index]['odchod'], "G:i:s")) /* line 92 */ ?> )
-<?php
-								}
-							}
-							else {
-								?>                            <?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "ui.nedefinovane")) ?>
-
-                            <a href="<?php echo LR\Filters::escapeHtmlAttr($this->global->uiControl->link("Edit!", ['typ'=>'odchod', 'osoba_id'=>$osoba, 'dochadzka_id'=>$index])) ?>"><button type="button" class="btn btn-default"><?php
-								echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "ui.form.edit")) ?></button></a>
-<?php
-							}
-?>
-                </td>
-                <td>
-                    <?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->date, $post2['cas_v_praci'], "%h:%I")) /* line 100 */ ?>
-
-                </td>
-            </tr>
-<?php
-							$iterations++;
-						}
-?>
-        </table>
-<?php
-					}
-					else {
-						?>        <div><?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "ui.none_definition_attendance")) ?></div>
-<?php
-					}
-?>
-        
-    </div>
-<?php
-					$iterations++;
-				}
-			}
-?>
-  
-
 <script type="text/javascript">
     $('#form-date-od').datetimepicker({
         minView: 2,
@@ -229,7 +126,7 @@ class Template3b2d4d017c extends Latte\Runtime\Template
         todayBtn:  1,
         useCurrent: true,
         format: "dd.mm.yyyy",
-        language:  <?php echo LR\Filters::escapeJs($activeLocale) /* line 121 */ ?>
+        language:  <?php echo LR\Filters::escapeJs($activeLocale) /* line 61 */ ?>
 
     });
     $('#form-date-do').datetimepicker({
@@ -237,11 +134,10 @@ class Template3b2d4d017c extends Latte\Runtime\Template
         autoclose: 1,
         todayBtn:  1,
         format: "dd.mm.yyyy",
-        language:  <?php echo LR\Filters::escapeJs($activeLocale) /* line 128 */ ?>
+        language:  <?php echo LR\Filters::escapeJs($activeLocale) /* line 68 */ ?>
 
     });
 </script> 
-
 
 <?php
 		}

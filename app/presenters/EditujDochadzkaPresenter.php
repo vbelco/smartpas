@@ -1,5 +1,5 @@
 <?php
-
+//halo
 namespace App\Presenters;
 
 use Nette;
@@ -43,13 +43,22 @@ class EditujDochadzkaPresenter extends BasePresenter
                 ->setAttribute('class', 'form-control')
                 ->setRequired( $this->translator->translate('ui.message.enter_end_date') );
         
-        $form->addCheckboxList('osoby', $this->translator->translate('ui.form.choose_person') ,$pole)
+        $form->addRadioList('osoba', $this->translator->translate('ui.form.choose_person') ,$pole)
                 ->setRequired( $this->translator->translate('ui.message.choose_least_1_person') );
         
         $form->addSubmit('send', $this->translator->translate('ui.form.show') );
         $form->onSuccess[] = [$this, 'prehladFormSubmitted']; //spracovanie formulara bude mat na starosti funckia tejto triedy s nazvom: pridajRFIDFormSubmitted
         
         return $form;
-    }
+    }//end function createComponent PrehladForm
+    
+    public function prehladFormSubmitted($form , $values){
+        //ulozime si udaje z formulara
+        $this->od = $values['datum_od'];
+        $this->do = $values['datum_do'];
+        $this->osoby = $values['osoba'];
+        
+        
+    }//end function prehladForm Submitted
  
 }

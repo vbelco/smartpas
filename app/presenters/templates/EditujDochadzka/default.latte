@@ -6,10 +6,7 @@
     <h1>{_ui.dochadzka}</h1>
 {/block}
 
-
 {block content}
-
-   
 
 {if $user->loggedIn} {*uz sme vnutri, len pre prihlasenych *}
     
@@ -40,11 +37,9 @@
 			<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
             </div>
         </div> 
-                        
-           
         <div class="row">
-            <div class="col-sm-1"> {label osoby /}</div>
-            <div class="col-sm-4"> {input osoby }</div>
+            <div class="col-sm-1"> {label osoba /}</div>
+            <div class="col-sm-4"> {input osoba }</div>
         </div>
         <div class="my_last_row">
             <div class="col-sm-1"> </div>
@@ -55,61 +50,6 @@
     </div>
 </div>   
     
-
-{if isset($meno_osoby) }
-    {foreach $osoby as $osoba}
-    <div class="table-responsive">
-        <h3>{$meno_osoby[$osoba]} ( {$osoba} )</h3>
-        {ifset $posts_zaokruhlena_dochadzka[$osoba]  }
-        {_ui.celkovy_cas}: 
-            {$celkovy_cas_dochadzky[$osoba]["hodiny"]} : {$celkovy_cas_dochadzky[$osoba]["minuty"]}
-        <table class=" table table-hover">
-            <tr>
-                <th>{_ui.prichod}</th>
-                <th>{_ui.odchod}</th>
-                <th>{_ui.time_at_work}</th>
-            </tr>
-        
-        {foreach $posts_zaokruhlena_dochadzka[$osoba] as $index => $post2}
-            <tr>
-                <td>
-                    {if  $post2['prichod'] }
-                        {$post2['prichod']|date:"d. m. Y G:i:s"}
-                        {if $vypisovat_realne_casy}
-                            <br>
-                            ( {$posts_raw_dochadzka[$osoba][$index]['prichod']|date:"G:i:s"} )
-                        {/if}
-                      {else}
-                            {_ui.nedefinovane}
-                            <a n:href="Edit! typ=>prichod, osoba_id=>$osoba, dochadzka_id=>$index"><button type="button" class="btn btn-default">{_ui.form.edit}</button></a>
-                      {/if}
-                </td>
-                <td>
-                    {if  $post2['odchod'] }
-                        {$post2['odchod']|date:"d. m. Y G:i:s"}
-                        {if $vypisovat_realne_casy}
-                            <br>
-                            ( {$posts_raw_dochadzka[$osoba][$index]['odchod']|date:"G:i:s"} )
-                        {/if}
-                    {else}  
-                            {_ui.nedefinovane}
-                            <a n:href="Edit! typ=>odchod, osoba_id=>$osoba, dochadzka_id=>$index"><button type="button" class="btn btn-default">{_ui.form.edit}</button></a>
-                    {/if}
-                </td>
-                <td>
-                    {$post2['cas_v_praci']|date:"%h:%I"} 
-                </td>
-            </tr>
-        {/foreach}
-        </table>
-        {else}
-        <div>{_ui.none_definition_attendance}</div>
-        {/ifset}
-        
-    </div>
-    {/foreach}  
-{/if}
-  
 
 <script type="text/javascript">
     $('#form-date-od').datetimepicker({
@@ -128,7 +68,6 @@
         language:  {$activeLocale}
     });
 </script> 
-
 
 {/if} {*if user is logged in*}
 {/block}
