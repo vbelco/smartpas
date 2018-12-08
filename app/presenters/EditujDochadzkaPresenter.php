@@ -16,11 +16,12 @@ class EditujDochadzkaPresenter extends BasePresenter
     
     private $od;  //pre formular datumu od
     private $do;   //pre formular do
-    private $osoba;  //pre formular id editovanej osoby
+    private $osoba;  //tireda osoby
     
-    public function __construct(Nette\Database\Context $database, Uzivatel $uzivatel, Dochadzka $dochadzka) {
+    public function __construct(Nette\Database\Context $database) {
         parent::__construct($database, $uzivatel);
-        $this->dochadzka = $dochadzka; 
+        $this->osoba = new Osoba($this->database); //definovane objektu osoby
+        $this->dochadzka = new Dochadzka($this->database); //definovane objektu dochadzky
     }
     
     protected function createComponentPrehladForm() {   
@@ -56,7 +57,11 @@ class EditujDochadzkaPresenter extends BasePresenter
         //ulozime si udaje z formulara
         $this->od = $values['datum_od'];
         $this->do = $values['datum_do'];
-        $this->osoby = $values['osoba'];
+        //nacitanie osoby
+        $this->osoba->InitializeFromDatabase($values["osoba"] ); //inicializacia z databazy 
+        
+        
+        
         
         
     }//end function prehladForm Submitted

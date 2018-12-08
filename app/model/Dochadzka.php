@@ -1,6 +1,6 @@
 <?php
 /*
-trieda reprezentujuca RFID klucenku, kartu a pod....
+trieda reprezentuje dochadku VIACERYCH osob v nejakom casovom rozsahu
   */
 
 namespace App\Model;
@@ -332,7 +332,6 @@ class Dochadzka extends Nette\Object
             //prebehneme si dochadzku a zratame
             foreach ( $this->pole_dochadzky as $key => $den ){
                     //prichod
-                    //pokial prichod je 1970-01-01 12:00:00 dame NULL
                     if ($den['prichod']){
                         //$temp je hodnota prichodu v timestampe, teda v sekundach
                         $temp = $this->zaokruhlovanie ? $den['prichod']->getTimestamp() / ($this->zaokruhlovanie * 60 ) : $den['prichod']->getTimestamp(); //vylucenie delenia 0 cez ternarny operator   
@@ -345,26 +344,26 @@ class Dochadzka extends Nette\Object
                         } else {
                             $den['prichod']->setTimestamp($temp) ; //nastavime spet
                         }
+                        //odchod
+                        //len v pripade ze je odchod uz nastaveny, a nieje NULL
+                        if ( $den['odchod'] ){
+                            $temp = $this->zaokruhlovanie ? $den['odchod']->getTimestamp() / ($this->zaokruhlovanie * 60 ) : $den['odchod']->getTimestamp(); //vylucenie delenia 0 cez ternarny operator
+                            $temp = floor($temp); //zaokruhlime nadol aby sme dostali cele jednoty
+                            $temp = $this->zaokruhlovanie ? $temp * $this->zaokruhlovanie * 60 : $temp; //vypocitame spet zaokruhleny cas, ale len v pripade, kedy zaokruhlovanie je rozdielne od 0
+                            $den['odchod']->setTimestamp($temp) ; //nastavime spet
+                            //prepocitanie casu v praci
+                            //$hodnota_casu = $den['odchod']->getTimestamp() - $den['prichod']->getTimestamp();
+                            $hodnota_casu = $den['prichod']->diff( $den['odchod'] );
+                            $this->pole_dochadzky[$key]['cas_v_praci'] = $hodnota_casu; //priamy pristup do pola musi byt cez operato $this->
+                        }//end if mame nastaveny odchod
+                        else {
+                             $this->pole_dochadzky[$key]['cas_v_praci'] = 0 ; //ked si zabudol poobede pipnut
+                        }
                     }//end if mame prichod rozdielny od NULL
-                    else {
+                    else{
                         $this->pole_dochadzky[$key]['cas_v_praci'] = 0 ; //ked si zabudol rano pipnut
                     } //end else
                     
-                    //odchod
-                    //len v pripade ze je odchod uz nastaveny, a nieje NULL ALEBO nieje 1970-01-01 12:00:00
-                    if ( $den['odchod'] ){
-                        $temp = $this->zaokruhlovanie ? $den['odchod']->getTimestamp() / ($this->zaokruhlovanie * 60 ) : $den['odchod']->getTimestamp(); //vylucenie delenia 0 cez ternarny operator
-                        $temp = floor($temp); //zaokruhlime nadol aby sme dostali cele jednoty
-                        $temp = $this->zaokruhlovanie ? $temp * $this->zaokruhlovanie * 60 : $temp; //vypocitame spet zaokruhleny cas, ale len v pripade, kedy zaokruhlovanie je rozdielne od 0
-                        $den['odchod']->setTimestamp($temp) ; //nastavime spet
-                        //prepocitanie casu v praci
-                        //$hodnota_casu = $den['odchod']->getTimestamp() - $den['prichod']->getTimestamp();
-                        $hodnota_casu = $den['prichod']->diff( $den['odchod'] );
-                        $this->pole_dochadzky[$key]['cas_v_praci'] = $hodnota_casu; //priamy pristup do pola musi byt cez operato $this->
-                    }
-                    else {
-                        $this->pole_dochadzky[$key]['cas_v_praci'] = 0 ; //ked je este v praci, tak dame 0
-                    } //end else
             }//end foreach
             
         } else { return false; }
