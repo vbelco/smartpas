@@ -12,6 +12,9 @@ citacka:
 section_rfid:
     prehlad: "Listing"
     add: "Add RFID"
+    all: "All"
+    len_nepriradene: "Only NOT assigned"
+    len_priradene: "Only assigned"
 section_osoby:
     prehlad: "Listing"
     pridaj: "Add Person"
@@ -21,3 +24,7 @@ section_dochadzka:
     settings: "Settings"
     nepriradene: "Not assigned"
     edituj: "Edit"
+section_uzivatel:
+    vase_udaje: "Your personal data"
+    organizacia: "Organization"
+    zmena_hesla: "Change password"

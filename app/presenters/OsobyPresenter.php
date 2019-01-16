@@ -84,7 +84,7 @@ class OsobyPresenter extends BasePresenter
         } else { //pridavame noveho
             if ( $this->osoba->InsertOsobuToDatabaseFromFormular($values, $active_user_id ) )
             {
-                $this->flashMessage( $this->translator->translate('ui.message.change_success') );
+                $this->flashMessage( $this->translator->translate('ui.message.change_success'), 'alert alert-success' );
                 $this->redirect('Osoby:default');
             }      
         }//end else

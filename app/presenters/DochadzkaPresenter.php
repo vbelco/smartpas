@@ -183,10 +183,12 @@ class DochadzkaPresenter extends BasePresenter
         $pracovna_doba = new \App\Model\PracovnaDoba($this->database, $this->getUser()->id  );
         $pracovna_doba->setPocetSmienFromDatabase();
         $pracovna_doba->loadPolePracovnejDoby();
-        $pocet_smien = $pracovna_doba->getPocetSmien();
+        $pocet_smien = $pracovna_doba->getPocetSmien(); //toto je predpriprava na viacpracovne smeny, zatial bude len jednosmenna prevadzka
                 
         $form = new Form;
-        
+        /*
+         * viacsmenna prevadzka
+         *
         $zoznam_doby = array (
             '0' => $this->translator->translate('ui.form.standard'),
             '1' => $this->translator->translate('ui.form.shifts'),
@@ -229,6 +231,20 @@ class DochadzkaPresenter extends BasePresenter
             $form['prichod3']->setDefaultValue( $pracovna_doba->getPrichod2()->format("%H:%I") );
             $form['odchod3']->setDefaultValue( $pracovna_doba->getOdchod3()->format("%H:%I") );
         }
+        */
+        /*
+         * jednosmenna prevadzka
+         */
+        $form->addText('prichod1', $this->translator->translate('ui.prichod'))
+                ->setAttribute('class', 'form-control')
+                ->setHtmlAttribute('id', 'form-prichod1');;
+        $form->addText('odchod1', $this->translator->translate('ui.odchod'))
+                ->setAttribute('class', 'form-control');
+        if ( $pracovna_doba->getPolePracovnejDoby() ) { //ak uz mame definovanu pracovnu dobu, tak nastavime vstupne hodnoty
+            $form['prichod1']->setDefaultValue( $pracovna_doba->getPrichod1()->format("%H:%I") );
+            $form['odchod1']->setDefaultValue( $pracovna_doba->getOdchod1()->format("%H:%I") );
+        }
+        
         
         $form->addSubmit('send', $this->translator->translate('ui.form.save'));
         $form->onSuccess[] = [$this, 'nastaveniePracovnejDobySubmitted']; //spracovanie formulara bude mat na starosti funckia tejto triedy s nazvom: pridajRFIDFormSubmitted
@@ -237,8 +253,9 @@ class DochadzkaPresenter extends BasePresenter
     }
     
     public function nastaveniePracovnejDobySubmitted( $form, $values ){
+        /* pre viac smien */
+        /*
         $pocet_smien = $values['prac_doba']; 
-        
         $pole_pracovnej_doby = array (
             'prichod1' => $values['prichod1'],
             'odchod1' => $values['odchod1'],
@@ -246,7 +263,16 @@ class DochadzkaPresenter extends BasePresenter
             'odchod2' => $values['odchod2'],
             'prichod3' => $values['prichod3'],
             'odchod3' => $values['odchod3']
-        );
+        ); 
+        */
+        
+        /*pre jedni smenu*/
+        $pocet_smien = 0;
+        $pole_pracovnej_doby = array (
+            'prichod1' => $values['prichod1'],
+            'odchod1' => $values['odchod1'],
+            );
+        
         
         //uvodne nasavovacky   
         $pracovna_doba = new \App\Model\PracovnaDoba($this->database, $this->getUser()->id  );

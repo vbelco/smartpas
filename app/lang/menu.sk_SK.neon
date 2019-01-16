@@ -12,6 +12,9 @@ citacka:
 section_rfid:
     prehlad: "Prehľad"
     add: "Pridaj RFID"
+    all: "Všetky"
+    len_nepriradene: "Len nepriradené"
+    len_priradene: "Len priradené"
 section_osoby:
     prehlad: "Prehľad"
     pridaj: "Pridaj osobu"
@@ -21,3 +24,7 @@ section_dochadzka:
     settings: "Nastavenia"
     nepriradene: "Nepriradené"
     edituj: "Edituj"
+section_uzivatel:
+    vase_udaje: "Vaše údaje"
+    organizacia: "Organizácia"
+    zmena_hesla: "Zmena hesla"

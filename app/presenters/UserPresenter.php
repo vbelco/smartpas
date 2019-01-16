@@ -22,10 +22,10 @@ class UserPresenter extends BasePresenter
     {
         $this->uzivatel->loadUserFromDatabase( $this->getUser()->id );
         $form = new Form;
-        $form->addText('email', '-Registracny email-')
+        $form->addText('email', $this->translator->translate('ui.form.registration_email') )
                 ->setDisabled()
                 ->setDefaultValue( $this->uzivatel->getEmail() );
-        $form->addText('name', '-Meno-:' )
+        $form->addText('name', $this->translator->translate('ui.form.name') )
                 ->setDefaultValue( $this->uzivatel->getName() );
         
         $form->addSubmit('send', $this->translator->translate('ui.form.save') );
@@ -38,9 +38,9 @@ class UserPresenter extends BasePresenter
     public function UserFormSubmitted( $form, $values ){
         try {
             $this->uzivatel->saveNameToDatabase($values->name); //ulozime si uzivatela do databazy
-            $this->flashMessage("-Zmeny sa podarili-", "alert alert-success" );
+            $this->flashMessage($this->translator->translate('ui.message.change_success'), "alert alert-success" );
         } catch (Exception $ex) {
-            $this->flashMessage("-Nepodarilo sa zmenit meno-", "alert alert-warning" );
+            $this->flashMessage($this->translator->translate('ui.message.change_fail'), "alert alert-warning" );
         }    
     }
 //----------------------------------------------------------------------------------------------------   
@@ -49,18 +49,18 @@ class UserPresenter extends BasePresenter
         $this->uzivatel->loadUserFromDatabase( $this->getUser()->id );
         $form = new Form;
         
-        $form->addPassword('password', '-Nove heslo:-')
+        $form->addPassword('password', $this->translator->translate('ui.form.passwd_new'))
             ->addCondition(Form::FILLED)
-            ->addRule(Form::MIN_LENGTH, '-Položka %label musí obsahovat min. %d znaků-', 6)
-            ->addRule(Form::MAX_LENGTH, '-Položka %label může obsahovat max. %d znaků-', 255);
+            ->addRule(Form::MIN_LENGTH, $this->translator->translate('ui.form.email_length'), 6)
+            ->addRule(Form::MAX_LENGTH, $this->translator->translate('ui.form.email_length_max'), 255);
         $form['password']->getControlPrototype()->autocomplete('off');
         
-        $form->addPassword('password_again', '-Heslo (znovu):-')
+        $form->addPassword('password_again', $this->translator->translate('ui.form.passwd2'))
             ->setRequired( $this->translator->translate('ui.message.fill_passwd') )
             ->addConditionOn($form["password"], Form::FILLED)
-            ->addRule(Form::EQUAL, "-Hesla se musí shodovat!-", $form["password"])
-            ->addRule(Form::MIN_LENGTH, '-Položka %label musí obsahovat min. %d znaků-', 6)
-            ->addRule(Form::MAX_LENGTH, '-Položka %label může obsahovat max. %d znaků-', 255);
+            ->addRule(Form::EQUAL, $this->translator->translate('ui.form.passwd_same') , $form["password"])
+            ->addRule(Form::MIN_LENGTH, $this->translator->translate('ui.form.email_length'), 6)
+            ->addRule(Form::MAX_LENGTH, $this->translator->translate('ui.form.email_length_max'), 255);
         
         $form->addSubmit('send', $this->translator->translate('ui.form.save') );
         $form->onSuccess[] = [$this, 'PasswordFormSubmitted']; //spracovanie formulara bude mat na starosti funckia tejto triedy s nazvom: pridajRFIDFormSubmitted
@@ -71,9 +71,9 @@ class UserPresenter extends BasePresenter
     public function PasswordFormSubmitted( $form, $values ){
         try {
             $this->uzivatel->savePasswordToDatabase($values->password);
-            $this->flashMessage("-Zmeny sa podarili-", "alert alert-success" );
+            $this->flashMessage($this->translator->translate('ui.message.change_success'), "alert alert-success" );
         } catch (Exception $ex) {
-            $this->flashMessage("-Nepodarilo sa zmenit heslo-", "alert alert-warning" );
+            $this->flashMessage($this->translator->translate('ui.message.change_fail'), "alert alert-warning" );
         }    
     }
 //----------------------------------------------------------------------------------------------------    

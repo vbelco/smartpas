@@ -18,9 +18,9 @@
 </div>
 <div>
 <ul class="nav nav-pills">
-    <li class="odsadenie {if $ktore == "all"}  active {/if}" ><a n:href="Filter! all">-Vsetky-</a></li>
-    <li class="odsadenie {if $ktore == "nepr"} active {/if}" ><a n:href="Filter! nepr">-Len nepriradene-</a></li>
-    <li class="odsadenie {if $ktore == "prir"} active {/if}" ><a n:href="Filter! prir">-Len priradene-</a></li>
+    <li class="odsadenie {if $ktore == "all"}  active {/if}" ><a n:href="Filter! all">{_menu.section_rfid.all}</a></li>
+    <li class="odsadenie {if $ktore == "nepr"} active {/if}" ><a n:href="Filter! nepr">{_menu.section_rfid.len_nepriradene}</a></li>
+    <li class="odsadenie {if $ktore == "prir"} active {/if}" ><a n:href="Filter! prir">{_menu.section_rfid.len_priradene}</a></li>
 </div>
     
 {*vypis nasich rfidiek*}
