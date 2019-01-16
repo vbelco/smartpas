@@ -76,13 +76,12 @@ class EditujDochadzkaPresenter extends BasePresenter
         return new Multiplier(function ($id) { //predavame id riadku s dochadzkou v datbaze
             $form = new Nette\Application\UI\Form;
             $form->addText('prichod', '')
-                    ->setRequired()
-                    ->addRule(Form::PATTERN, $this->translator->translate('ui.form.time_explanation'), '[0-2][0-9]:[0-5][0-9]');
+                    ->setRequired();
             $form->addHidden('id', $id);
             $form->addHidden('datum_od', $this->od);
             $form->addHidden('datum_do', $this->do);
             $form->addHidden('osoba', $this->osoba->id);
-            $form->addSubmit('send', $this->translator->translate('ui.form.change'));
+            $form->addSubmit('send', 'Zmeň');
             $form->onSuccess[] = [$this, 'editPrichodFormSubmitted']; //spracovanie formulara bude mat na starosti funckia tejto triedy s nazvom: pridajRFIDFormSubmitted
         return $form;
         });
@@ -93,13 +92,12 @@ class EditujDochadzkaPresenter extends BasePresenter
         return new Multiplier(function ($id) {
             $form = new Nette\Application\UI\Form;
             $form->addText('odchod', '')
-                    ->setRequired()
-                    ->addRule(Form::PATTERN, 'Čas musí byť vo formáte hodina:minuta. Hodina v rozmedzí 00-23. Minúta v rozmedzí 00-59', '[0-2][0-9]:[0-5][0-9]');
+                    ->setRequired();
             $form->addHidden('id', $id);
             $form->addHidden('datum_od', $this->od);
             $form->addHidden('datum_do', $this->do);
             $form->addHidden('osoba', $this->osoba->id);
-            $form->addSubmit('send', $this->translator->translate('ui.form.change'));
+            $form->addSubmit('send', 'Zmeň');
             $form->onSuccess[] = [$this, 'editOdchodFormSubmitted'];
         return $form;
         });
@@ -117,14 +115,9 @@ class EditujDochadzkaPresenter extends BasePresenter
         //vytvorenie dochadzky
         $this->dochadzkaOsoby = new DochadzkaOsoby( $this->database, $this->user->id, $this->osoba->getId() );
         //upravenie hodnoty dochadzky
-        try {
-            $this->dochadzkaOsoby->storeDochadzka($zaznam_id, 'prichod', $hodnota_prichodu);
-            //nacitanie dochadzky cloveka v danom romedzi
-            $this->dochadzkaOsoby->nacitaj($this->od, $this->do); 
-            $this->flashMessage($this->translator->translate('ui.message.change_success'), 'alert alert-success');
-        } catch (\ErrorException $e){
-            $this->flashMessage($this->translator->translate('ui.message.change_fail'), 'alert alert-warning'); // informování uživatele o chybě
-        }
+        $this->dochadzkaOsoby->storeDochadzka($zaznam_id, 'prichod', $hodnota_prichodu);
+        //nacitanie dochadzky cloveka v danom romedzi
+        $this->dochadzkaOsoby->nacitaj($this->od, $this->do); 
     }
     
     public function editOdchodFormSubmitted($form , $values){
@@ -140,15 +133,10 @@ class EditujDochadzkaPresenter extends BasePresenter
         //vytvorenie dochadzky
         $this->dochadzkaOsoby = new DochadzkaOsoby( $this->database, $this->user->id, $this->osoba->getId() );
         //upravenie hodnoty dochadzky
-        try {
-            $this->dochadzkaOsoby->storeDochadzka($zaznam_id, 'odchod', $hodnota_odchodu);
-            //nacitanie dochadzky cloveka v danom romedzi
-            $this->dochadzkaOsoby->nacitaj($this->od, $this->do); 
-            $this->flashMessage($this->translator->translate('ui.message.change_success'), 'alert alert-success');
-        } catch (\ErrorException $e){
-            $this->flashMessage($this->translator->translate('ui.message.change_fail'), 'alert alert-warning'); // informování uživatele o chybě
-        }
-    }//end function editOdchodForm Submitted
+        $this->dochadzkaOsoby->storeDochadzka($zaznam_id, 'odchod', $hodnota_odchodu);
+        //nacitanie dochadzky cloveka v danom romedzi
+        $this->dochadzkaOsoby->nacitaj($this->od, $this->do); 
+    }
     
     /* funckia na vypisanie stranky editacie  */
     public function renderDefault() {

@@ -38,8 +38,8 @@ class Template3b2d4d017c extends Latte\Runtime\Template
 	function prepare()
 	{
 		extract($this->params);
-		if (isset($this->params['index'])) trigger_error('Variable $index overwritten in foreach on line 66');
-		if (isset($this->params['den'])) trigger_error('Variable $den overwritten in foreach on line 66');
+		if (isset($this->params['index'])) trigger_error('Variable $index overwritten in foreach on line 65');
+		if (isset($this->params['den'])) trigger_error('Variable $den overwritten in foreach on line 65');
 		Nette\Bridges\ApplicationLatte\UIRuntime::initialize($this, $this->parentName, $this->blocks);
 		
 	}
@@ -128,9 +128,9 @@ class Template3b2d4d017c extends Latte\Runtime\Template
 ?>
 
 <?php
-			if ((isset ($dochadzkaOsoby))) {
-				if ($dochadzkaOsoby->dochadzka_den != NULL) {
-?>    <div class="table-responsive">
+			if (isset ($dochadzkaOsoby)) {
+?>
+    <div class="table-responsive">
     <table class="table table-hover"">
         <tr>
                 <th><?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "ui.date")) ?></th>
@@ -138,95 +138,85 @@ class Template3b2d4d017c extends Latte\Runtime\Template
                 <th><?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "ui.odchod")) ?></th>
             </tr>
 <?php
-					$iterations = 0;
-					foreach ($dochadzkaOsoby->dochadzka_den as $index => $den) {
+				$iterations = 0;
+				foreach ($dochadzkaOsoby->dochadzka_den as $index => $den) {
 ?>
                 <tr>
                     <td>
-                        <?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->date, call_user_func($this->filters->translate, $den), "D")) ?> | <?php
-						echo LR\Filters::escapeHtmlText(call_user_func($this->filters->date, $den, "D")) /* line 69 */ ?>
-
-                        </br>
-                        <?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->date, $den, "d. m. Y")) /* line 71 */ ?>
+                        <?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->date, $den, "d. m. Y")) /* line 68 */ ?>
 
                     </td>
                     <td>
-                        <?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->date, $dochadzkaOsoby->dochadzka_prichod[$index], "G:i:s")) /* line 74 */ ?>
+<?php
+					if ($dochadzkaOsoby->dochadzka_prichod) {
+						?>                            <?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->date, $dochadzkaOsoby->dochadzka_prichod[$index], "G:i:s")) /* line 72 */ ?>
 
 <?php
-						if ((!$dochadzkaOsoby->dochadzka_prichod[$index]) ||
-						($dochadzkaOsoby->dochadzka_prichod_upravene[$index])) {
+					}
+					else {
 ?>
-                                
+                            
                             <?php
-							/* line 79 */
-							echo Nette\Bridges\FormsLatte\Runtime::renderFormBegin($form = $_form = $this->global->formsStack[] = $this->global->uiControl["editPrichodForm-$index"], []);
+						/* line 75 */
+						echo Nette\Bridges\FormsLatte\Runtime::renderFormBegin($form = $_form = $this->global->formsStack[] = $this->global->uiControl["editPrichodForm-$index"], []);
 ?>
 
-                                <span id="prichod-<?php echo LR\Filters::escapeHtmlAttr($index) /* line 80 */ ?>" data-align="top" data-autoclose="true">
-                                    <?php echo end($this->global->formsStack)["prichod"]->getControl() /* line 81 */ ?>
+                                <span id="prichod-<?php echo LR\Filters::escapeHtmlAttr($index) /* line 76 */ ?>" data-align="top" data-autoclose="true">
+                                    <?php echo end($this->global->formsStack)["prichod"]->getControl() /* line 77 */ ?>
 
                                 </span>
-                                <?php echo end($this->global->formsStack)["send"]->getControl() /* line 83 */ ?>
+                                <?php echo end($this->global->formsStack)["send"]->getControl() /* line 79 */ ?>
 
                             <?php
-							echo Nette\Bridges\FormsLatte\Runtime::renderFormEnd(array_pop($this->global->formsStack));
+						echo Nette\Bridges\FormsLatte\Runtime::renderFormEnd(array_pop($this->global->formsStack));
 ?>
 
                             <script type="text/javascript">
-                                $("#prichod-<?php echo LR\Filters::escapeJs($index) /* line 86 */ ?>").clockpicker();
+                                $("#prichod-<?php echo LR\Filters::escapeJs($index) /* line 82 */ ?>").clockpicker();
                             </script> 
-                            
 <?php
-						}
+					}
 ?>
                     </td>
                     <td>
-                        <?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->date, $dochadzkaOsoby->dochadzka_odchod[$index], "G:i:s")) /* line 92 */ ?>
+<?php
+					if ($dochadzkaOsoby->dochadzka_odchod[$index]) {
+						?>                            <?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->date, $dochadzkaOsoby->dochadzka_odchod[$index], "G:i:s")) /* line 88 */ ?>
 
 <?php
-						if ((!$dochadzkaOsoby->dochadzka_odchod[$index]) ||
-						($dochadzkaOsoby->dochadzka_odchod_upravene[$index])) {
+					}
+					else {
+						?>                            <?php
+						/* line 90 */
+						echo Nette\Bridges\FormsLatte\Runtime::renderFormBegin($form = $_form = $this->global->formsStack[] = $this->global->uiControl["editOdchodForm-$index"], []);
 ?>
 
-                            <?php
-							/* line 97 */
-							echo Nette\Bridges\FormsLatte\Runtime::renderFormBegin($form = $_form = $this->global->formsStack[] = $this->global->uiControl["editOdchodForm-$index"], []);
-?>
-
-                                <span id="odchod-<?php echo LR\Filters::escapeHtmlAttr($index) /* line 98 */ ?>" data-align="top" data-autoclose="true">
-                                    <?php echo end($this->global->formsStack)["odchod"]->getControl() /* line 99 */ ?>
+                                <span id="odchod-<?php echo LR\Filters::escapeHtmlAttr($index) /* line 91 */ ?>" data-align="top" data-autoclose="true">
+                                    <?php echo end($this->global->formsStack)["odchod"]->getControl() /* line 92 */ ?>
 
                                 </span>
-                                <?php echo end($this->global->formsStack)["send"]->getControl() /* line 101 */ ?>
+                                <?php echo end($this->global->formsStack)["send"]->getControl() /* line 94 */ ?>
 
                             <?php
-							echo Nette\Bridges\FormsLatte\Runtime::renderFormEnd(array_pop($this->global->formsStack));
+						echo Nette\Bridges\FormsLatte\Runtime::renderFormEnd(array_pop($this->global->formsStack));
 ?>
 
                             </div>
                             <script type="text/javascript">
-                                $("#odchod-<?php echo LR\Filters::escapeJs($index) /* line 105 */ ?>").clockpicker();
+                                $("#odchod-<?php echo LR\Filters::escapeJs($index) /* line 98 */ ?>").clockpicker();
                             </script> 
-
 <?php
-						}
+					}
 ?>
                     </td>
                 </tr>
 <?php
-						$iterations++;
-					}
+					$iterations++;
+				}
 ?>
     </table>
     </div>
 <?php
-				}
-				else {
-?> 
-    <div><?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "ui.none_definition_attendance")) ?></div>
-<?php
-				}
 			}
 ?>
 
@@ -237,7 +227,7 @@ class Template3b2d4d017c extends Latte\Runtime\Template
         todayBtn:  1,
         useCurrent: true,
         format: "dd.mm.yyyy",
-        language:  <?php echo LR\Filters::escapeJs($activeLocale) /* line 126 */ ?>
+        language:  <?php echo LR\Filters::escapeJs($activeLocale) /* line 115 */ ?>
 
     });
     $('#form-date-do').datetimepicker({
@@ -245,7 +235,7 @@ class Template3b2d4d017c extends Latte\Runtime\Template
         autoclose: 1,
         todayBtn:  1,
         format: "dd.mm.yyyy",
-        language:  <?php echo LR\Filters::escapeJs($activeLocale) /* line 133 */ ?>
+        language:  <?php echo LR\Filters::escapeJs($activeLocale) /* line 122 */ ?>
 
     });
 </script> 

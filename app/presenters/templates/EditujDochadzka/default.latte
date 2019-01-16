@@ -54,8 +54,7 @@
     <h3> {$osoba->meno} </h3>
 {/if}
 
-{if (isset ($dochadzkaOsoby))}  {* pokial uz mame nejaku dochadzku, teda sme odoslali formular *}
-{if $dochadzkaOsoby->dochadzka_den != NULL } {* dochadzka nieje nulova, tedfa mame nejake dni *}
+{if isset ($dochadzkaOsoby) }
     <div class="table-responsive">
     <table class="table table-hover"">
         <tr>
@@ -66,16 +65,13 @@
             {foreach $dochadzkaOsoby->dochadzka_den as $index => $den}
                 <tr>
                     <td>
-                        {_$den|date:"D"} | {$den|date:"D"} 
-                        </br>
                         {$den|date:"d. m. Y"}
                     </td>
                     <td>
-                        {$dochadzkaOsoby->dochadzka_prichod[$index]|date:"G:i:s"}
-                        {*pokial je nedefinovany prichod, alebo ked uz nedefinovany prichod bol niekedy zmeneny*}
-                        {if (!$dochadzkaOsoby->dochadzka_prichod[$index]) ||
-                            ($dochadzkaOsoby->dochadzka_prichod_upravene[$index]) }
-                                
+                        {if $dochadzkaOsoby->dochadzka_prichod} 
+                            {$dochadzkaOsoby->dochadzka_prichod[$index]|date:"G:i:s"}
+                        {else}
+                            
                             {form editPrichodForm-$index}
                                 <span id="prichod-{$index}" data-align="top" data-autoclose="true">
                                     {input prichod} 
@@ -85,15 +81,12 @@
                             <script type="text/javascript">
                                 $("#prichod-{$index}").clockpicker();
                             </script> 
-                            
                         {/if}
                     </td>
                     <td>
-                        {$dochadzkaOsoby->dochadzka_odchod[$index]|date:"G:i:s"} 
-                        {*pokial je nedefinovany odchod, alebo ked uz nedefinovany odchod bol niekedy zmeneny*}
-                        {if (!$dochadzkaOsoby->dochadzka_odchod[$index]) || 
-                            ($dochadzkaOsoby->dochadzka_odchod_upravene[$index]) }
-
+                        {if $dochadzkaOsoby->dochadzka_odchod[$index] }
+                            {$dochadzkaOsoby->dochadzka_odchod[$index]|date:"G:i:s"} 
+                        {else}
                             {form editOdchodForm-$index}
                                 <span id="odchod-{$index}" data-align="top" data-autoclose="true">
                                     {input odchod} 
@@ -104,16 +97,12 @@
                             <script type="text/javascript">
                                 $("#odchod-{$index}").clockpicker();
                             </script> 
-
                         {/if}
                     </td>
                 </tr>
             {/foreach}
     </table>
     </div>
-{else} {* pre tohto cloveka nemame v databaze ziadnu dochadzku, teda nechodil do roboty *}
-    <div>{_ui.none_definition_attendance}</div>
-{/if}
 {/if}
 
 <script type="text/javascript">
