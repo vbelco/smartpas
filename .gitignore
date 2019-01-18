@@ -1,0 +1,8 @@
+# Subor, ktorz gitko bude ignorovat #
+# NetBeans specific #
+
+nbproject/
+vendor/
+temp/
+log/
+
