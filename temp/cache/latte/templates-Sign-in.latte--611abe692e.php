@@ -67,6 +67,11 @@ class Template611abe692e extends Latte\Runtime\Template
 		if ($_tmp instanceof Nette\Application\UI\IRenderable) $_tmp->redrawControl(null, false);
 		$_tmp->render();
 ?>
+    
+    <p>
+     <?php echo LR\Filters::escapeHtmlText(call_user_func($this->filters->translate, "ui.skuska_text")) ?>
+
+    </p>
 
 <?php
 	}
