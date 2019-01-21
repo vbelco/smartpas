@@ -64,6 +64,9 @@ class EditujDochadzkaPresenter extends BasePresenter
         //ulozime si udaje z formulara
         $this->od = $values['datum_od'];
         $this->do = $values['datum_do'];
+        
+        //!!!!tu musime hodit kontrolu na datum, aby do nebolo mensie ako od!!!!
+        
         //nacitanie osoby
         $this->osoba->InitializeFromDatabase($values["osoba"] ); //inicializacia z databazy 
         //vytvorenie dochadzky
@@ -110,7 +113,10 @@ class EditujDochadzkaPresenter extends BasePresenter
         $this->do = $values['datum_do'];
         $osoba_id = $values["osoba"];
         $hodnota_prichodu = $values["prichod"];
-        $zaznam_id = $values["id"];
+        $offset = $values["id"]; //ofset o kolko dni sme od datumu $this->od
+        //ziskanie  datumu dna v ktorom ideme riesit dochadzku
+        $datum = new Nette\Utils\DateTime($this->od); //pociatocny datum
+        $datum->add(new \DateInterval('P'.$offset.'D')); //pripocitame potrebny pocet dni
         //nacitanie osoby
         $this->osoba = new Osoba($this->database); //definovane objektu osoby
         $this->osoba->InitializeFromDatabase($osoba_id); //inicializacia z databazy 
@@ -118,7 +124,7 @@ class EditujDochadzkaPresenter extends BasePresenter
         $this->dochadzkaOsoby = new DochadzkaOsoby( $this->database, $this->user->id, $this->osoba->getId() );
         //upravenie hodnoty dochadzky
         try {
-            $this->dochadzkaOsoby->storeDochadzka($zaznam_id, 'prichod', $hodnota_prichodu);
+            $this->dochadzkaOsoby->pipnutieDna($datum, "prichod", $hodnota_prichodu);
             //nacitanie dochadzky cloveka v danom romedzi
             $this->dochadzkaOsoby->nacitaj($this->od, $this->do); 
             $this->flashMessage($this->translator->translate('ui.message.change_success'), 'alert alert-success');
@@ -133,7 +139,10 @@ class EditujDochadzkaPresenter extends BasePresenter
         $this->do = $values['datum_do'];
         $osoba_id = $values["osoba"];
         $hodnota_odchodu = $values["odchod"];
-        $zaznam_id = $values["id"];
+        $offset = $values["id"]; //ofset dna od zadaneho intervalu $this->od
+        //ziskanie  datumu dna v ktorom ideme riesit dochadzku
+        $datum = new Nette\Utils\DateTime($this->od); //pociatocny datum
+        $datum->add(new \DateInterval('P'.$offset.'D')); //pripocitame potrebny pocet dni
         //nacitanie osoby
         $this->osoba = new Osoba($this->database); //definovane objektu osoby
         $this->osoba->InitializeFromDatabase($osoba_id); //inicializacia z databazy 
@@ -141,7 +150,7 @@ class EditujDochadzkaPresenter extends BasePresenter
         $this->dochadzkaOsoby = new DochadzkaOsoby( $this->database, $this->user->id, $this->osoba->getId() );
         //upravenie hodnoty dochadzky
         try {
-            $this->dochadzkaOsoby->storeDochadzka($zaznam_id, 'odchod', $hodnota_odchodu);
+            $this->dochadzkaOsoby->pipnutieDna($datum, "odchod", $hodnota_odchodu);
             //nacitanie dochadzky cloveka v danom romedzi
             $this->dochadzkaOsoby->nacitaj($this->od, $this->do); 
             $this->flashMessage($this->translator->translate('ui.message.change_success'), 'alert alert-success');

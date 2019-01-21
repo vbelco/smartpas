@@ -55,46 +55,37 @@
 {/if}
 
 {if (isset ($dochadzkaOsoby))}  {* pokial uz mame nejaku dochadzku, teda sme odoslali formular *}
-{if $dochadzkaOsoby->dochadzka_den != NULL } {* dochadzka nieje nulova, tedfa mame nejake dni *}
     <div class="table-responsive">
     <table class="table table-hover"">
         <tr>
-                <th>{_ui.date}</th>
-                <th>{_ui.prichod}</th>
-                <th>{_ui.odchod}</th>
-            </tr>
-            {foreach $dochadzkaOsoby->dochadzka_den as $index => $den}
-                <tr>
-                    <td>
-                        {_}ui.{$den|date:"D"}{/_} 
-                        </br>
-                        {$den|date:"d. m. Y"}
-                    </td>
-                    <td>
-                        {$dochadzkaOsoby->dochadzka_prichod[$index]|date:"G:i:s"}
-                        {*pokial je nedefinovany prichod, alebo ked uz nedefinovany prichod bol niekedy zmeneny*}
-                        {if (!$dochadzkaOsoby->dochadzka_prichod[$index]) ||
-                            ($dochadzkaOsoby->dochadzka_prichod_upravene[$index]) }
-                                
-                            {form editPrichodForm-$index}
-                                <span id="prichod-{$index}" data-align="top" data-autoclose="true">
-                                    {input prichod} 
-                                </span>
-                                {input send}
-                            {/form}
-                            <script type="text/javascript">
-                                $("#prichod-{$index}").clockpicker();
-                            </script> 
-                            
-                        {/if}
-                    </td>
-                    <td>
-                        {$dochadzkaOsoby->dochadzka_odchod[$index]|date:"G:i:s"} 
-                        {*pokial je nedefinovany odchod, alebo ked uz nedefinovany odchod bol niekedy zmeneny*}
-                        {if (!$dochadzkaOsoby->dochadzka_odchod[$index]) || 
-                            ($dochadzkaOsoby->dochadzka_odchod_upravene[$index]) }
-
-                            {form editOdchodForm-$index}
+            <th>{_ui.date}</th>
+            <th>{_ui.prichod}</th>
+            <th>{_ui.odchod}</th>
+        </tr>
+        {foreach $dochadzkaOsoby->dochadzka as $index => $den}
+            <tr>
+                <td>
+                    {_}ui.{$den->den|date:"D"}{/_} 
+                    {$den->den|date:"d. m. Y"}
+                </td>
+                <td>
+                    {$den->prichod|date:"G:i:s"}
+                    {if ($den->prichod == NULL) || ($den->prichod_upravene != NULL) } 
+                        {form editPrichodForm-$index}
+                            <span id="prichod-{$index}" data-align="top" data-autoclose="true">
+                                {input prichod} 
+                            </span>
+                            {input send}
+                        {/form}
+                        <script type="text/javascript">
+                            $("#prichod-{$index}").clockpicker();
+                        </script> 
+                    {/if}
+                </td>
+                <td>
+                    {$den->odchod|date:"G:i:s"}
+                    {if ($den->odchod == NULL) || ($den->odchod_upravene != NULL) } 
+                        {form editOdchodForm-$index}
                                 <span id="odchod-{$index}" data-align="top" data-autoclose="true">
                                     {input odchod} 
                                 </span>
@@ -103,17 +94,13 @@
                             </div>
                             <script type="text/javascript">
                                 $("#odchod-{$index}").clockpicker();
-                            </script> 
-
-                        {/if}
-                    </td>
-                </tr>
-            {/foreach}
+                            </script>
+                    {/if}
+                </td>
+            </tr>
+        {/foreach}
     </table>
     </div>
-{else} {* pre tohto cloveka nemame v databaze ziadnu dochadzku, teda nechodil do roboty *}
-    <div>{_ui.none_definition_attendance}</div>
-{/if}
 {/if}
 
 <script type="text/javascript">

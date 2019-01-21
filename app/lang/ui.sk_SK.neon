@@ -69,6 +69,7 @@ Thu: "Štv"
 Fri: "Pi"
 Sat: "So"
 Sun: "Ne"
+skuska_text: "Môžete vyskúšať našu aplikáciu prihlásením sa. Login email: test@test.com  password: Testing123"
 form:
     yes: "Áno"
     no: "Nie"
@@ -108,6 +109,7 @@ form:
     shifts: "2 smenná prevádzka"
     all_day: "3 smenná prevádzka"
     choose_1_person: "Zvoľte jedno meno"
+    time_explanation: "Formát času hh:mm"
 message:
     change_success: "Zmena bola úspešne vykonaná"
     change_fail: "Zmena NEBOLA úspešná"
