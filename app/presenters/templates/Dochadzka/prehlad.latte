@@ -68,6 +68,7 @@
                 <th>{_ui.prichod}</th>
                 <th>{_ui.odchod}</th>
                 <th>{_ui.time_at_work}</th>
+                <th>{_ui.poznamka}</th>
             </tr>
         
         {foreach $posts_zaokruhlena_dochadzka[$osoba] as $index => $post2}
@@ -96,6 +97,9 @@
                 </td>
                 <td>
                     {$post2['cas_v_praci']|date:"%h:%I"} 
+                </td>
+                <td>
+                    {$post2['poznamka']}
                 </td>
             </tr>
         {/foreach}

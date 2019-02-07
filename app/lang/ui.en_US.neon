@@ -70,6 +70,7 @@ Fri: "Fri"
 Sat: "Sat"
 Sun: "Sun"
 skuska_text: "You can test our application by signing in. Login email: test@test.com  password: Testing123"
+poznamka: "Note"
 form:
     yes: "Yes"
     no: "No"

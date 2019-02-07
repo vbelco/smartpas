@@ -70,6 +70,7 @@ Fri: "Pi"
 Sat: "So"
 Sun: "Ne"
 skuska_text: "Môžete vyskúšať našu aplikáciu prihlásením sa. Login email: test@test.com  password: Testing123"
+poznamka: "Poznámka"
 form:
     yes: "Áno"
     no: "Nie"

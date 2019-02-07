@@ -108,6 +108,21 @@ class EditujDochadzkaPresenter extends BasePresenter
         });
     }
     
+    /* funckia na vztvorenie editacneho formulara  pre POZNAMKU*/
+    protected function createComponentEditPoznamkaForm() {
+        return new Multiplier(function ($id) {
+            $form = new Nette\Application\UI\Form;
+            $form->addText('poznamka', '');
+            $form->addHidden('id', $id);
+            $form->addHidden('datum_od', $this->od);
+            $form->addHidden('datum_do', $this->do);
+            $form->addHidden('osoba', $this->osoba->id);
+            $form->addSubmit('send', $this->translator->translate('ui.form.change'));
+            $form->onSuccess[] = [$this, 'editPoznamkaFormSubmitted'];
+        return $form;
+        });
+    }
+    
     public function editPrichodFormSubmitted($form , $values){
         $this->od = $values['datum_od'];
         $this->do = $values['datum_do'];
@@ -151,6 +166,32 @@ class EditujDochadzkaPresenter extends BasePresenter
         //upravenie hodnoty dochadzky
         try {
             $this->dochadzkaOsoby->pipnutieDna($datum, "odchod", $hodnota_odchodu);
+            //nacitanie dochadzky cloveka v danom romedzi
+            $this->dochadzkaOsoby->nacitaj($this->od, $this->do); 
+            $this->flashMessage($this->translator->translate('ui.message.change_success'), 'alert alert-success');
+        } catch (\ErrorException $e){
+            $this->flashMessage($this->translator->translate('ui.message.change_fail'), 'alert alert-warning'); // informování uživatele o chybě
+        }
+    }//end function editOdchodForm Submitted
+
+    public function editPoznamkaFormSubmitted($form , $values){
+        //prenos hodnot z formulara
+        $this->od = $values['datum_od'];
+        $this->do = $values['datum_do'];
+        $osoba_id = $values["osoba"];
+        $poznamka = $values["poznamka"];
+        $offset = $values["id"]; //ofset dna od zadaneho intervalu $this->od
+        //ziskanie  datumu dna v ktorom ideme riesit dochadzku
+        $datum = new Nette\Utils\DateTime($this->od); //pociatocny datum
+        $datum->add(new \DateInterval('P'.$offset.'D')); //pripocitame potrebny pocet dni
+        //nacitanie osoby
+        $this->osoba = new Osoba($this->database); //definovane objektu osoby
+        $this->osoba->InitializeFromDatabase($osoba_id); //inicializacia z databazy 
+        //vytvorenie dochadzky
+        $this->dochadzkaOsoby = new DochadzkaOsoby( $this->database, $this->user->id, $this->osoba->getId() );
+        //upravenie hodnoty dochadzky
+        try {
+            $this->dochadzkaOsoby->upravPoznamka($datum, $poznamka);
             //nacitanie dochadzky cloveka v danom romedzi
             $this->dochadzkaOsoby->nacitaj($this->od, $this->do); 
             $this->flashMessage($this->translator->translate('ui.message.change_success'), 'alert alert-success');

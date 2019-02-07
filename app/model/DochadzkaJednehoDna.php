@@ -20,6 +20,7 @@ class DochadzkaJednehoDna extends Nette\Object{
     public $odchod;
     public $prichod_upravene;
     public $odchod_upravene;
+    public $poznamka;
     
     function __construct(Nette\Database\Context $database)  {
         $this->database = $database;
@@ -28,6 +29,7 @@ class DochadzkaJednehoDna extends Nette\Object{
         $this->odchod = NULL;
         $this->prichod_upravene = NULL;
         $this->odchod_upravene = NULL;
+        $this->poznamka = NULL;
     }
     
     

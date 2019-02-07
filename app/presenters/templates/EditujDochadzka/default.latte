@@ -61,6 +61,7 @@
             <th>{_ui.date}</th>
             <th>{_ui.prichod}</th>
             <th>{_ui.odchod}</th>
+            <th>{_ui.poznamka}</th>
         </tr>
         {foreach $dochadzkaOsoby->dochadzka as $index => $den}
             <tr>
@@ -69,7 +70,7 @@
                     {$den->den|date:"d. m. Y"}
                 </td>
                 <td>
-                    {$den->prichod|date:"G:i:s"}
+                    {$den->prichod|date:"G:i"}
                     {if ($den->prichod == NULL) || ($den->prichod_upravene != NULL) } 
                         {form editPrichodForm-$index}
                             <span id="prichod-{$index}" data-align="top" data-autoclose="true">
@@ -83,7 +84,7 @@
                     {/if}
                 </td>
                 <td>
-                    {$den->odchod|date:"G:i:s"}
+                    {$den->odchod|date:"G:i"}
                     {if ($den->odchod == NULL) || ($den->odchod_upravene != NULL) } 
                         {form editOdchodForm-$index}
                                 <span id="odchod-{$index}" data-align="top" data-autoclose="true">
@@ -96,6 +97,13 @@
                                 $("#odchod-{$index}").clockpicker();
                             </script>
                     {/if}
+                </td>
+                <td>
+                    {$den->poznamka}
+                    {form editPoznamkaForm-$index}
+                        {input poznamka} 
+                        {input send}
+                    {/form}
                 </td>
             </tr>
         {/foreach}

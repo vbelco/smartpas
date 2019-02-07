@@ -294,10 +294,21 @@ class Dochadzka extends Nette\Object
                     ->where ( 'people_id = ?', $this->clovek_id )
                     ->where ('den >= ?', $this->datum_od->format('Y-m-d H:i:s') )
                     ->where ('den <= ?', $this->datum_do->format('Y-m-d H:i:s') )
+                    ->order('den ASC')
                 ->fetchAll();   //no tot musi byt inak to nenaplni data v selection
         foreach ($rows as $row){
             $this->pole_dochadzky[$row->id]['prichod'] = $row->prichod_timestamp;
             $this->pole_dochadzky[$row->id]['odchod'] = $row->odchod_timestamp;
+            //pre kazdy den si natiahneme poznamku
+            $poznamky = $this->database->table('poznamky')
+                    ->where('den = ?', $row->den )
+                    ->where('people_id = ?', $this->clovek_id )
+                    ->fetch();
+            if ($poznamky){ //uz mame poznamku na tento den
+                $this->pole_dochadzky[$row->id]['poznamka'] = $poznamky['poznamka'];
+            } else { //este nemame poznamku na tent den
+               $this->pole_dochadzky[$row->id]['poznamka']  = NULL;
+            }
         }
         $this->zaokruhliCasVPraci(); //zaokruhli cas v pracipre tohto cloveka v danom intervale
         //\Tracy\Dumper::dump($this->pole_dochadzky);
