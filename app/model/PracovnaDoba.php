@@ -34,6 +34,11 @@ class PracovnaDoba extends Nette\Object
     */
     private $pole_prac_doby; 
     
+    /*
+     * priznak ci sa bude cas prichodov a odchodov brat do uvahy 
+     * pri rozhodovaniach o zabudnutych prichodoch a odchodoch
+     */
+    private $je_povolena_prac_doba;
     
     
     function __construct(Nette\Database\Context $database, int $user_id = 0)
@@ -50,7 +55,40 @@ class PracovnaDoba extends Nette\Object
     public function getOdchod2() { return $this->pole_prac_doby[1]['odchod']; }
     public function getPrichod3() { return $this->pole_prac_doby[2]['prichod']; }
     public function getOdchod3() { return $this->pole_prac_doby[2]['odchod']; }
+    public function getJePovolenaPracDoba() { return $this->je_povolena_prac_doba; }
+    public function getJePovolenaPracDobaFromDatabase( $user_id){
+        //zisti nastavenie zaokruhlovania
+        $row= $this->database->table('dochadzka_nastavenie')
+                ->where('user_id = ?', $this->user_id)
+                ->where('vlastnost = ?', 'je_povolena_prac_doba')
+                ->fetch();
+        if($row){
+            return $row["hodnota"];
+        } else { //este nemame taky zaznam v databaze, tak ho tam dame
+            return 0;
+        }
+    }
 
+    public function setJePovolenaPracDobaFromDatabase( $user_id){
+        //zisti nastavenie zaokruhlovania
+        $row= $this->database->table('dochadzka_nastavenie')
+                ->where('user_id = ?', $this->user_id)
+                ->where('vlastnost = ?', 'je_povolena_prac_doba')
+                ->fetch();
+        if($row){
+            $this->je_povolena_prac_doba = $row["hodnota"];
+            return $row["hodnota"];
+        } else { //este nemame taky zaznam v databaze, tak ho tam dame
+            $this->je_povolena_prac_doba = 0; //nastavenie lokalnej premennej
+            $pole = array ( 
+                'hodnota' => '0',
+                'user_id' => $this->user_id,
+                'vlastnost' => 'je_povolena_prac_doba'
+                );
+            $this->database->table('dochadzka_nastavenie')->insert($pole);
+            return 0;
+        }
+    }
     public function setUserId($user_id) { $this->user_id = $user_id; }
     public function setPocetSmienFromDatabase () {
         //zisti nastavenie zaokruhlovania
@@ -126,4 +164,15 @@ class PracovnaDoba extends Nette\Object
             }
         }//end else
     }//end function updatePracovnaDoba
+    
+    /*
+     * funkcia na update priznaku ci budeme brat do uvahy pracovnu dobu 
+     */
+    public function updateJePovolenaPracDoba( $je_nastavena_prac_doba ){
+        $row= $this->database->table('dochadzka_nastavenie')
+                    ->where('user_id = ?', $this->user_id)
+                    ->where('vlastnost = ?', 'je_povolena_prac_doba');
+        $navrt = $row->update( array('hodnota' => $je_nastavena_prac_doba) );
+        if ($navrt  > 1) { throw new \ErrorException; }
+    }//end function updateJeNastavenaPracDoba
 }

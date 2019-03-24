@@ -183,8 +183,17 @@ class DochadzkaPresenter extends BasePresenter
         $pracovna_doba->setPocetSmienFromDatabase();
         $pracovna_doba->loadPolePracovnejDoby();
         $pocet_smien = $pracovna_doba->getPocetSmien();
+        $pracovna_doba->setJePovolenaPracDobaFromDatabase( $this->getUser()->id );
+        $je_povolena_prac_doba = $pracovna_doba->getJePovolenaPracDoba();
                 
         $form = new Form;
+        
+        $form->addCheckBox('je_povolena_prac_doba', "__Prac. doba je povolena__");
+        if ($je_povolena_prac_doba) {
+            $form['je_povolena_prac_doba']->setDefaultValue(true);
+        } else {
+            $form['je_povolena_prac_doba']->setDefaultValue(false);
+        }
         
         $form->addText('prichod1', $this->translator->translate('ui.prichod'))
                 ->setAttribute('class', 'form-control');
@@ -204,21 +213,20 @@ class DochadzkaPresenter extends BasePresenter
     }
     
     public function nastaveniePracovnejDobySubmitted( $form, $values ){
-        $pocet_smien = $values['prac_doba']; 
         
         $pole_pracovnej_doby = array (
             'prichod1' => $values['prichod1'],
             'odchod1' => $values['odchod1'],
-            'prichod2' => $values['prichod2'],
-            'odchod2' => $values['odchod2'],
-            'prichod3' => $values['prichod3'],
-            'odchod3' => $values['odchod3']
         );
+        
+        
+        $je_povolena_prac_doba = $values["je_povolena_prac_doba"] ? "1" : "0" ;
         
         //uvodne nasavovacky   
         $pracovna_doba = new \App\Model\PracovnaDoba($this->database, $this->getUser()->id  );
         try {
-            $pracovna_doba->updatePracovnaDoba($pocet_smien, $pole_pracovnej_doby);
+            $pracovna_doba->updateJePovolenaPracDoba($je_povolena_prac_doba);
+            $pracovna_doba->updatePracovnaDoba(0, $pole_pracovnej_doby);
             $this->flashMessage($this->translator->translate('ui.message.change_success'), 'alert alert-success');
         } catch (Exception $ex) {
             $this->flashMessage($this->translator->translate('ui.message.change_fail'), 'alert alert-warning'); // informování uživatele o chybě

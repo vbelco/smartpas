@@ -440,32 +440,37 @@ class Dochadzka extends Nette\Object
         }
         /*
          * oblast kontrol na hranicne situace
+         * oblast bude zapnuta iba pri priznaku v nastavenia dochadzky s nazvom je_povolena_prac_doba
          */
         $pracovna_doba = new \App\Model\PracovnaDoba($this->database, $this->user_id );
         $pracovna_doba->setPocetSmienFromDatabase(); //nacitanie nastaveni
         $pracovna_doba->loadPolePracovnejDoby(); //nacitanie pracovnej doby z databazy
-        if($row->prichod_timestamp) {
-            $rozdiel = $timestamp->getTimestamp() - $row->prichod_timestamp->getTimestamp();
-        } else {
-            $rozdiel = $timestamp->getTimestamp() - $row->odchod_timestamp->getTimestamp() + (12*60*60);
-        }
-        $hodiny_pipnutie = $timestamp->format('G'); //vycucneme si hodiny
-        $hodiny_odchod = $pracovna_doba->getOdchod1()->format("%h");
-        $hodiny_prichod = $pracovna_doba->getPrichod1()->format("%h");
-        //kontrola zabudnuteho prichodu
-        //situacia: je dalsi den a
-        // /preslo viac ako 20 hodin od predosleho prichodu, alebo viac ako 8 hodin od predosleho odchodu/ 
-        // a je cas definovaneho odchodu v nastaveniach   
+        if ( $pracovna_doba->getJePovolenaPracDobaFromDatabase($this->user_id) ) {
+            
+            if($row->prichod_timestamp) {
+                $rozdiel = $timestamp->getTimestamp() - $row->prichod_timestamp->getTimestamp();
+            } else {
+                $rozdiel = $timestamp->getTimestamp() - $row->odchod_timestamp->getTimestamp() + (12*60*60);
+            }
+            $hodiny_pipnutie = $timestamp->format('G'); //vycucneme si hodiny
+            $hodiny_odchod = $pracovna_doba->getOdchod1()->format("%h");
+            $hodiny_prichod = $pracovna_doba->getPrichod1()->format("%h");
+            //kontrola zabudnuteho prichodu
+            //situacia: je dalsi den a
+            // /preslo viac ako 20 hodin od predosleho prichodu, alebo viac ako 8 hodin od predosleho odchodu/ 
+            // a je cas definovaneho odchodu v nastaveniach   
             if ( ( $rozdiel > (20*60*60) ) && ( abs((int)$hodiny_odchod - (int)$hodiny_pipnutie) < 2 ) ){
                 $navrat = 'odchod';
             } 
-        //kontrola zabudnuteho odchodu
-        //situacia: je dalsi den rano 
-        ///preslo viac ako 20 hodin od predosleho prichodu, alebo viac ako 8 hodin od predosleho odchodu// 
-        //   AND je v case prichodu
+            //kontrola zabudnuteho odchodu
+            //situacia: je dalsi den rano 
+            ///preslo viac ako 20 hodin od predosleho prichodu, alebo viac ako 8 hodin od predosleho odchodu// 
+            //   AND je v case prichodu
             if ( ( $rozdiel > (20*60*60) ) && ( abs((int)$hodiny_prichod - (int)$hodiny_pipnutie) < 2 ) ){
                 $navrat = 'prichod';
             }
+        }//end if oblast kontrol na hranicne situacie
+        
         
         return $navrat;
     }//end function akyTypZaznamu
