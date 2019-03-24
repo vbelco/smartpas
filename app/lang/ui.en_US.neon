@@ -111,6 +111,7 @@ form:
     all_day: "3 shifts"
     choose_1_person: "Choose one person"
     time_explanation: "Format time: hh:mm"
+    allowed_time_schedule: "Time schedule is allowed"
 message:
     change_success: "Change has been successfull"
     change_fail: "Change has NOT been successfull"

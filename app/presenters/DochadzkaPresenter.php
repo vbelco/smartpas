@@ -188,7 +188,7 @@ class DochadzkaPresenter extends BasePresenter
                 
         $form = new Form;
         
-        $form->addCheckBox('je_povolena_prac_doba', "__Prac. doba je povolena__");
+        $form->addCheckBox('je_povolena_prac_doba', $this->translator->translate('ui.form.allowed_time_schedule') );
         if ($je_povolena_prac_doba) {
             $form['je_povolena_prac_doba']->setDefaultValue(true);
         } else {

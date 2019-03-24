@@ -111,6 +111,7 @@ form:
     all_day: "3 smenná prevádzka"
     choose_1_person: "Zvoľte jedno meno"
     time_explanation: "Formát času hh:mm"
+    allowed_time_schedule: "Pracovná dobe je povolená"
 message:
     change_success: "Zmena bola úspešne vykonaná"
     change_fail: "Zmena NEBOLA úspešná"
