@@ -186,47 +186,15 @@ class DochadzkaPresenter extends BasePresenter
                 
         $form = new Form;
         
-        $zoznam_doby = array (
-            '0' => $this->translator->translate('ui.form.standard'),
-            '1' => $this->translator->translate('ui.form.shifts'),
-            '2' => $this->translator->translate('ui.form.all_day')
-        );
-        
-        $form->addRadioList('prac_doba', $this->translator->translate('ui.form.prac_doba') , $zoznam_doby)
-            ->addCondition($form::EQUAL, '1')
-            ->toggle('2_smeny')
-            ->endCondition()
-            ->addCondition($form::EQUAL, '2')
-            ->toggle('2_smeny')
-            ->toggle('3_smeny')
-            ->endCondition();
-        $form['prac_doba']->setDefaultValue( $pocet_smien );
-        
         $form->addText('prichod1', $this->translator->translate('ui.prichod'))
                 ->setAttribute('class', 'form-control');
         
         $form->addText('odchod1', $this->translator->translate('ui.odchod'))
                 ->setAttribute('class', 'form-control');
         
-        $form->addText('prichod2', $this->translator->translate('ui.prichod'))
-                ->setAttribute('class', 'form-control');
-        
-        $form->addText('odchod2', $this->translator->translate('ui.odchod'))
-                ->setAttribute('class', 'form-control');
-        
-        $form->addText('prichod3', $this->translator->translate('ui.prichod'))
-                ->setAttribute('class', 'form-control');
-        
-        $form->addText('odchod3', $this->translator->translate('ui.odchod'))
-                ->setAttribute('class', 'form-control');
-        
         if ( $pracovna_doba->getPolePracovnejDoby() ) { //ak uz mame definovanu pracovnu dobu, tak nastavime vstupne hodnoty
             $form['prichod1']->setDefaultValue( $pracovna_doba->getPrichod1()->format("%H:%I") );
             $form['odchod1']->setDefaultValue( $pracovna_doba->getOdchod1()->format("%H:%I") );
-            $form['prichod2']->setDefaultValue( $pracovna_doba->getPrichod2()->format("%H:%I") );
-            $form['odchod2']->setDefaultValue( $pracovna_doba->getOdchod2()->format("%H:%I") );
-            $form['prichod3']->setDefaultValue( $pracovna_doba->getPrichod2()->format("%H:%I") );
-            $form['odchod3']->setDefaultValue( $pracovna_doba->getOdchod3()->format("%H:%I") );
         }
         
         $form->addSubmit('send', $this->translator->translate('ui.form.save'));
