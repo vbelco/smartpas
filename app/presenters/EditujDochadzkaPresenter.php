@@ -76,7 +76,7 @@ class EditujDochadzkaPresenter extends BasePresenter
     
     /* funckia na vztvorenie editacneho formulara */
     protected function createComponentEditPrichodForm() {
-        return new Multiplier(function ($id) { //predavame id riadku s dochadzkou v datbaze
+        return new Multiplier(function ($id) { //predavame id riadku s dochadzkou v databaze
             $form = new Nette\Application\UI\Form;
             $form->addText('prichod', '')
                     ->setRequired()
@@ -86,6 +86,7 @@ class EditujDochadzkaPresenter extends BasePresenter
             $form->addHidden('datum_do', $this->do);
             $form->addHidden('osoba', $this->osoba->id);
             $form->addSubmit('send', $this->translator->translate('ui.form.change'));
+            
             $form->onSuccess[] = [$this, 'editPrichodFormSubmitted']; //spracovanie formulara bude mat na starosti funckia tejto triedy s nazvom: pridajRFIDFormSubmitted
         return $form;
         });

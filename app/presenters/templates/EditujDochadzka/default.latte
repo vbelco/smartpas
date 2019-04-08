@@ -70,8 +70,10 @@
                     {$den->den|date:"d. m. Y"}
                 </td>
                 <td>
+                    {$den->prichod_historia}
                     {$den->prichod|date:"G:i"}
-                    {if ($den->prichod == NULL) || ($den->prichod_upravene != NULL) } 
+                    {* budeme moc menit vsetky datumy, aj tie ktore si ludia pipli samy *}
+                    {* {if ($den->prichod == NULL) || ($den->prichod_upravene != NULL) } *}
                         {form editPrichodForm-$index}
                             <span id="prichod-{$index}" data-align="top" data-autoclose="true">
                                 {input prichod} 
@@ -81,11 +83,13 @@
                         <script type="text/javascript">
                             $("#prichod-{$index}").clockpicker();
                         </script> 
-                    {/if}
+                    {* {/if} *}
                 </td>
                 <td>
+                    {$den->odchod_historia}
                     {$den->odchod|date:"G:i"}
-                    {if ($den->odchod == NULL) || ($den->odchod_upravene != NULL) } 
+                    {* budeme moc menit vsetky datumy, aj tie ktore si ludia pipli samy *}
+                    {* {if ($den->odchod == NULL) || ($den->odchod_upravene != NULL) }  *}
                         {form editOdchodForm-$index}
                                 <span id="odchod-{$index}" data-align="top" data-autoclose="true">
                                     {input odchod} 
@@ -96,7 +100,7 @@
                             <script type="text/javascript">
                                 $("#odchod-{$index}").clockpicker();
                             </script>
-                    {/if}
+                    {* {/if} *}
                 </td>
                 <td>
                     {$den->poznamka}
