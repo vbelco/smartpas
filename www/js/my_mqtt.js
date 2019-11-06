@@ -82,7 +82,7 @@ function onMessageArrived(message) {
     var payload = message.payloadString;
         
     switch  (topic){
-        case "online_smartpas":
+        case "out_smartpas":
             var identifikator = '#kontrola_'+payload;
             var cell_identifikator = '#cell_kontrola_'+payload;
             $(cell_identifikator).removeClass("warning");
