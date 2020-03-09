@@ -135,3 +135,5 @@ message:
     enter_begin_date: "Zadajte dátum začiatku"
     enter_end_date: "Zadajte dátum konca"
     choose_least_1_person: "Zvoľte aspoň jedno meno"
+self_check: "Sebakontrola"
+header_ability_to_selfcheck: "Možnosť osôb vykonávať kontrolu svojej vlastnej dochádzky"

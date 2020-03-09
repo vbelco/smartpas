@@ -135,4 +135,5 @@ message:
     enter_begin_date: "Enter starting date"
     enter_end_date: "Enter ending date"
     choose_least_1_person: "Choose at least one person"
-    
+self_check: "SelfCheck"
+header_ability_to_selfcheck: "Ability to self check attendance"
