@@ -50,7 +50,7 @@
                 "shasum": ""
             },
             "require": {
-                "latte/latte": "^2.4@dev",
+                "latte/latte": "2.10.6",
                 "nette/caching": "^2.4@dev",
                 "nette/di": "^2.4@dev",
                 "nette/finder": "^2.4@dev",
